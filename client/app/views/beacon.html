@@ -1,0 +1,26 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div ng-controller="BeaconCtrl">
+  <form>
+    <div class="row">
+      <label for="name" class="col-md-2">Name</label>
+      <input type="text" name="name" ng-model="beacon.name" value="">
+    </div>
+    <div class="row">
+      <label for="uuid" class="col-md-2">UUID</label>
+      <input type="text" name="uuid" ng-model="beacon.uuid" value="">
+    </div>
+    <div class="row">
+      <label for="major" class="col-md-2">Major</label>
+      <input type="text" name="major"  ng-model="beacon.major" value="">
+    </div>
+    <div class="row">
+      <label for="minor" class="col-md-2">Minor</label>
+      <input type="text" name="minor"  ng-model="beacon.minor" value="">
+    </div>
+
+    <button ng-click="submit(beacon)">Submit</button>
+
+  </form>
+</div>
+
