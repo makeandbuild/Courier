@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('guntApp')
+angular.module('courierApp')
   .controller('LoginCtrl', function ($scope, Auth, $location) {
     $scope.user = {};
     $scope.errors = {};

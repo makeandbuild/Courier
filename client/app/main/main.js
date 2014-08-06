@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('guntApp')
+angular.module('courierApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

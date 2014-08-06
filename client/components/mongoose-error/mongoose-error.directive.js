@@ -3,7 +3,7 @@
 /**
  * Removes server error when user updates input
  */
-angular.module('guntApp')
+angular.module('courierApp')
   .directive('mongooseError', function () {
     return {
       restrict: 'A',

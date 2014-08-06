@@ -1,7 +1,7 @@
 /* global io */
 'use strict';
 
-angular.module('guntApp')
+angular.module('courierApp')
   .factory('socket', function(socketFactory) {
 
     // socket.io now auto-configures its connection when we ommit a connection url

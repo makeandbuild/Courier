@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('guntApp')
+angular.module('courierApp')
   .controller('SettingsCtrl', function ($scope, User, Auth) {
     $scope.errors = {};
 

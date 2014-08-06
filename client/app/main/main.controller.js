@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('guntApp')
+angular.module('courierApp')
   .controller('MainCtrl', function ($scope, $http, socket) {
     $scope.awesomeThings = [];
 
