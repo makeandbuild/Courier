@@ -1,7 +1,10 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div ng-controller="BeaconCtrl">
-  <form>
+  <div class="container">
+
+   <h1 class="page-header">Add a Beacon:</h1>
+   <form class="beaconForm">
     <div class="row">
       <label for="name" class="col-md-2">Name</label>
       <input type="text" name="name" ng-model="beacon.name" value="">
@@ -18,9 +21,27 @@
       <label for="minor" class="col-md-2">Minor</label>
       <input type="text" name="minor"  ng-model="beacon.minor" value="">
     </div>
+    <div class="properties">
+      <h3>Custom Properties</h3>
+      <div class="row">
+        <input type="text" name="" class="newKey"  ng-model="property.key" value="Property Key">
+        <input type="text" name="" class="newValue" ng-model="property.value" value="Property Value">
+         <span class="glyphicon glyphicon-plus" ng-click="addProperty(property)"></span>
+      </div>
+  
+      <div class="row property" ng-repeat="(key, value) in properties">
+        <label for="property{{$index}}" class="col-md-2 key property{{$index}}">{{key}}</label>
+        <input type="text" name="property{{$index}}" class="value property{{$index}}"  value="{{value}}">
+      </div>
 
-    <button ng-click="submit(beacon)">Submit</button>
+
+    </div>
+
+
+
+    <div class="button" ng-click="submit(beacon)">Submit</div>
 
   </form>
+</div>
 </div>
 

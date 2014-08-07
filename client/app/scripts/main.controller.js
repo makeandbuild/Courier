@@ -1,24 +1,22 @@
 'use strict';
 
 angular.module('courierApp')
-  .controller('MainCtrl', function ($scope, $http, socket) {
+  .controller('MainCtrl', function ($scope, $http, socket, $location) {
     $scope.awesomeThings = [];
 
     $http.get('/api/beacons').success(function(awesomeThings) {
       console.log(awesomeThings);
-      $scope.awesomeThings = awesomeThings;
-      socket.syncUpdates('beacon', $scope.awesomeThings);
+      $scope.beacons = awesomeThings;
+      socket.syncUpdates('beacon', $scope.beacons);
     });
 
-    $scope.addThing = function() {
-      if($scope.newThing === '') {
-        return;
-      }
-      $http.post('/api/beacons', { name: $scope.newThing });
-      $scope.newThing = '';
+    $scope.addBeacon = function(){
+      console.log('addBeacon clicked');
+      $location.path('/beacon');
     };
+   
 
-    $scope.deleteThing = function(beacon) {
+    $scope.deleteBeacon = function(beacon) {
       $http.delete('/api/beacons/' + beacon._id);
     };
 
