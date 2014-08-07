@@ -12,7 +12,7 @@ angular.module('courierApp', [
 		$routeProvider
 		 .when('/', {
 				templateUrl: 'app/views/main.html',
-				controller: 'MainCtrl'
+				controller: 'MainCtrl',
 			})
 			.when('/beacon', {
 				templateUrl: 'app/views/beacon.html',

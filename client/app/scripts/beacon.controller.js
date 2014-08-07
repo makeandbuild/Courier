@@ -27,8 +27,13 @@
  	}
 
  	$scope.addProperty = function(property) {
- 		console.log 
+ 		console.log (property);
  		$scope.properties[property.key] = property.value;
+ 		console.log($scope.properties);
+ 	}
+ 		$scope.delProperty = function(key) {
+ 		console.log (key)
+ 		delete $scope.properties[key];
  		console.log($scope.properties);
  	}
 

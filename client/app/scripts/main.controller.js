@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('courierApp')
-  .controller('MainCtrl', function ($scope, $http, socket, $location) {
+  .controller('MainCtrl', function ($scope, $http, socket, $location, $filter) {
     $scope.awesomeThings = [];
 
     $http.get('/api/beacons').success(function(awesomeThings) {
@@ -17,8 +17,11 @@ angular.module('courierApp')
    
 
     $scope.deleteBeacon = function(beacon) {
-      $http.delete('/api/beacons/' + beacon._id);
-    };
+      $http.delete('/api/beacons/' + beacon._id).success(function(response){
+         $scope.beacons = $filter('filter')($scope.beacons, {_id: '!'+beacon._id});
+       
+    });
+    }
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('beacon');

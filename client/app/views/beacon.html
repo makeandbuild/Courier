@@ -24,14 +24,17 @@
     <div class="properties">
       <h3>Custom Properties</h3>
       <div class="row">
-        <input type="text" name="" class="newKey"  ng-model="property.key" value="Property Key">
-        <input type="text" name="" class="newValue" ng-model="property.value" value="Property Value">
+      <div class="col-md-12">
+        <input type="text" name="" class="newKey"  ng-model="property.key" value="" placeholder="Property Key">
+        <input type="text" name="" class="newValue" ng-model="property.value" value="" placeholder="Property Value">
          <span class="glyphicon glyphicon-plus" ng-click="addProperty(property)"></span>
+         </div>
       </div>
   
       <div class="row property" ng-repeat="(key, value) in properties">
         <label for="property{{$index}}" class="col-md-2 key property{{$index}}">{{key}}</label>
         <input type="text" name="property{{$index}}" class="value property{{$index}}"  value="{{value}}">
+        <span class="glyphicon glyphicon-minus" ng-click="delProperty(key)"></span>
       </div>
 
 
