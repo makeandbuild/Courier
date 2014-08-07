@@ -44,6 +44,7 @@ exports.update = function(req, res) {
     if (err) { return handleError(res, err); }
     if( ! beacon) { return res.send(404); }
     var updated = _.merge(beacon, req.body);
+    beacon.markModified('properties');
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
       return res.json(200, beacon);

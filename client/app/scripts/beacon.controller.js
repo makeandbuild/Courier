@@ -30,6 +30,8 @@
  		console.log (property);
  		$scope.properties[property.key] = property.value;
  		console.log($scope.properties);
+ 		$('.newKey').val('');
+	 			$('.newValue').val('');
  	}
  		$scope.delProperty = function(key) {
  		console.log (key)
