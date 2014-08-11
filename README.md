@@ -15,6 +15,7 @@ sudo npm install grunt-cli -g
 
 //Installs all of the NodeJS Courier packages.
 npm install
+bower install
 ```
 
 Run grunt serve to get it running:
