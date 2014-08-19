@@ -1,0 +1,18 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div ng-controller="AgentCtrl">
+  <div class="container">
+
+   <h1 class="page-header">Add an Agent:</h1>
+   <form class="beaconForm">
+    <div class="row">
+      <label for="name" class="col-md-2">Name</label>
+      <input type="text" name="name" ng-model="agent.name" value="">
+    </div>
+
+    <div class="button" ng-click="submit(agent)">Submit</div>
+
+  </form>
+</div>
+</div>
+

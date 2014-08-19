@@ -10,38 +10,46 @@ angular.module('courierApp', [
 ])
 	.config(function ($routeProvider, $locationProvider, $httpProvider) {
 		$routeProvider
-		 .when('/', {
-				templateUrl: 'app/views/main.html',
-				controller: 'MainCtrl',
-			})
-			.when('/beacon', {
-				templateUrl: 'app/views/beacon.html',
-				controller: 'BeaconCtrl'
-			})
-		 .when('/beacon/:beaconId', {
-				templateUrl: 'app/views/beacon.html',
-				controller: 'BeaconCtrl'
-			})
-			.when('/login', {
-				templateUrl: 'app/views/login.html',
-				controller: 'LoginCtrl'
-			})
-			.when('/signup', {
-				templateUrl: 'app/views/signup.html',
-				controller: 'SignupCtrl'
-			})
-			.when('/settings', {
-				templateUrl: 'app/views/settings.html',
-				controller: 'SettingsCtrl',
-				authenticate: true
-			})
-			.when('/admin', {
-				templateUrl: 'app/views/admin.html',
-				controller: 'AdminCtrl'
-			})
-			.otherwise({
-				redirectTo: '/'
-			});
+		.when('/', {
+			templateUrl: 'app/views/main.html',
+			controller: 'MainCtrl',
+		})
+		.when('/agent', {
+			templateUrl: 'app/views/agent.html',
+			controller: 'AgentCtrl'
+		})
+		.when('/agent/:agentId', {
+			templateUrl: 'app/views/agent.html',
+			controller: 'AgentCtrl'
+		})
+		.when('/beacon', {
+			templateUrl: 'app/views/beacon.html',
+			controller: 'BeaconCtrl'
+		})
+		.when('/beacon/:beaconId', {
+			templateUrl: 'app/views/beacon.html',
+			controller: 'BeaconCtrl'
+		})
+		.when('/login', {
+			templateUrl: 'app/views/login.html',
+			controller: 'LoginCtrl'
+		})
+		.when('/signup', {
+			templateUrl: 'app/views/signup.html',
+			controller: 'SignupCtrl'
+		})
+		.when('/settings', {
+			templateUrl: 'app/views/settings.html',
+			controller: 'SettingsCtrl',
+			authenticate: true
+		})
+		.when('/admin', {
+			templateUrl: 'app/views/admin.html',
+			controller: 'AdminCtrl'
+		})
+		.otherwise({
+			redirectTo: '/'
+		});
 
 		$locationProvider.html5Mode(true);
 		$httpProvider.interceptors.push('authInterceptor');

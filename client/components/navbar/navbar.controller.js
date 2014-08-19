@@ -5,6 +5,14 @@ angular.module('courierApp')
     $scope.menu = [{
       'title': 'Home',
       'link': '/'
+    },
+    {
+      'title': 'Beacons',
+      'link': '/beacons'
+    },
+    {
+      'title': 'Agents',
+      'link': '/agents'
     }];
 
     $scope.isCollapsed = true;
