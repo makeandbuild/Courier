@@ -5,3 +5,6 @@ public
 client/bower_components
 dist
 /server/config/local.env.js
+# Ignore IntelliJ project directory
+.idea
+*.iml
