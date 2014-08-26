@@ -18,7 +18,7 @@ npm install
 bower install
 ```
 
-Istall and start MongoDb
+Install and start MongoDb
 
 ```
 brew install mongodb
