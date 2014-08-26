@@ -18,6 +18,20 @@ npm install
 bower install
 ```
 
+Istall and start MongoDb
+
+```
+brew install mongodb
+
+//Add to start up
+ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+
+//Or just launch once
+mongod --dbpath=/usr/local/var/mongodb
+
+```
+
 Run grunt serve to get it running:
 
 ```
