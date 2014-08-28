@@ -9,14 +9,6 @@ var _ = require('lodash');
 
 // Creates a new beacon in the DB.
 exports.ping_mode1 = function(req, res) {
-	var ping = {
-		'time': req.body.time,
-		'uuid': req.body.uuid,
-		'major': req.body.major,
-		'minor': req.body.minor,
-		'tx': req.body.tx,
-		'rssi': req.body.rssi
-	};
-	console.log(ping);
+	console.log(req.body);
 	res.send(200, 'ok');
 };
