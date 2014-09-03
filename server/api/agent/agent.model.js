@@ -5,7 +5,9 @@ var mongoose = require('mongoose'),
 
 var AgentSchema = new Schema({
   name: String,
-  active: Boolean
+  location: String,
+  lastSeen: Date,
+  capabilities: [String]
 });
 
 module.exports = mongoose.model('Agent', AgentSchema);

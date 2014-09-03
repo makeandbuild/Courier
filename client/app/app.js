@@ -13,6 +13,7 @@ angular.module('courierApp', [
 		.when('/', {
 			templateUrl: 'app/views/main.html',
 			controller: 'MainCtrl',
+            authenticate: true
 		})
 		.when('/agent', {
 			templateUrl: 'app/views/agent.html',
@@ -47,6 +48,10 @@ angular.module('courierApp', [
 			templateUrl: 'app/views/admin.html',
 			controller: 'AdminCtrl'
 		})
+        .when('/:param', {
+            templateUrl: 'app/views/main.html',
+            controller: 'MainCtrl'
+        })
 		.otherwise({
 			redirectTo: '/'
 		});

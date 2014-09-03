@@ -13,16 +13,16 @@
     <div class="container">
 
       <ul class="nav nav-tabs">
-          <li ng-class="{active: main.active.tab == 'beacons' }">
-              <a ng-click='main.active.tab = "beacons"'>Beacons</a>
+          <li ng-class="{active: activetab == 'beacons' }">
+              <a ng-click='activetab = "beacons"'>Beacons</a>
           </li>
-          <li ng-class="{active: main.active.tab == 'agents' }">
-              <a ng-click='main.active.tab = "agents"'>Agents</a>
+          <li ng-class="{active: activetab == 'agents' }">
+              <a ng-click='activetab = "agents"'>Agents</a>
           </li>
       </ul>
 
       <div class="tab-content">
-          <div ng-switch='main.active.tab'>
+          <div ng-switch='activetab'>
               <div ng-switch-when='beacons'>
                   <div ng-include src="'app/views/beaconsTab.html'"></div>
               </div>

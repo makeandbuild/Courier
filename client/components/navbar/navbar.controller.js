@@ -26,6 +26,11 @@ angular.module('courierApp')
     };
 
     $scope.isActive = function(route) {
+        if($location.path() === "/beacons"){
+            $scope.activetab="beacons";
+        }else{
+            $scope.activetab="agent";
+        }
       return route === $location.path();
     };
   });

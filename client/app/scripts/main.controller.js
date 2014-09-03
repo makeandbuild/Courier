@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('courierApp')
-  .controller('MainCtrl', function ($scope, $http, socket, $location, $filter) {
+  .controller('MainCtrl', function ($scope, $http, socket, $location, $filter, $routeParams) {
     $scope.awesomeThings = [];
-
     $http.get('/api/beacons').success(function(awesomeThings) {
       console.log(awesomeThings);
       $scope.beacons = awesomeThings;
@@ -36,6 +35,12 @@ angular.module('courierApp')
       $http.delete('/api/agents/' + agent._id).success(function(response){
          $scope.agents = $filter('filter')($scope.agents, {_id: '!' + agent._id});
       });
+    }
+
+    if(typeof $routeParams.param == 'undefined'){
+        $scope.activetab ="beacons";
+    }else {
+        $scope.activetab = $routeParams.param
     }
 
     $scope.$on('$destroy', function () {

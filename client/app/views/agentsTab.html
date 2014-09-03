@@ -17,6 +17,9 @@
             <tr >
                 <th class="col-md-3"><a href="">ID</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
+                <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
+                <th class="col-md-3"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Status</a></th>
+                <th class="col-md-3"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Last Seen</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
             </tr>
         </thead>
@@ -24,6 +27,9 @@
             <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent" ng-click="setSelected(agent.id)" class="beaconRow">
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.lastSeen}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.lastSeen}}</a></td>
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-minus" ng-click="deleteAgent(agent)"></span>
                 </td>

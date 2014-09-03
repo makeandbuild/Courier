@@ -79,7 +79,7 @@
  			
 
  			$http.post('/api/beacons', newBeacon);
- 			$location.path('/')
+ 			$location.path('/beacons')
  		}
 
 

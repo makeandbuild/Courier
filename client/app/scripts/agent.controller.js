@@ -29,11 +29,12 @@
 
         } else {
             var newAgent = {
-                name: agent.name
+                name: agent.name,
+                location: agent.location
             };
 
             $http.post('/api/agents', newAgent);
-            $location.path('/')
+            $location.path('/agents')
         }
     };
  });
