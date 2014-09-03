@@ -1,103 +1,38 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<header class="hero-unit" id="banner">
-  <div class="container">
-    <img class="logo" src="assets/images/logo.png" width="200" >
-    <p class="lead">Register and Manage your beacons</p>
-
-  </div>
-</header>
-
-
-
-<div class="container">
-
-
-  <div class="col-lg-12">
-    <div class="row">
-      <h1 class="page-header">Beacons:</h1>
-
-      <div class="searchBar">
-        <div class="col-md-11">
-          <label for="search" class="col-md-2">Search:</label>
-          <input name="search" ng-model="searchText">
-        </div>
-        <div class="col-md-1">
-          <span class="glyphicon glyphicon-plus" ng-click="addBeacon()"></span>
-        </div>
+    <header class="hero-unit" id="banner">
+      <div class="container">
+        <img class="logo" src="assets/images/logo.png" width="200" >
+        <p class="lead">Register and Manage your beacons</p>
 
       </div>
+    </header>
 
-      <table  class=" col-md-12">
-      <thead>
-        <tr >
-          <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
-          <th class="col-md-4"><a href="" ng-click="predicate = 'uuid'; reverse=!reverse">UUID</a></th>
-          <th class="col-md-2"><a href="" ng-click="predicate = 'major'; reverse=!reverse">Major</a></th>
-          <th class="col-md-2"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Minor</a></th>
-          <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="beacon in beacons |  orderBy:predicate:reverse | filter:searchText" ng-click="setSelected(beacon.id)" class="beaconRow">
-         <td class="col-md-3"><a href="/beacon/{{beacon._id}}" >{{beacon.name}}</a></td>
-         <td class="col-md-4">
-          {{beacon.uuid}}
-        </td>
-        <td class="col-md-2">
-          {{beacon.major}}
-        </td>
 
-        <td class="col-md-2">
-          {{beacon.minor}}
-        </td>
-        <td class="col-md-1">
-          <span class="glyphicon glyphicon-minus" ng-click="deleteBeacon(beacon)"></span>
-        </td>
-      </tr>
-      </tbody>
 
-    </table>
+    <div class="container">
 
-    </div>
+      <ul class="nav nav-tabs">
+          <li ng-class="{active: main.active.tab == 'beacons' }">
+              <a ng-click='main.active.tab = "beacons"'>Beacons</a>
+          </li>
+          <li ng-class="{active: main.active.tab == 'agents' }">
+              <a ng-click='main.active.tab = "agents"'>Agents</a>
+          </li>
+      </ul>
 
-    <div class="row">
-      <h1 class="page-header">Agents:</h1>
-
-      <div class="searchBar">
-        <div class="col-md-11">
-          <label for="search" class="col-md-2">Search:</label>
-          <input name="search" ng-model="searchTextAgent">
-        </div>
-        <div class="col-md-1">
-          <span class="glyphicon glyphicon-plus" ng-click="addAgent()"></span>
-        </div>
+      <div class="tab-content">
+          <div ng-switch='main.active.tab'>
+              <div ng-switch-when='beacons'>
+                  <div ng-include src="'app/views/beaconsTab.html'"></div>
+              </div>
+              <div ng-switch-when='agents'>
+                  <div ng-include src="'app/views/agentsTab.html'"></div>
+              </div>
+          </div>
       </div>
 
-      <table  class=" col-md-12">
-      <thead>
-        <tr >
-          <th class="col-md-3"><a href="">ID</a></th>
-          <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
-          <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent" ng-click="setSelected(agent.id)" class="beaconRow">
-          <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
-          <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
-        <td class="col-md-1">
-          <span class="glyphicon glyphicon-minus" ng-click="deleteAgent(agent)"></span>
-        </td>
-      </tr>
-      </tbody>
-
-    </table>
-
     </div>
-
-  </div>
-</div>
 
 </div>
 

@@ -1,0 +1,35 @@
+
+<div class="row">
+    <h1 class="page-header">Agents:</h1>
+
+    <div class="searchBar">
+        <div class="col-md-11">
+            <label for="search" class="col-md-2">Search:</label>
+            <input name="search" ng-model="searchTextAgent">
+        </div>
+        <div class="col-md-1">
+            <span class="glyphicon glyphicon-plus" ng-click="addAgent()"></span>
+        </div>
+    </div>
+
+    <table  class=" col-md-12">
+        <thead>
+            <tr >
+                <th class="col-md-3"><a href="">ID</a></th>
+                <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
+                <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent" ng-click="setSelected(agent.id)" class="beaconRow">
+                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
+                <td class="col-md-1">
+                    <span class="glyphicon glyphicon-minus" ng-click="deleteAgent(agent)"></span>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+</div>
