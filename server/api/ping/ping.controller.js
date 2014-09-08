@@ -15,29 +15,34 @@ exports.ping_mode1 = function(req, res) {
     console.log(req.body);
 
     var options = {
-        maxsize: 1000,
-        filename: "/tmp/fileName.log"
+        maxsize: 1000
     }
-    //TODO: convert incoming json to log line to append to file
+
+    //convert incoming json to log line to append to file
 
 
+    var logLine = "" + req.body;
 
     //TODO: save ping to log file.
     winston.add(winston.transports.File, { filename: '/tmp/somefile.log' });
     winston.remove(winston.transports.Console);
-    winston.log('error', 'This is some text for an error. weeeeeeeeeeeee', options);
-    winston.log('info', 'This is some text for an info. woooooooooooo', options);
+    winston.log('info', logLine, options);
 
-    //TODO: convert incomming json to agent post
+    //TODO: convert incoming json to agent post
+    var agentInfo = "{ 'id':'" + req.body.agent + "', 'api-key': " + req.body.api-key + "', 'lastSeen':" + new Date();
 
     //TODO: update agent with new heartbeat (time + id)
     // Updates an existing agent in the DB.
     exports.update = function(req, res) {
         if(req.body._id) { delete req.body._id; }
         Agent.findById(req.params.id, function (err, agent) {
+
             if (err) { return handleError(res, err); }
+
             if( ! agent) { return res.send(404); }
+
             var updated = _.merge(agent, req.body);
+
             updated.save(function (err) {
                 if (err) { return handleError(res, err); }
                 return res.json(200, agent);
