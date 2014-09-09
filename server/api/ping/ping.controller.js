@@ -19,17 +19,15 @@ exports.ping_mode1 = function(req, res) {
     }
 
     //convert incoming json to log line to append to file
-
-
     var logLine = "" + req.body;
 
-    //TODO: save ping to log file.
+    //save ping to log file
     winston.add(winston.transports.File, { filename: '/tmp/somefile.log' });
     winston.remove(winston.transports.Console);
     winston.log('info', logLine, options);
 
-    //TODO: convert incoming json to agent post
-    var agentInfo = "{ 'id':'" + req.body.agent + "', 'api-key': " + req.body.api-key + "', 'lastSeen':" + new Date();
+    //convert incoming json to agent post
+    var agentInfo = "{ 'id':'" + req.body.agent + "', 'apikey': " + req.body.api-key + "', 'lastSeen':" + new Date();
 
     //TODO: update agent with new heartbeat (time + id)
     // Updates an existing agent in the DB.
@@ -41,7 +39,7 @@ exports.ping_mode1 = function(req, res) {
 
             if( ! agent) { return res.send(404); }
 
-            var updated = _.merge(agent, req.body);
+            var updated = _.merge(agent, agentInfo);
 
             updated.save(function (err) {
                 if (err) { return handleError(res, err); }
