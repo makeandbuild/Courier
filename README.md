@@ -37,3 +37,8 @@ Run grunt serve to get it running:
 ```
 grunt serve
 ```
+
+Run Tests
+```
+npm tests
+```
