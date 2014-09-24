@@ -5,7 +5,7 @@ Beacon Registering
 
 ## Environment Setup
 
-Mac OS X 
+### Mac OS X 
 
 ```
 ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" //Installs homebrew package manager
@@ -46,5 +46,5 @@ Run Mocha Tests
 ```
 grunt mochaTest
 ```
-## Intellij Setup
+### Intellij Setup
 Instructions are posted in the wiki https://github.com/makeandbuild/Courier/wiki/IntelliJ-Setup
