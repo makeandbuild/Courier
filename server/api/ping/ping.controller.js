@@ -22,12 +22,12 @@ exports.ping_mode1 = function(req, res) {
     var logLine = "" + req.body;
 
     //save ping to log file
-    winston.add(winston.transports.File, { filename: '/tmp/somefile.log' });
+    winston.add(winston.transports.File, { name: 'log.info', filename: '/tmp/somefile.log', level: 'info' });
     winston.remove(winston.transports.Console);
     winston.log('info', logLine, options);
 
     //convert incoming json to agent post
-    var agentInfo = "{ 'id':'" + req.body.agent + "', 'apikey': " + req.body.api-key + "', 'lastSeen':" + new Date();
+    var agentInfo = "{ 'id':'" + req.body.agent + "', 'apikey': " + req.body.apikey + "', 'lastSeen':" + new Date();
 
     //TODO: update agent with new heartbeat (time + id)
     // Updates an existing agent in the DB.
