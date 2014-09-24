@@ -38,7 +38,11 @@ Run grunt serve to get it running:
 grunt serve
 ```
 
-Run Tests
+Run All Tests
 ```
-npm tests
+grunt test
+```
+Run Mocha Tests
+```
+grunt mochaTest
 ```
