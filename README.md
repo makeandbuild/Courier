@@ -3,7 +3,7 @@ Courier
 
 Beacon Registering 
 
-Environment Setup
+## Environment Setup
 
 Mac OS X 
 
@@ -46,3 +46,5 @@ Run Mocha Tests
 ```
 grunt mochaTest
 ```
+## Intellij Setup
+Instructions are posted in the wiki https://github.com/makeandbuild/Courier/wiki/IntelliJ-Setup
