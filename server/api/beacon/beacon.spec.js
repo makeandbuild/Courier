@@ -11,13 +11,11 @@ beforeEach(function (done) {
 
 describe('GET /api/beacons', function () {
 
-
     it('should respond with 401 unauthorized', function (done) {
         request(app)
             .get('/api/beacons')
             .expect(401, done);
     });
-
 
     var AUTHORIZED_USERNAME = 'test@test.com';
     var AUTHORIZED_PASSWORD = 'test';

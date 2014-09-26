@@ -2,24 +2,13 @@
 
 var express = require('express');
 var controller = require('./beacon.controller');
-var jwtauth = require('../../auth/jwtauth.js');
+var tokenAuth = require('../../auth/middleware/token-auth.js'); // checks token only
 
 var router = express.Router();
 
-/**
- * A simple middleware to restrict access to authenticated users.
- */
-var requireAuth = function(req, res, next) {
-    if (!req.user) {
-        res.send('Not authorized', 401);
-    }	else {
-        next();
-    }
-}
 
 // route middleware that will happen on every request
-router.use(jwtauth);
-router.use(requireAuth);
+router.use(tokenAuth);
 
 router.get('/', controller.index);
 router.get('/:id', controller.show);

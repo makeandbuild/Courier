@@ -20,10 +20,10 @@ angular.module('courierApp')
         var cb = callback || angular.noop;
         var deferred = $q.defer();
 
-        $http.post('/auth/local', {
-          email: user.email,
-          password: user.password
-        }).
+        $http.get('/api/tokens', { headers: {
+            username: user.email,
+            password: user.password
+        }}).
         success(function(data) {
           $cookieStore.put('token', data.token);
           currentUser = User.get();

@@ -68,7 +68,7 @@ angular.module('courierApp', [
 			request: function (config) {
 				config.headers = config.headers || {};
 				if ($cookieStore.get('token')) {
-					config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+					config.headers['x-access-token'] = $cookieStore.get('token');
 				}
 				return config;
 			},
