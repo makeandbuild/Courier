@@ -8,7 +8,7 @@ var _ = require('lodash');
 var Agent = require('../agent/agent.model');
 var winston = require('winston');
 //var Beacon = require('./beacon.model');
-var logConfig = require('../../config.log.json');
+var logConfig = require('../../config/config.log.json');
 
 // can only add a transport once, so do it outside of the function
 winston.add(winston.transports.File, { name: 'log.info', filename: logConfig.path + '/pings.log', level: 'info' });

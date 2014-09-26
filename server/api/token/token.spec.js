@@ -4,20 +4,21 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 
-// make sure seed data is done loading
-beforeEach(function (done) {
-    app.mongoReadyPromise.then(function() { done() });
-});
+describe('API token auth testing', function () {
 
-describe('GET /api/beacons', function () {
-
-
-    it('should respond with 401 unauthorized', function (done) {
+    it('should not be able to get a token without credentials', function (done) {
         request(app)
-            .get('/api/beacons')
+            .get('/api/tokens')
             .expect(401, done);
     });
 
+    it('should not be able to get a token for a non user', function (done) {
+        request(app)
+            .get('/api/tokens')
+            .set('username', 'not@a.user')
+            .set('password', 'pass')
+            .expect(401, done);
+    });
 
     var AUTHORIZED_USERNAME = 'test@test.com';
     var AUTHORIZED_PASSWORD = 'test';
@@ -40,17 +41,24 @@ describe('GET /api/beacons', function () {
             });
     });
 
-
-    it('should respond with JSON array', function (done) {
+    it('should get a token for an authorized user', function (done) {
         request(app)
-            .get('/api/beacons')
-            .set('x-access-token', token)
+            .get('/api/tokens')
+            .set('username', AUTHORIZED_USERNAME)
+            .set('password', AUTHORIZED_PASSWORD)
             .expect(200)
             .expect('Content-Type', /json/)
             .end(function (err, res) {
-                if (err) return done(err);
-                res.body.should.be.instanceof(Array);
+                if (err) {
+                    return done(err);
+                }
+                res.body.should.be.instanceof(Object);
+                token = res.body.token;
                 done();
             });
     });
+
+
+
+
 });

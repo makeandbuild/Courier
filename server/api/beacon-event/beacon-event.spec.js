@@ -72,11 +72,7 @@ describe('beaconEvent API Testing', function() {
     it('should delete a beacon event', function(done) {
         request(app)
             .delete('/api/beaconEvents/' + createdBeacon._id)
-            .expect(204)
-            .end(function(err, res) {
-                if (err) return done(err);
-                done();
-            });
+            .expect(204, done);
     });
 
 });

@@ -10,35 +10,24 @@ var Beacon = require('../api/beacon/beacon.model');
 var BeaconEvent = require('../api/beacon-event/beacon-event.model');
 var Agent = require('../api/agent/agent.model');
 
-User.find({}).remove(function() {
-  User.create({
-    provider: 'local',
-    name: 'Test User',
-    email: 'test@test.com',
-    password: 'test'
-  }, {
-    provider: 'local',
-    role: 'admin',
-    name: 'Admin',
-    email: 'admin@admin.com',
-    password: 'admin'
-  }, function() {
-      console.log('finished populating users');
-    }
-  );
-});
+module.exports = function (complete) {
+    User.find({}).remove(function () {
+        User.create({
+                provider: 'local',
+                name: 'Test User',
+                email: 'test@test.com',
+                password: 'test'
+            }, {
+                provider: 'local',
+                role: 'admin',
+                name: 'Admin',
+                email: 'admin@admin.com',
+                password: 'admin'
+            }, function () {
+                console.log('finished populating users');
+                complete();
+            }
+        );
+    });
+}
 
-// sample beacon data
-//BeaconEvent.find({}).remove(function () {
-//    BeaconEvent.create({
-//        time: Date.now(),
-//        uuid: '88888',
-//        major: '11111',
-//        minor: '22222',
-//        tx: 3,
-//        rssi: 1,
-//        distance: 1.2
-//    }, function() {
-//        console.log('finished adding sample beacon event');
-//    });
-//});
