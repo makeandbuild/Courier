@@ -29,7 +29,7 @@ var all = {
         jwtTokenSecret: 'COURIER_SUPER_SECRET_TOKEN'
     },
 
-    // List of user roles
+    // List of user roles (the order of these matters)
     userRoles: ['guest', 'user', 'admin'],
 
     // MongoDB connection options
