@@ -13,6 +13,7 @@ router.delete('/:id', roleAuth('admin'), controller.destroy);
 router.get('/me', tokenAuth, controller.me);
 router.put('/:id/password', tokenAuth, controller.changePassword);
 router.get('/:id', tokenAuth, controller.show);
+// [Lindsay Thurmond:9/29/14] TODO: can't have auth from front end because of how 'register' front end form works, but we might still want it from server side?
 router.post('/', controller.create);
 
 module.exports = router;
