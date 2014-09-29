@@ -53,21 +53,22 @@ describe('beaconEvent API Testing', function() {
                 done();
             });
     });
-//[Lindsay Thurmond:9/23/14] TODO: figure out how to get PUT test to work
-//    it('should update a beacon event', function(done) {
-//        createdBeacon.distance = 3.2;
-//
-//        request(app)
-//            .put('/api/beaconEvents/' + createdBeacon._id)
-//            .expect(200)
-//            .expect('Content-Type', /json/)
-//            .end(function(err, res) {
-//                if (err) return done(err);
-//                res.body.should.be.instanceof(Object);
-//                expect(res.body.distance).toEqual(3.2);
-//                done();
-//            });
-//    });
+
+    it('should update a beacon event', function(done) {
+        createdBeacon.distance = 3.2;
+
+        request(app)
+            .put('/api/beaconEvents/' + createdBeacon._id)
+            .send(createdBeacon)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function(err, res) {
+                if (err) return done(err);
+                res.body.should.be.instanceof(Object);
+                res.body.distance.should.equal(3.2);
+                done();
+            });
+    });
 
     it('should delete a beacon event', function(done) {
         request(app)
