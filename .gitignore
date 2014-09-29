@@ -9,3 +9,5 @@ npm-*.log
 # Ignore IntelliJ project directory
 .idea
 *.iml
+# osx
+.DS_Store
