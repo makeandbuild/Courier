@@ -70,3 +70,36 @@ thead{
 	color: #FFC038;
 	display: inline-block;
 }
+
+
+.status-section{
+	text-align: center;
+
+	.glyphicon-remove-sign{
+		color: #CC0000;
+	}
+
+	.glyphicon-ok-sign{
+		color: #00CC33;
+	}
+}
+
+
+.pending-section{
+	margin-top: 40px;
+	
+	margin-bottom: 40px;
+	.icon-section{
+		text-align: center
+	}
+
+	.glyphicon-remove{
+		color: #CC0000;
+	}
+
+	.glyphicon-ok{
+		color: #00CC33;
+	}
+
+}
+
