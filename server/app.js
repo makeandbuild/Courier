@@ -31,9 +31,6 @@ var promiseMongoSeedComplete = new Promise(function(resolve, reject) {
 });
 app.mongoReadyPromise = promiseMongoSeedComplete;
 
-// Set the secret for encoding/decoding JWT tokens
-app.set('jwtTokenSecret', 'SUPER_DUPER_SECRET_STRING');
-
 var server = require('http').createServer(app);
 var socketio = require('socket.io').listen(server);
 require('./config/socketio')(socketio);

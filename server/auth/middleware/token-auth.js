@@ -12,6 +12,7 @@
 var url = require('url');
 var User = require('../../api/user/user.model.js');
 var jwt = require('jwt-simple');
+var config = require('../../config/environment');
 
 module.exports = function (req, res, next) {
 
@@ -35,7 +36,7 @@ module.exports = function (req, res, next) {
     }
 
     try {
-        var decoded = jwt.decode(token, req.app.get('jwtTokenSecret'));
+        var decoded = jwt.decode(token, config.secrets.jwtTokenSecret);
 
         if (decoded.exp <= Date.now()) {
             res.end('Access token has expired', 400);

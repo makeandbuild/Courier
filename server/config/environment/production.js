@@ -20,5 +20,7 @@ module.exports = {
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/courier'
   },
+
+  // adding here for extra protection even though the default should be false
   seedDB: false
 };

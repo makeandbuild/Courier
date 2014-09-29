@@ -2,7 +2,8 @@ var express = require('express');
 var User = require('../user/user.model');
 var jwt = require('jwt-simple');
 var moment = require('moment');
-var tokenConfig = require('../../config/config.token.json');
+var config = require('../../config/environment');
+var tokenService = require('./token.service.js');
 
 exports.index = function (req, res) {
     var username = req.headers.username;
@@ -23,20 +24,8 @@ exports.index = function (req, res) {
 
         var isMatch = user.authenticate(password);
         if (isMatch) {
-            // found the user, give them a token
-            var expires = moment().add(tokenConfig.validFor.amount, tokenConfig.validFor.unitOfTime).valueOf();
-            var token = jwt.encode(
-                {
-                    iss: user._id,
-                    exp: expires
-                },
-                req.app.get('jwtTokenSecret')
-            );
-            res.json({
-                token: token,
-                expires: expires,
-                user: user.toJSON()
-            });
+            var token = tokenService.createToken(user);
+            res.json(token);
         } else {
             // invalid password
             return sendNotAuthorized(res);
