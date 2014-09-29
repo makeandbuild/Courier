@@ -11,6 +11,11 @@ var BeaconEvent = require('../api/beacon-event/beacon-event.model');
 var Agent = require('../api/agent/agent.model');
 
 module.exports = function (complete) {
+
+    //[Lindsay Thurmond:9/29/14] TODO: there is probably a better way to do this
+    var usersLoaded = false;
+    var agentsLoaded = false;
+
     User.find({}).remove(function () {
         User.create({
                 provider: 'local',
@@ -25,7 +30,39 @@ module.exports = function (complete) {
                 password: 'admin'
             }, function () {
                 console.log('finished populating users');
-                complete();
+                usersLoaded = true;
+                if (agentsLoaded === true) {
+                    complete();
+                }
+            }
+        );
+    });
+
+    Agent.find({}).remove(function () {
+        Agent.create({
+                name: 'Agent 1',
+                location: 'entry way',
+                capabilities: ['audio'],
+                approvedStatus: 'Pending',
+                operationalStatus: 'Success'
+            }, {
+                name: 'Agent 2',
+                location: 'great room',
+                capabilities: ['audio'],
+                approvedStatus: 'Approved',
+                operationalStatus: 'Success'
+            }, {
+                name: 'Agent 3',
+                location: 'situation room',
+                capabilities: ['audio'],
+                approvedStatus: 'Denied',
+                operationalStatus: 'Failure'
+            }, function () {
+                console.log('finished populating agents');
+                agentsLoaded = true;
+                if (usersLoaded === true) {
+                    complete();
+                }
             }
         );
     });

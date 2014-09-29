@@ -13,6 +13,7 @@ var _ = require('lodash');
 var Agent = require('./agent.model');
 
 // Get list of agents
+// GET /agents
 exports.index = function(req, res) {
   Agent.find(function (err, agents) {
     if (err) { return handleError(res, err); }
@@ -21,6 +22,7 @@ exports.index = function(req, res) {
 };
 
 // Get a single agent
+// GET /agents/:id
 exports.show = function(req, res) {
   Agent.findById(req.params.id, function (err, agent) {
     if (err) { return handleError(res, err); }
@@ -30,6 +32,7 @@ exports.show = function(req, res) {
 };
 
 // Creates a new agent in the DB.
+// POST /agents
 exports.create = function(req, res) {
   Agent.create(req.body, function(err, agent) {
     if (err) { return handleError(res, err); }
@@ -38,6 +41,7 @@ exports.create = function(req, res) {
 };
 
 // Updates an existing agent in the DB.
+// PUT /agents/:id
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Agent.findById(req.params.id, function (err, agent) {
@@ -52,6 +56,7 @@ exports.update = function(req, res) {
 };
 
 // Deletes a agent from the DB.
+// DELETE /agents/:id
 exports.destroy = function(req, res) {
   Agent.findById(req.params.id, function (err, agent) {
     if (err) { return handleError(res, err); }
