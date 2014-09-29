@@ -4,65 +4,134 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 
-describe('beaconEvent API Testing', function() {
+// make sure seed data is done loading
+beforeEach(function (done) {
+    app.mongoReadyPromise.then(function () {
+        done()
+    });
+});
 
-    var createdBeacon;
+describe('Test /api/beaconEvents API', function () {
 
-    it('should create beacon event object', function(done) {
+    var AUTHORIZED_USERNAME = 'test@test.com';
+    var AUTHORIZED_PASSWORD = 'test';
+
+    var token;
+
+    var beaconEvent = {
+        time: Date.now(),
+        uuid: '0000000',
+        major: 11111,
+        minor: 22222,
+        tx: 3,
+        rssi: 1,
+        distance: 1.2
+    };
+
+    // CREATE BEACON EVENT
+
+    it('POST /api/beaconEvents -> should respond with 401 unauthorized', function (done) {
         request(app)
             .post('/api/beaconEvents')
-            .send({
-                time: Date.now(),
-                uuid: '0000000',
-                major: 11111,
-                minor: 22222,
-                tx: 3,
-                rssi: 1,
-                distance: 1.2
-            })
+            .send(beaconEvent)
+            .expect(401, done);
+    });
+
+    it('GET /api/tokens -> should get a token for an authorized user', function (done) {
+        request(app)
+            .get('/api/tokens')
+            .set('username', AUTHORIZED_USERNAME)
+            .set('password', AUTHORIZED_PASSWORD)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+                res.body.should.be.instanceof(Object);
+                token = res.body.token;
+                done();
+            });
+    });
+
+    it('POST /api/beaconEvents -> should create a single beaconEvent', function (done) {
+        request(app)
+            .post('/api/beaconEvents')
+            .send(beaconEvent)
+            .set('x-access-token', token)
             .expect(201)
             .expect('Content-Type', /json/)
-            .end(function(err, res) {
-                if (err) return done(err);
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
                 res.body.should.be.instanceof(Object);
-                createdBeacon = res.body;
+                res.body.should.have.property('_id');
+                beaconEvent = res.body;
                 done();
             });
     });
 
-    it('should get a single beacon event', function(done){
-        request(app)
-            .get('/api/beaconEvents/' + createdBeacon._id)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end(function(err, res) {
-                if (err) return done(err);
-                res.body.should.be.instanceof(Object);
-                done();
-            });
-    });
+    // GET ALL BEACON EVENTS
 
-    it('should get a list of beacon events', function(done) {
+    it('GET /api/beaconEvents -> should respond with 401 unauthorized', function (done) {
         request(app)
             .get('/api/beaconEvents')
+            .expect(401, done);
+    });
+
+    it('GET /api/beaconEvents -> should respond with JSON array of beaconEvents', function (done) {
+        request(app)
+            .get('/api/beaconEvents')
+            .set('x-access-token', token)
             .expect(200)
             .expect('Content-Type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 if (err) return done(err);
                 res.body.should.be.instanceof(Array);
                 done();
             });
     });
 
-    it('should update a beacon event', function(done) {
-        createdBeacon.distance = 3.2;
+    // GET SINGLE BEACON EVENT
 
+    it('GET /api/beaconEvents/:id -> should respond with 401 unauthorized', function (done) {
         request(app)
-            .put('/api/beaconEvents/' + createdBeacon._id)
-            .send(createdBeacon)
+            .get('/api/beaconEvents/' + beaconEvent._id)
+            .expect(401, done);
+    });
+
+    it('GET /api/beaconEvents/:id -> should respond with a single beaconEvent', function (done) {
+        request(app)
+            .get('/api/beaconEvents/' + beaconEvent._id)
+            .set('x-access-token', token)
             .expect(200)
             .expect('Content-Type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
+                if (err) return done(err);
+                res.body.should.be.instanceof(Object);
+                done();
+            });
+    });
+
+    // UPDATE
+
+    beaconEvent.distance = 3.2;
+
+    it('PUT /api/beaconEvents/:id -> should respond with 401 unauthorized', function (done) {
+        request(app)
+            .put('/api/beaconEvents/' + beaconEvent._id)
+            .send(beaconEvent)
+            .expect(401, done);
+    });
+
+    it('PUT /api/beaconEvents/:id -> should update a single beaconEvent', function (done) {
+        request(app)
+            .put('/api/beaconEvents/' + beaconEvent._id)
+            .send(beaconEvent)
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
                 if (err) return done(err);
                 res.body.should.be.instanceof(Object);
                 res.body.distance.should.equal(3.2);
@@ -70,9 +139,18 @@ describe('beaconEvent API Testing', function() {
             });
     });
 
-    it('should delete a beacon event', function(done) {
+    // DELETE
+
+    it('DELETE /api/beaconEvents/:id -> should respond with 401 unauthorized', function (done) {
         request(app)
-            .delete('/api/beaconEvents/' + createdBeacon._id)
+            .delete('/api/beaconEvents/' + beaconEvent._id)
+            .expect(401, done);
+    });
+
+    it('DELETE /api/beaconEvents/:id -> should delete a single beaconEvent', function(done) {
+        request(app)
+            .delete('/api/beaconEvents/' + beaconEvent._id)
+            .set('x-access-token', token)
             .expect(204, done);
     });
 
