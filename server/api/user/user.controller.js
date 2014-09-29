@@ -96,14 +96,19 @@ exports.changePassword = function(req, res, next) {
  * GET /api/users/me
  */
 exports.me = function(req, res, next) {
-  var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
-    if (err) return next(err);
-    if (!user) return res.json(401);
-    res.json(user);
-  });
+    var user = req.user;
+    if (!user) {
+        return res.send(401);
+    }
+
+    var userId = user._id;
+    User.findOne({
+        _id: userId
+    }, '-salt -hashedPassword', function (err, user) { // don't ever give out the password or salt
+        if (err) return next(err);
+        if (!user) return res.json(401);
+        res.json(user);
+    });
 };
 
 /**

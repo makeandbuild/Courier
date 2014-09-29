@@ -11,7 +11,7 @@ beforeEach(function (done) {
     });
 });
 
-describe('GET /api/beacons', function () {
+describe('Test /api/beacons API', function () {
 
     var AUTHORIZED_USERNAME = 'test@test.com';
     var AUTHORIZED_PASSWORD = 'test';
