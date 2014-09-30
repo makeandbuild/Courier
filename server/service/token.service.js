@@ -1,8 +1,8 @@
 var express = require('express');
-var User = require('../user/user.model');
+var User = require('../models/user.model.js');
 var jwt = require('jwt-simple');
 var moment = require('moment');
-var config = require('../../config/environment');
+var config = require('../config/environment/index');
 
 function createToken(user) {
     if (user) {

@@ -1,10 +1,8 @@
 'use strict';
 
-var User = require('./user.model');
-var passport = require('passport');
+var User = require('./../../models/user.model.js');
 var config = require('../../config/environment');
-var jwt = require('jsonwebtoken');
-var tokenService = require('../token/token.service.js');
+var tokenService = require('../../service/token.service.js');
 
 var validationError = function(res, err) {
   return res.json(422, err);

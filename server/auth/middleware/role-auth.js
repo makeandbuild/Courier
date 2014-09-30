@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var config = require('../../config/environment');
 var compose = require('composable-middleware');
-var User = require('../../api/user/user.model');
+var User = require('../../models/user.model.js');
 var tokenAuth = require('./token-auth.js');
 
 

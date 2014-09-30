@@ -1,9 +1,9 @@
 var express = require('express');
-var User = require('../user/user.model');
+var User = require('../../models/user.model.js');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 var config = require('../../config/environment');
-var tokenService = require('./token.service.js');
+var tokenService = require('./../../service/token.service.js');
 
 exports.index = function (req, res) {
     var username = req.headers.username;

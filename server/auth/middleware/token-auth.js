@@ -10,7 +10,7 @@
  */
 
 var url = require('url');
-var User = require('../../api/user/user.model.js');
+var User = require('../../models/user.model.js');
 var jwt = require('jwt-simple');
 var config = require('../../config/environment');
 

@@ -5,9 +5,9 @@
 'use strict';
 
 var _ = require('lodash');
-var Agent = require('../agent/agent.model');
+var Agent = require('../../models/agent.model.js');
 var winston = require('winston');
-var Ping = require('./ping.model');
+var Ping = require('./../../models/ping.model.js');
 var config = require('../../config/environment');
 
 // can only add a transport once, so do it outside of the function

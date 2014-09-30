@@ -10,7 +10,7 @@
 'use strict';
 
 var _ = require('lodash');
-var Agent = require('./agent.model');
+var Agent = require('./../../models/agent.model.js');
 
 // Get list of agents
 // GET /agents

@@ -5,9 +5,9 @@
 
 'use strict';
 
-var User = require('../api/user/user.model');
-var Beacon = require('../api/beacon/beacon.model');
-var Agent = require('../api/agent/agent.model');
+var User = require('../models/user.model.js');
+var Beacon = require('../models/beacon.model.js');
+var Agent = require('../models/agent.model.js');
 
 module.exports = function (complete) {
 

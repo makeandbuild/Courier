@@ -10,7 +10,7 @@
 'use strict';
 
 var _ = require('lodash');
-var Beacon = require('./beacon.model');
+var Beacon = require('./../../models/beacon.model.js');
 
 // Get list of beacons
 // GET /beacons
