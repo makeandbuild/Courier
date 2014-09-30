@@ -28,7 +28,7 @@ describe('Test /api/pings API', function () {
         distance: 1.2
     };
 
-    // CREATE PING
+    // ACCEPT PING
 
     it('POST /api/pings -> should respond with 401 unauthorized', function (done) {
         request(app)
@@ -53,7 +53,7 @@ describe('Test /api/pings API', function () {
             });
     });
 
-    //[Lindsay Thurmond:9/30/14] TODO: fix me
+    //[Lindsay Thurmond:9/30/14] TODO: implement me
 //    it('POST /api/pings -> should create a single ping', function (done) {
 //        request(app)
 //            .post('/api/pings')
@@ -68,49 +68,6 @@ describe('Test /api/pings API', function () {
 //                res.body.should.be.instanceof(Object);
 //                res.body.should.have.property('_id');
 //                ping = res.body;
-//                done();
-//            });
-//    });
-
-    // GET ALL PINGS
-
-    it('GET /api/pings -> should respond with 401 unauthorized', function (done) {
-        request(app)
-            .get('/api/pings')
-            .expect(401, done);
-    });
-
-    it('GET /api/pings -> should respond with JSON array of pings', function (done) {
-        request(app)
-            .get('/api/pings')
-            .set('x-access-token', token)
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end(function (err, res) {
-                if (err) return done(err);
-                res.body.should.be.instanceof(Array);
-                done();
-            });
-    });
-
-    // GET SINGLE PING
-
-    it('GET /api/pings/:id -> should respond with 401 unauthorized', function (done) {
-        request(app)
-            .get('/api/pings/' + ping._id)
-            .expect(401, done);
-    });
-
-    //[Lindsay Thurmond:9/30/14] TODO: fix me
-//    it('GET /api/pings/:id -> should respond with a single ping', function (done) {
-//        request(app)
-//            .get('/api/pings/' + ping._id)
-//            .set('x-access-token', token)
-//            .expect(200)
-//            .expect('Content-Type', /json/)
-//            .end(function (err, res) {
-//                if (err) return done(err);
-//                res.body.should.be.instanceof(Object);
 //                done();
 //            });
 //    });

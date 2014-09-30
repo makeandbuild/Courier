@@ -9,7 +9,6 @@ suite.discuss('Courier API Tests')
     .use('localhost', 9000)
     .post("api/ping", {
         agent: "540756a9a36b267c0a5965dd",
-        apikey: "awef8a40t243af",
         beacons: [
             {
                 time: "1409847363.458166",

@@ -7,6 +7,7 @@ var AgentSchema = new Schema({
     name: String,
     location: String,
     lastSeen: Date,
+    lastSeenBy: String, // beacon id
     capabilities: [String],
     approvedStatus: String, // Pending, Approved, Denied
     operationalStatus: String // Success, Warning, Failure
