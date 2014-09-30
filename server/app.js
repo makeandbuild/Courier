@@ -9,7 +9,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var express = require('express');
 var mongoose = require('mongoose');
-var jwt = require('jwt-simple');
 var config = require('./config/environment');
 var Promise = require('promise');
 

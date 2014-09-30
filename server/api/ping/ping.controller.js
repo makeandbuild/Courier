@@ -6,13 +6,9 @@
 
 var _ = require('lodash');
 var Agent = require('../../models/agent.model.js');
-var winston = require('winston');
 var Ping = require('./../../models/ping.model.js');
 var config = require('../../config/environment');
-
-// can only add a transport once, so do it outside of the function
-winston.add(winston.transports.File, { name: 'log.info', filename: config.log.path + '/pings.log', level: 'info' });
-winston.remove(winston.transports.Console);
+var logger = require('../../utils/logger.js');
 
 // Get list of pings
 // GET /pings
@@ -44,15 +40,11 @@ exports.ping_mode1 = function (req, res) {
 
     console.log(req.body);
 
-    var options = {
-        maxsize: 1000
-    }
-
     //convert incoming json to log line to append to file
-    var logLine = "" + req.body;
+    var logLine = JSON.stringify(req.body);
 
     //save ping to log file
-    winston.log('info', logLine, options);
+    logger.pings(logLine);
 
     //convert incoming json to agent post
     var agentInfo = "{ 'id':'" + req.body.agent + "', 'api-key': " + req.body['api-key'] + "', 'lastSeen':" + new Date();

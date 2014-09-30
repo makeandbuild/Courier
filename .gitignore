@@ -11,3 +11,5 @@ npm-*.log
 *.iml
 # osx
 .DS_Store
+courier.log
+pings.log
