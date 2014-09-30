@@ -1,5 +1,5 @@
 /**
- * POST    /ping              ->  ping
+ * POST    /pings              ->  ping
  */
 
 'use strict';
@@ -7,15 +7,40 @@
 var _ = require('lodash');
 var Agent = require('../agent/agent.model');
 var winston = require('winston');
-//var Beacon = require('./beacon.model');
+var Ping = require('./ping.model');
 var config = require('../../config/environment');
 
 // can only add a transport once, so do it outside of the function
 winston.add(winston.transports.File, { name: 'log.info', filename: config.log.path + '/pings.log', level: 'info' });
 winston.remove(winston.transports.Console);
 
-// Creates a new beacon in the DB.
-exports.ping_mode1 = function(req, res) {
+// Get list of pings
+// GET /pings
+exports.index = function (req, res) {
+    Ping.find(function (err, beacons) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, beacons);
+    });
+};
+
+// Get a single ping
+// GET /pings/:id
+exports.show = function (req, res) {
+    Ping.findById(req.params.id, function (err, beacon) {
+        if (err) {
+            return handleError(res, err);
+        }
+        if (!beacon) {
+            return res.send(404);
+        }
+        return res.json(beacon);
+    });
+};
+
+// POST /api/pings
+exports.ping_mode1 = function (req, res) {
 
     console.log(req.body);
 
@@ -34,21 +59,25 @@ exports.ping_mode1 = function(req, res) {
 
     //TODO: update agent with new heartbeat (time + id)
     // Updates an existing agent in the DB.
-    exports.update = function(req, res) {
-        if(req.body._id) { delete req.body._id; }
+    exports.update = function (req, res) {
+        if (req.body._id) {
+            delete req.body._id;
+        }
         Agent.findById(req.params.id, function (err, agent) {
-
-            if (err) { return handleError(res, err); }
-
-            if( ! agent) { return res.send(404); }
-
-            var updated = _.merge(agent, agentInfo);
-
-            updated.save(function (err) {
-                if (err) { return handleError(res, err); }
+            if (err) {
+                return handleError(res, err);
+            }
+            if (!agent) {
+                return res.send(404);
+            }
+            var updatedAgent = _.merge(agent, agentInfo);
+            updatedAgent.save(function (err) {
+                if (err) {
+                    return handleError(res, err);
+                }
                 return res.json(200, agent);
             });
         });
     };
-	res.send(200, 'ok');
+    res.send(200, 'ok');
 };

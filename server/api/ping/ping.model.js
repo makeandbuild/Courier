@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 // not positive what goes in an event, but this is a start
-var BeaconEventSchema = new Schema({
+var PingSchema = new Schema({
   time: String,
   uuid: String,
   major: Number,
@@ -14,4 +14,4 @@ var BeaconEventSchema = new Schema({
   distance: Number
 });
 
-module.exports = mongoose.model('BeaconEvent', BeaconEventSchema);
+module.exports = mongoose.model('Ping', PingSchema);

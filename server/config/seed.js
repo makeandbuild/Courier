@@ -7,7 +7,6 @@
 
 var User = require('../api/user/user.model');
 var Beacon = require('../api/beacon/beacon.model');
-var BeaconEvent = require('../api/beacon-event/beacon-event.model');
 var Agent = require('../api/agent/agent.model');
 
 module.exports = function (complete) {

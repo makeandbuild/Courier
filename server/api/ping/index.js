@@ -9,6 +9,8 @@ var router = express.Router();
 // route middleware that will happen on every request
 router.use(tokenAuth);
 
+router.get('/', controller.index);
+router.get('/:id', controller.show);
 router.post('/', controller.ping_mode1);
 
 module.exports = router;
