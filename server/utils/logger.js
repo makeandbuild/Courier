@@ -23,7 +23,8 @@ var pings = new winston.Logger({
             filename: 'pings.log',
             level: 'info',
             maxsize: 1024 * 1024 * 10, // 10MB
-            handleExceptions: false
+            handleExceptions: false,
+            json: false
         })
     ]
 });
