@@ -17,7 +17,11 @@ exports.findAgentById = function (id, callback) {
 }
 
 exports.createAgent = function(agent, callback) {
+    //[Lindsay Thurmond:10/1/14] TODO: check for existing agents first - ids will be mac addresses
+    //[Lindsay Thurmond:10/1/14] TODO: add registrationDate to json in mongo
     Agent.create(agent, callback);
+
+    //[Lindsay Thurmond:10/1/14] TODO: if already exists - set saved approved status, otherwise unapproved
 };
 
 // Updates an existing agent in the DB

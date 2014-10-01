@@ -19,8 +19,8 @@ describe('Test /api/beaconevents API', function () {
     var token;
 
     var beaconEvent = {
-        agent: "id will be generated during test",
-        pings: [
+        agentId: "id will be generated during test",
+        detections: [
             {
                 time: "1409847363.458166",
                 uuid: "1000000000000000",
@@ -75,7 +75,7 @@ describe('Test /api/beaconevents API', function () {
                 res.body.should.have.property('_id');
                 agent = res.body;
                 // update agent with generated id
-                beaconEvent.agent = agent._id;
+                beaconEvent.agentId = agent._id;
                 done();
             });
     });

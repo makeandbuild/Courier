@@ -12,15 +12,15 @@ winston.add(winston.transports.File, {
 });
 winston.remove(winston.transports.Console);
 
-// pings.log
-// add log that will only contain pings
-var pings = new winston.Logger({
+// detections.log
+// add log that will only contain detections
+var detections = new winston.Logger({
     levels: {
         info: 1
     },
     transports: [
         new (winston.transports.File)({
-            filename: 'pings.log',
+            filename: 'detections.log',
             level: 'info',
             maxsize: 1024 * 1024 * 10, // 10MB
             handleExceptions: false,
@@ -34,8 +34,8 @@ var exports = {
     courier: function (level, msg) {
         winston.log(level, msg);
     },
-    pings: function (msg) {
-        pings.info(msg);
+    detections: function (msg) {
+        detections.info(msg);
     },
     log: function (level, msg) {
         winston.log(level, msg);

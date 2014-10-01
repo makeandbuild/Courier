@@ -10,8 +10,8 @@ var beaconEventService = require('../../service/beacon-event.service.js');
  * POST /api/beaconevents
  *
  * {
-        agent: "540756a9a36b267c0a5965dd",
-        pings: [
+        agentId: "540756a9a36b267c0a5965dd",
+        detections: [
             {
                 time: "1409847363.458166",
                 uuid: "1000000000000000",
@@ -32,7 +32,7 @@ exports.index = function (req, res) {
     var logLine = JSON.stringify(req.body);
 
     //save ping to log file
-    logger.pings(logLine);
+    logger.detections(logLine);
 
     beaconEventService.updateAgentWithMostRecentPing(req.body, function(err, agent) {
         if (err) {
@@ -43,4 +43,8 @@ exports.index = function (req, res) {
         }
         return res.json(200, agent);
     });
+
+    //[Lindsay Thurmond:10/1/14] TODO: save detections to database
+
+    //[Lindsay Thurmond:10/1/14] TODO: save to database regardless of whether an agent id is specified
 }

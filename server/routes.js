@@ -14,7 +14,7 @@ module.exports = function (app) {
     app.use('/api/agents', require('./api/agent'));
     app.use('/api/beacons', require('./api/beacon'));
     app.use('/api/users', require('./api/user'));
-    app.use('/api/pings', require('./api/ping'));
+    app.use('/api/beacondetections', require('./api/beacon_detection'));
     app.use('/api/beaconevents', require('./api/beacon_event'));
 
     // All undefined asset or api routes should return a 404

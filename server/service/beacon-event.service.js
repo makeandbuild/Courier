@@ -10,14 +10,14 @@ function findMostRecentPing(beaconEvent, callback) {
     if (!beaconEvent) {
         return callback('No beacon event specified');
     }
-    if (!beaconEvent.pings) {
+    if (!beaconEvent.detections) {
         return callback('Pings array is empty');
     }
-    if (!beaconEvent.pings instanceof Array) {
+    if (!beaconEvent.detections instanceof Array) {
         return callback('Pings is expected to be an array');
     }
 
-    var pings = beaconEvent.pings;
+    var pings = beaconEvent.detections;
 
     var mostRecentPing;
     pings.forEach(function (ping) {
@@ -38,7 +38,7 @@ function findMostRecentPing(beaconEvent, callback) {
     if (!beaconEvent) {
         return callback('No beacon event specified');
     }
-    if (!beaconEvent.agent) {
+    if (!beaconEvent.agentId) {
         return callback('No agent found');
     }
 
@@ -47,7 +47,7 @@ function findMostRecentPing(beaconEvent, callback) {
             return callback(err);
         }
         if (mostRecentPing) {
-            var agentId = beaconEvent.agent;
+            var agentId = beaconEvent.agentId;
             agentService.findAgentById(agentId, function(err, foundAgent) {
                 if (!foundAgent) {
                     return callback('Could not find agent');

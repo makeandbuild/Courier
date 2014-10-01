@@ -11,14 +11,14 @@ beforeEach(function (done) {
     });
 });
 
-describe('Test /api/pings API', function () {
+describe('Test /api/beaconDetections API', function () {
 
     var AUTHORIZED_USERNAME = 'test@test.com';
     var AUTHORIZED_PASSWORD = 'test';
 
     var token;
 
-    var ping = {
+    var beaconDetection = {
         time: Date.now(),
         uuid: '0000000',
         major: 11111,
@@ -28,12 +28,12 @@ describe('Test /api/pings API', function () {
         distance: 1.2
     };
 
-    // ACCEPT PING
+    // ACCEPT BEACON DETECTION
 
-    it('POST /api/pings -> should respond with 401 unauthorized', function (done) {
+    it('POST /api/beaconDetections -> should respond with 401 unauthorized', function (done) {
         request(app)
-            .post('/api/pings')
-            .send(ping)
+            .post('/api/beaconDetections')
+            .send(beaconDetection)
             .expect(401, done);
     });
 
@@ -54,10 +54,10 @@ describe('Test /api/pings API', function () {
     });
 
     //[Lindsay Thurmond:9/30/14] TODO: implement me
-//    it('POST /api/pings -> should create a single ping', function (done) {
+//    it('POST /api/beaconDetections -> should create a single beaconDetection', function (done) {
 //        request(app)
-//            .post('/api/pings')
-//            .send(ping)
+//            .post('/api/beaconDetections')
+//            .send(beaconDetection)
 //            .set('x-access-token', token)
 //            .expect(201)
 //            .expect('Content-Type', /json/)
@@ -67,7 +67,7 @@ describe('Test /api/pings API', function () {
 //                }
 //                res.body.should.be.instanceof(Object);
 //                res.body.should.have.property('_id');
-//                ping = res.body;
+//                beaconDetection = res.body;
 //                done();
 //            });
 //    });
