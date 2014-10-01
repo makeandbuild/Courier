@@ -1,38 +1,21 @@
 var express = require('express');
 var User = require('../../models/user.model.js');
-var jwt = require('jwt-simple');
-var moment = require('moment');
 var config = require('../../config/environment');
 var tokenService = require('./../../service/token.service.js');
 
+// Get a token for the user with credentials
+// GET /api/tokens
 exports.index = function (req, res) {
     var username = req.headers.username;
     var password = req.headers.password;
 
-    if (!username || !password) {
-        // missing username or password, or expected error
-        return sendNotAuthorized(res);
-    }
-
-    // Fetch the appropriate user, if they exist
-    User.findOne({ email: username }, function (err, user) {
-
-        if (err || !user) {
-            // user not found
-            return sendNotAuthorized(res);
-        }
-
-        var isMatch = user.authenticate(password);
-        if (isMatch) {
-            var token = tokenService.createToken(user);
+    tokenService.findAuthedUser(username, password, function (err, authenticatedUser) {
+        if (authenticatedUser) {
+            // create token and send back
+            var token = tokenService.createToken(authenticatedUser);
             res.json(token);
         } else {
-            // invalid password
-            return sendNotAuthorized(res);
+            return res.send(err, 401);
         }
     });
-}
-
-function sendNotAuthorized(res) {
-    res.send('Authentication error', 401);
 }
