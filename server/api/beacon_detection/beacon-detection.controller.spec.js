@@ -72,4 +72,25 @@ describe('Test /api/beaconDetections API', function () {
 //            });
 //    });
 
+    // GET ALL DETECTIONS
+
+    it('GET /api/beacondetections -> should respond with 401 unauthorized', function (done) {
+        request(app)
+            .get('/api/beacondetections')
+            .expect(401, done);
+    });
+
+    it('GET /api/beacondetections -> should respond with JSON array of beacon detections', function (done) {
+        request(app)
+            .get('/api/beacondetections')
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                res.body.should.be.instanceof(Array);
+                done();
+            });
+    });
+
 });

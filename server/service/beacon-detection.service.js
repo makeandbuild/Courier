@@ -3,8 +3,11 @@
  */
 'use strict';
 
-var agentService = require('./agent.service.js');
 var BeaconDetection = require('./../models/beacon-detection.model.js');
+
+function findDetections(callback) {
+    BeaconDetection.find(callback);
+}
 
 /**
  * Create a single beacon detection
@@ -30,5 +33,6 @@ function saveDetections(beaconDetections, callback) {
     BeaconDetection.create(beaconDetections, callback);
 }
 
+exports.findDetections = findDetections;
 exports.saveDetection = saveDetection;
 exports.saveDetections = saveDetections;

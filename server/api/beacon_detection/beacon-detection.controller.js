@@ -4,7 +4,20 @@ var _ = require('lodash');
 var Agent = require('../../models/agent.model.js');
 var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
-//var agentService = require('../../service/agent.service.js');
+var beaconDetectionService = require('../../service/beacon-detection.service.js');
+
+//[Lindsay Thurmond:10/3/14] TODO: get beacons detections
+//[Lindsay Thurmond:10/3/14] TODO: by date
+//[Lindsay Thurmond:10/3/14] TODO: by agent
+//[Lindsay Thurmond:10/3/14] TODO: beacon
+exports.index = function(req, res) {
+    beaconDetectionService.findDetections(function (err, detections) {
+        if (err) {
+            return handleError(res, err);
+        }
+        return res.json(200, detections);
+    });
+}
 
 /**
  * POST /api/beaconDetections
@@ -26,11 +39,3 @@ exports.create = function (req, res) {
 
     res.send(200, 'ok');
 };
-
-
-//[Lindsay Thurmond:10/3/14] TODO: get beacons detections
-//[Lindsay Thurmond:10/3/14] TODO: by date
-//[Lindsay Thurmond:10/3/14] TODO: by agent
-//[Lindsay Thurmond:10/3/14] TODO: beacon
-
-
