@@ -4,6 +4,7 @@ var Agent = require('../../models/agent.model.js');
 var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconEventService = require('../../service/beacon-event.service.js');
+var beaconDetectionService = require('../../service/beacon-detection.service.js');
 
 
 /**
@@ -26,22 +27,36 @@ var beaconEventService = require('../../service/beacon-event.service.js');
  */
 exports.index = function (req, res) {
 
-    console.log(req.body);
+    var beaconEvent = req.body;
 
-    //convert incoming json to log line to append to file
-    var logLine = JSON.stringify(req.body);
+    // logging
+    var logLine = JSON.stringify(beaconEvent);
+    console.log(logLine);
+    if (config.log.beaconDetections === true) {
+        //[Lindsay Thurmond:10/2/14] TODO: log as individual beacon detections instead?
+        logger.detections(logLine);
+    }
 
-    //save ping to log file
-    logger.detections(logLine);
+    var detections = beaconEventService.convertEventToDetections(beaconEvent);
 
-    beaconEventService.updateAgentWithMostRecentPing(req.body, function(err, agent) {
+    //[Lindsay Thurmond:10/5/14] TODO: update to use promises instead
+
+    beaconEventService.updateAgentWithMostRecentPing(beaconEvent, function(err, agent) {
+        if (err || !agent) {
+            logger.log('error', err);
+        }
+    });
+
+
+    beaconDetectionService.saveDetections(detections, function(err, detections) {
         if (err) {
             return res.send(500, err);
         }
-        if (!agent) {
+        if (!detections) {
             return res.send(404);
         }
-        return res.json(200, agent);
+        return res.json(200);
+
     });
 
     //[Lindsay Thurmond:10/1/14] TODO: save detections to database

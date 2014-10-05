@@ -124,4 +124,6 @@ describe('Test /api/beaconevents API', function () {
             });
     });
 
+    //[Lindsay Thurmond:10/5/14] TODO: test that detections are saved to the database
+
 });

@@ -42,7 +42,7 @@ var all = {
     },
 
     log: {
-        "path": "/tmp"
+        beaconDetections: true // should beacon detections be logged to a file
     },
 
     token: {
