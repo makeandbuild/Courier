@@ -30,7 +30,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
     [
         {
             "_id" : "5431902254596fdb1742756e",
-            "time" : Mon Oct 06 11:56:43 EDT 2014 // ms is being converted to timestamp
+            "time" : 1412610581244 // ms
             "uuid" : "1000000000000000",
             "major" : 1,
             "minor" : 1,
@@ -75,6 +75,6 @@ exports.create = function (req, res) {
         }
         console.log(savedDetections);
         return res.json(200, savedDetections);
-    });
+    }, true);
 
 }

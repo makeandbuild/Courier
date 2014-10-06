@@ -10,32 +10,26 @@ function handleError(res, err) {
   return res.send(500, err);
 }
 
-var fakeDetections = [
-    {
-        time: Date.now(),
-        uuid: '0000000',
-        major: 11111,
-        minor: 22222,
-        tx: 3,
-        rssi: 1,
-        distance: 1.2
-    },
-    {
-        time: Date.now(),
-        uuid: '0000001',
-        major: 11112,
-        minor: 22223,
-        tx: 4,
-        rssi: 2,
-        distance: 2.2
-    }
-];
 
 //[Lindsay Thurmond:10/3/14] TODO: get by date
 //[Lindsay Thurmond:10/3/14] TODO: get by agent
 /**
  * GET /api/beacondetections
- * Get unfiltered list of all beacon detections.
+ * Get unfiltered array of all beacon detections.
+ *
+    [
+        {
+           "_id" : "5432bbbbe4ca5c9a22bc765f",
+           "distance" : 1.91,
+           "major" : 1,
+           "uuid" : "123e4567e89b12d3a456426655440000",
+           "tx" : -62,
+           "time" "2014-10-06T15:56:43.793Z",
+           "rssi" : -75,
+           "minor" : 2,
+           "agentId" : "5432bbbbe4ca5c9a22bc765e"
+        }
+    ]
  *
  * @param req
  * @param res
@@ -45,7 +39,7 @@ exports.index = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, fakeDetections);
+        return res.json(200, detections);
     });
 }
 
@@ -74,5 +68,5 @@ exports.create = function (req, res) {
         }
         console.log(detections);
         return res.json(201, detections);
-    });
+    }, true);
 };

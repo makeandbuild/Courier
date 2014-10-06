@@ -14,9 +14,20 @@ function findDetections(callback) {
  *
  * @param beaconDetection
  * @param callback
+ * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
-function saveDetection(beaconDetection, callback) {
-    BeaconDetection.create(beaconDetection, callback);
+function saveDetection(beaconDetection, callback, timeAsMs) {
+
+    BeaconDetection.create(beaconDetection, function(err, savedDetection) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (timeAsMs && timeAsMs === true && savedDetection.time) {
+            savedDetection.time = savedDetection.time.getTime();
+        }
+        return callback(null, savedDetection);
+    });
 }
 
 /**
@@ -24,8 +35,9 @@ function saveDetection(beaconDetection, callback) {
  *
  * @param beaconDetections
  * @param callback
+ * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
-function saveDetections(beaconDetections, callback) {
+function saveDetections(beaconDetections, callback, timeAsMs) {
     // Depending on how many we are trying to insert at once, we may want to change to insert
     // (draw back is that it bypasses the mongoose schema validation).  For now
     // I'm sticking with create() until it becomes a problem.
@@ -41,10 +53,14 @@ function saveDetections(beaconDetections, callback) {
         var savedDetections = [];
         for (var i = 1; i < arguments.length; i++) {
             var savedDetection = arguments[i];
+            if (timeAsMs && timeAsMs === true) {
+                // flip the dates back to ms for consistency
+                if (savedDetection.time) {
+                    savedDetection.time = savedDetection.time.getTime();
+                }
+            }
             savedDetections.push(savedDetection);
         }
-        // NOTE: if we want to send the date back as a ms string, we can change the
-        // data here and convert each one with something like 'savedDetections[0].time.getTime()'
         return callback(null, savedDetections);
     });
 
