@@ -55,8 +55,6 @@ exports.create = function (req, res) {
         logger.detections(logLine);
     }
 
-    var detections = beaconEventService.convertEventToDetections(beaconEvent);
-
     //[Lindsay Thurmond:10/5/14] TODO: update to use promises instead
 
     // if the agent is specified, update with latest detection information
@@ -66,16 +64,17 @@ exports.create = function (req, res) {
         }
     });
 
+    var detections = beaconEventService.convertEventToDetections(beaconEvent);
 
-    beaconDetectionService.saveDetections(detections, function(err, detections) {
+    beaconDetectionService.saveDetections(detections, function(err, savedDetections) {
         if (err) {
             return res.send(500, err);
         }
-        if (!detections) {
+        if (!savedDetections) {
             return res.send(404);
         }
-        console.log(detections);
-        return res.json(200, detections);
+        console.log(savedDetections);
+        return res.json(200, savedDetections);
     });
 
 }

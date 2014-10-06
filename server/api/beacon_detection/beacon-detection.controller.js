@@ -40,7 +40,7 @@ exports.create = function (req, res) {
     }
 
     var detections = req.body;
-    beaconDetectionService.saveDetections(detections, function(err, detections) {
+    beaconDetectionService.saveDetection(detections, function(err, detections) {
         if (err) {
             return res.send(500, err);
         }

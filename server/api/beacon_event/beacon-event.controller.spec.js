@@ -148,11 +148,11 @@ describe('Test /api/beaconevents API', function () {
                 }
                 // check that detections were saved to the database
                 var savedDetections = res.body;
-//                savedDetections.should.be.instanceof(Array);
+                savedDetections.should.be.instanceof(Array);
+                savedDetections.should.have.lengthOf(2);
                 // should have a mongo id now
-//                savedDetections[0].should.have.property('_id');
-                savedDetections.should.have.property('_id');
-                //[Lindsay Thurmond:10/6/14] TODO: this should return multiple detections
+                savedDetections[0].should.have.property('_id');
+                savedDetections[1].should.have.property('_id');
 
                 done();
             });

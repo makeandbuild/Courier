@@ -20,7 +20,7 @@ function saveDetection(beaconDetection, callback) {
 }
 
 /**
- * Create an array of beacon detections
+ * Create an array of beacon detections.  Callback will contain an array of the saved detections.
  *
  * @param beaconDetections
  * @param callback
@@ -30,7 +30,22 @@ function saveDetections(beaconDetections, callback) {
     // (draw back is that it bypasses the mongoose schema validation).  For now
     // I'm sticking with create() until it becomes a problem.
     // BeaconDetection.collection.insert(beaconDetections, callback);
-    BeaconDetection.create(beaconDetections, callback);
+    BeaconDetection.create(beaconDetections, function() {
+
+        // wrap up results in an array to make easier to use
+        var err = arguments[0];
+        if(err) {
+            return callback(err);
+        }
+
+        var savedDetections = [];
+        for (var i = 1; i < arguments.length; i++) {
+            var savedDetection = arguments[i];
+            savedDetections.push(savedDetection);
+        }
+        return callback(null, savedDetections);
+    });
+
 }
 
 exports.findDetections = findDetections;
