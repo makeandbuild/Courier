@@ -12,6 +12,7 @@ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)" //In
 sudo brew update
 sudo brew install node
 sudo npm install grunt-cli -g
+sudo npm install bower -g
 
 //Installs all of the NodeJS Courier packages.
 npm install
