@@ -10,9 +10,10 @@
 'use strict';
 
 var _ = require('lodash');
-var Beacon = require('./beacon.model');
+var Beacon = require('./../../models/beacon.model.js');
 
 // Get list of beacons
+// GET /beacons
 exports.index = function(req, res) {
   Beacon.find(function (err, beacons) {
     if (err) { return handleError(res, err); }
@@ -21,6 +22,7 @@ exports.index = function(req, res) {
 };
 
 // Get a single beacon
+// GET /beacons/:id
 exports.show = function(req, res) {
   Beacon.findById(req.params.id, function (err, beacon) {
     if (err) { return handleError(res, err); }
@@ -30,6 +32,7 @@ exports.show = function(req, res) {
 };
 
 // Creates a new beacon in the DB.
+// POST /beacons
 exports.create = function(req, res) {
   Beacon.create(req.body, function(err, beacon) {
     if (err) { return handleError(res, err); }
@@ -38,6 +41,7 @@ exports.create = function(req, res) {
 };
 
 // Updates an existing beacon in the DB.
+// PUT /beacons/:id
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
   Beacon.findById(req.params.id, function (err, beacon) {
@@ -53,6 +57,7 @@ exports.update = function(req, res) {
 };
 
 // Deletes a beacon from the DB.
+// DELETE /beacons/:id
 exports.destroy = function(req, res) {
   Beacon.findById(req.params.id, function (err, beacon) {
     if (err) { return handleError(res, err); }

@@ -1,9 +1,8 @@
 'use strict';
 
-var User = require('./user.model');
-var passport = require('passport');
+var User = require('./../../models/user.model.js');
 var config = require('../../config/environment');
-var jwt = require('jsonwebtoken');
+var tokenService = require('../../service/token.service.js');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -12,6 +11,8 @@ var validationError = function(res, err) {
 /**
  * Get list of users
  * restriction: 'admin'
+ *
+ * GET /api/users
  */
 exports.index = function(req, res) {
   User.find({}, '-salt -hashedPassword', function (err, users) {
@@ -22,6 +23,8 @@ exports.index = function(req, res) {
 
 /**
  * Creates a new user
+ *
+ * POST /api/users
  */
 exports.create = function (req, res, next) {
   var newUser = new User(req.body);
@@ -29,13 +32,15 @@ exports.create = function (req, res, next) {
   newUser.role = 'user';
   newUser.save(function(err, user) {
     if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
+    var token = tokenService.createToken(user);
     res.json({ token: token });
   });
 };
 
 /**
  * Get a single user
+ *
+ * GET /api/users/:id
  */
 exports.show = function (req, res, next) {
   var userId = req.params.id;
@@ -50,6 +55,8 @@ exports.show = function (req, res, next) {
 /**
  * Deletes a user
  * restriction: 'admin'
+ *
+ * DELETE /api/users/:id
  */
 exports.destroy = function(req, res) {
   User.findByIdAndRemove(req.params.id, function(err, user) {
@@ -60,6 +67,8 @@ exports.destroy = function(req, res) {
 
 /**
  * Change a users password
+ *
+ * PUT /api/users/:id/password
  */
 exports.changePassword = function(req, res, next) {
   var userId = req.user._id;
@@ -81,16 +90,23 @@ exports.changePassword = function(req, res, next) {
 
 /**
  * Get my info
+ *
+ * GET /api/users/me
  */
 exports.me = function(req, res, next) {
-  var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
-    if (err) return next(err);
-    if (!user) return res.json(401);
-    res.json(user);
-  });
+    var user = req.user;
+    if (!user) {
+        return res.send(401);
+    }
+
+    var userId = user._id;
+    User.findOne({
+        _id: userId
+    }, '-salt -hashedPassword', function (err, user) { // don't ever give out the password or salt
+        if (err) return next(err);
+        if (!user) return res.json(401);
+        res.json(user);
+    });
 };
 
 /**

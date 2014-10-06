@@ -10,7 +10,9 @@ angular.module('courierApp')
     });
 
     $http.get('/api/agents').success(function(agents) {
-      $scope.agents = agents;
+        
+      $scope.agents = $filter('filter')(agents, {approvedStatus: '!Pending'});
+      $scope.pendingAgents = $filter('filter')(agents, {approvedStatus: 'Pending'});
       socket.syncUpdates('agent', $scope.agents);
     });
 
@@ -36,6 +38,35 @@ angular.module('courierApp')
          $scope.agents = $filter('filter')($scope.agents, {_id: '!' + agent._id});
       });
     }
+
+     $scope.approveAgent = function(agent) {
+      var updateAgent = agent;
+      updateAgent.approvedStatus = 'Approved';
+      $http.put('/api/agents/' + agent._id, updateAgent).success(function(response){
+         $scope.getAgents()
+      });
+    }
+
+     $scope.denyAgent = function(agent) {
+       var updateAgent = agent;
+        updateAgent.approvedStatus = 'Denied'
+      $http.delete('/api/agents/' + agent._id, updateAgent).success(function(response){
+        $scope.getAgents()
+      });
+
+      
+    }
+
+    $scope.getAgents = function(){
+         $http.get('/api/agents').success(function(agents) {
+        
+          $scope.agents = $filter('filter')(agents, {approvedStatus: '!Pending'});
+          $scope.pendingAgents = $filter('filter')(agents, {approvedStatus: 'Pending'});
+          socket.syncUpdates('agent', $scope.agents);
+        });
+      }
+
+   
 
     if(typeof $routeParams.param == 'undefined'){
         $scope.activetab ="beacons";

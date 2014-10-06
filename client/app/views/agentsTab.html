@@ -1,7 +1,5 @@
-
+<h1 class="page-header">Agents:</h1>
 <div class="row">
-    <h1 class="page-header">Agents:</h1>
-
     <div class="searchBar">
         <div class="col-md-11">
             <label for="search" class="col-md-2">Search:</label>
@@ -11,31 +9,63 @@
             <span class="glyphicon glyphicon-plus" ng-click="addAgent()"></span>
         </div>
     </div>
-
+</div>
+<div class="row">
     <table  class=" col-md-12">
         <thead>
             <tr >
                 <th class="col-md-3"><a href="">ID</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
-                <th class="col-md-3"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Status</a></th>
-                <th class="col-md-3"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Last Seen</a></th>
+                <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Status</a></th>
+                <th class="col-md-1"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Last Seen</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent" ng-click="setSelected(agent.id)" class="beaconRow">
+            <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.id)" class="beaconRow">
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>
-                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.lastSeen}}</a></td>
-                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.lastSeen}}</a></td>
+                <td class="col-md-1 status-section"><a href="/agent/{{agent._id}}"><i class="glyphicon" ng-class="agent.operationalStatus == 'Failure' ? 'glyphicon-remove-sign' :'glyphicon-ok-sign'"></i></a></td>
+                <td class="col-md-1"><a href="/agent/{{agent._id}}">{{agent.lastSeen}}</a></td>
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-minus" ng-click="deleteAgent(agent)"></span>
                 </td>
             </tr>
         </tbody>
-
     </table>
+</div>
 
+
+<div class="pending-section" ng-class="pendingAgents.length == 0 ? 'hide' : 'display'">
+    <h1>Pending Agents:</h1>
+    <div class="row">
+        <table  class=" col-md-12">
+            <thead>
+                <tr >
+                    <th class="col-md-3"><a href="">ID</a></th>
+                    <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
+                    <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
+                    <th class="col-md-3 status-section"><a href="" ng-click="predicate = 'approvedStatus'; reverse=false">Approve</a></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="agent in pendingAgents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.id)" class="beaconRow">
+                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>
+                    <td class="col-md-3">
+                        <div class="col-md-6 icon-section ">
+                            <span class="glyphicon glyphicon-ok" ng-click="approveAgent(agent)"></span>
+                        </div>
+                        <div class="col-md-6 icon-section">
+                            <span class="glyphicon glyphicon-remove" ng-click="denyAgent(agent)"></span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
