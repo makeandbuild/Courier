@@ -6,6 +6,31 @@ var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');
 
+function handleError(res, err) {
+  return res.send(500, err);
+}
+
+var fakeDetections = [
+    {
+        time: Date.now(),
+        uuid: '0000000',
+        major: 11111,
+        minor: 22222,
+        tx: 3,
+        rssi: 1,
+        distance: 1.2
+    },
+    {
+        time: Date.now(),
+        uuid: '0000001',
+        major: 11112,
+        minor: 22223,
+        tx: 4,
+        rssi: 2,
+        distance: 2.2
+    }
+];
+
 //[Lindsay Thurmond:10/3/14] TODO: get by date
 //[Lindsay Thurmond:10/3/14] TODO: get by agent
 /**
@@ -20,7 +45,7 @@ exports.index = function(req, res) {
         if (err) {
             return handleError(res, err);
         }
-        return res.json(200, detections);
+        return res.json(200, fakeDetections);
     });
 }
 

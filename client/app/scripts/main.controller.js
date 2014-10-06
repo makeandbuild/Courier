@@ -9,13 +9,6 @@ angular.module('courierApp')
       socket.syncUpdates('beacon', $scope.beacons);
     });
 
-    $http.get('/api/agents').success(function(agents) {
-        
-      $scope.agents = $filter('filter')(agents, {approvedStatus: '!Pending'});
-      $scope.pendingAgents = $filter('filter')(agents, {approvedStatus: 'Pending'});
-      socket.syncUpdates('agent', $scope.agents);
-    });
-
     $scope.addBeacon = function(){
       console.log('addBeacon clicked');
       $location.path('/beacon');
@@ -23,56 +16,67 @@ angular.module('courierApp')
 
     $scope.deleteBeacon = function(beacon) {
       $http.delete('/api/beacons/' + beacon._id).success(function(response){
-         $scope.beacons = $filter('filter')($scope.beacons, {_id: '!' + agent._id});
+        $scope.beacons = $filter('filter')($scope.beacons, {_id: '!' + agent._id});
       });
-    }
+    };
 
     $scope.addAgent = function(){
       console.log('addAgent clicked');
       $location.path('/agent');
     };
 
-
     $scope.deleteAgent = function(agent) {
       $http.delete('/api/agents/' + agent._id).success(function(response){
-         $scope.agents = $filter('filter')($scope.agents, {_id: '!' + agent._id});
+        $scope.agents = $filter('filter')($scope.agents, {_id: '!' + agent._id});
       });
-    }
+    };
 
-     $scope.approveAgent = function(agent) {
+    $scope.approveAgent = function(agent) {
       var updateAgent = agent;
       updateAgent.approvedStatus = 'Approved';
       $http.put('/api/agents/' + agent._id, updateAgent).success(function(response){
-         $scope.getAgents()
+        $scope.getAgents();
       });
-    }
+    };
 
-     $scope.denyAgent = function(agent) {
-       var updateAgent = agent;
-        updateAgent.approvedStatus = 'Denied'
+    $scope.denyAgent = function(agent) {
+      var updateAgent = agent;
+      updateAgent.approvedStatus = 'Denied';
       $http.delete('/api/agents/' + agent._id, updateAgent).success(function(response){
-        $scope.getAgents()
+        $scope.getAgents();
       });
+    };
 
-      
-    }
+    $scope.getAgents = function() {
+      $http.get('/api/agents').success(function(agents) {
 
-    $scope.getAgents = function(){
-         $http.get('/api/agents').success(function(agents) {
-        
-          $scope.agents = $filter('filter')(agents, {approvedStatus: '!Pending'});
-          $scope.pendingAgents = $filter('filter')(agents, {approvedStatus: 'Pending'});
-          socket.syncUpdates('agent', $scope.agents);
+        $scope.agents = $filter('filter')(agents, {
+          approvedStatus: '!Pending'
         });
-      }
+        $scope.pendingAgents = $filter('filter')(agents, {
+          approvedStatus: 'Pending'
+        });
+        socket.syncUpdates('agent', $scope.agents);
+      });
+    };
+
+    $scope.getBeaconDetections = function() {
+      $http.get('/api/beacondetections').success(function(detections) {
+        $scope.detections = detections;
+
+      });
+    };
 
    
 
-    if(typeof $routeParams.param == 'undefined'){
-        $scope.activetab ="beacons";
+    if(typeof $routeParams.param === 'undefined'){
+      $scope.activetab = 'beacons';
     }else {
-        $scope.activetab = $routeParams.param
+      $scope.activetab = $routeParams.param;
     }
+    $scope.getAgents();
+
+    $scope.getBeaconDetections();
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('beacon');
