@@ -4,6 +4,7 @@ var Agent = require('../../models/agent.model.js');
 var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconEventService = require('../../service/beacon-event.service.js');
+var beaconDetectionService = require('../../service/beacon-detection.service.js');
 
 
 /**
@@ -13,38 +14,67 @@ var beaconEventService = require('../../service/beacon-event.service.js');
         agentId: "540756a9a36b267c0a5965dd",
         detections: [
             {
-                time: "1409847363.458166",
+                time: "1409847363.458166", //[Lindsay Thurmond:10/6/14] TODO: fix time format
                 uuid: "1000000000000000",
-                major: "1",
-                minor: "1",
-                tx: "-65",
-                rssi: "-75",
+                major: 1,
+                minor: 1,
+                tx: -65,
+                rssi: -75,
                 distance: 1.6
             }
         ]
     }
+
+    Sends list of saved beacon detections as response body.
+
+    [
+        {
+            "_id" : "5431902254596fdb1742756e",
+            "time" : "1970-01-17T07:37:27.363Z" //[Lindsay Thurmond:10/6/14] TODO: fix date format
+            "uuid" : "1000000000000000",
+            "major" : 1,
+            "minor" : 1,
+            "tx" : -65,
+            "rssi" : -75,
+            "distance" : 1.6,
+            "agentId" : "5431902254596fdb1742756d"
+        },
+        ...
+    ]
+
  */
-exports.index = function (req, res) {
+exports.create = function (req, res) {
 
-    console.log(req.body);
+    var beaconEvent = req.body;
 
-    //convert incoming json to log line to append to file
-    var logLine = JSON.stringify(req.body);
+    // logging
+    var logLine = JSON.stringify(beaconEvent);
+    console.log(logLine);
+    if (config.log.beaconDetections === true) {
+        //[Lindsay Thurmond:10/2/14] TODO: log as individual beacon detections instead?
+        logger.detections(logLine);
+    }
 
-    //save ping to log file
-    logger.detections(logLine);
+    //[Lindsay Thurmond:10/5/14] TODO: update to use promises instead
 
-    beaconEventService.updateAgentWithMostRecentPing(req.body, function(err, agent) {
+    // if the agent is specified, update with latest detection information
+    beaconEventService.updateAgentWithMostRecentPing(beaconEvent, function(err, agent) {
+        if (err || !agent) {
+            logger.log('error', err);
+        }
+    });
+
+    var detections = beaconEventService.convertEventToDetections(beaconEvent);
+
+    beaconDetectionService.saveDetections(detections, function(err, savedDetections) {
         if (err) {
             return res.send(500, err);
         }
-        if (!agent) {
+        if (!savedDetections) {
             return res.send(404);
         }
-        return res.json(200, agent);
+        console.log(savedDetections);
+        return res.json(200, savedDetections);
     });
 
-    //[Lindsay Thurmond:10/1/14] TODO: save detections to database
-
-    //[Lindsay Thurmond:10/1/14] TODO: save to database regardless of whether an agent id is specified
 }

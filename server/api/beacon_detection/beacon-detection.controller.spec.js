@@ -11,7 +11,7 @@ beforeEach(function (done) {
     });
 });
 
-describe('Test /api/beaconDetections API', function () {
+describe('Test /api/beacondetections API', function () {
 
     var AUTHORIZED_USERNAME = 'test@test.com';
     var AUTHORIZED_PASSWORD = 'test';
@@ -30,9 +30,9 @@ describe('Test /api/beaconDetections API', function () {
 
     // ACCEPT BEACON DETECTION
 
-    it('POST /api/beaconDetections -> should respond with 401 unauthorized', function (done) {
+    it('POST /api/beacondetections -> should respond with 401 unauthorized', function (done) {
         request(app)
-            .post('/api/beaconDetections')
+            .post('/api/beacondetections')
             .send(beaconDetection)
             .expect(401, done);
     });
@@ -53,23 +53,45 @@ describe('Test /api/beaconDetections API', function () {
             });
     });
 
-    //[Lindsay Thurmond:9/30/14] TODO: implement me
-//    it('POST /api/beaconDetections -> should create a single beaconDetection', function (done) {
-//        request(app)
-//            .post('/api/beaconDetections')
-//            .send(beaconDetection)
-//            .set('x-access-token', token)
-//            .expect(201)
-//            .expect('Content-Type', /json/)
-//            .end(function (err, res) {
-//                if (err) {
-//                    return done(err);
-//                }
-//                res.body.should.be.instanceof(Object);
-//                res.body.should.have.property('_id');
-//                beaconDetection = res.body;
-//                done();
-//            });
-//    });
+    it('POST /api/beacondetections -> should create a single beacon detection', function (done) {
+        request(app)
+            .post('/api/beacondetections')
+            .send(beaconDetection)
+            .set('x-access-token', token)
+            .expect(201)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+                res.body.should.be.instanceof(Object);
+                res.body.should.have.property('_id');
+                beaconDetection = res.body;
+                done();
+            });
+    });
+
+    // GET ALL DETECTIONS
+
+    it('GET /api/beacondetections -> should respond with 401 unauthorized', function (done) {
+        request(app)
+            .get('/api/beacondetections')
+            .expect(401, done);
+    });
+
+    it('GET /api/beacondetections -> should respond with JSON array of beacon detections', function (done) {
+        request(app)
+            .get('/api/beacondetections')
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                var detections = res.body;
+                detections.should.be.instanceof(Array);
+                detections.length.should.be.above(0);
+                done();
+            });
+    });
 
 });

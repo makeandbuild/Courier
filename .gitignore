@@ -12,4 +12,4 @@ npm-*.log
 # osx
 .DS_Store
 courier.log
-pings.log
+detections.log
