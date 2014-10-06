@@ -14,7 +14,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
         agentId: "540756a9a36b267c0a5965dd",
         detections: [
             {
-                time: "1409847363.458166", //[Lindsay Thurmond:10/6/14] TODO: fix time format
+                time: 1412610581244, // ms since epoch
                 uuid: "1000000000000000",
                 major: 1,
                 minor: 1,
@@ -30,7 +30,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
     [
         {
             "_id" : "5431902254596fdb1742756e",
-            "time" : "1970-01-17T07:37:27.363Z" //[Lindsay Thurmond:10/6/14] TODO: fix date format
+            "time" : Mon Oct 06 11:56:43 EDT 2014 // ms is being converted to timestamp
             "uuid" : "1000000000000000",
             "major" : 1,
             "minor" : 1,

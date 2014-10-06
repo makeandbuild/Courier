@@ -26,7 +26,7 @@ describe('Test /api/beaconevents API', function () {
         agentId: "id will be generated during test",
         detections: [
             {
-                time: "1409847363.458166",
+                time: 1412610581244,
                 uuid: "1000000000000000",
                 major: 1,
                 minor: 1,
@@ -34,7 +34,7 @@ describe('Test /api/beaconevents API', function () {
                 rssi: -75,
                 distance: 1.6
             },  {
-                time: "1409847363",
+                time: Date.now(),
                 uuid: "1000000000000000",
                 major: 1,
                 minor: 1,
@@ -125,8 +125,7 @@ describe('Test /api/beaconevents API', function () {
                             return done(err);
                         }
                         agent = resp.body;
-                        //[Lindsay Thurmond:10/1/14] TODO: fix date format conversion
-//                        agent.should.have.property('lastSeen', '1409847363.458166');
+//                      agent.should.have.property('lastSeen', '2014-10-06T16:23:46.544Z');
                         agent.should.have.property('lastSeen');
                         agent.should.have.property('lastSeenBy', '1000000000000000');
 

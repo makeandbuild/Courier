@@ -43,6 +43,8 @@ function saveDetections(beaconDetections, callback) {
             var savedDetection = arguments[i];
             savedDetections.push(savedDetection);
         }
+        // NOTE: if we want to send the date back as a ms string, we can change the
+        // data here and convert each one with something like 'savedDetections[0].time.getTime()'
         return callback(null, savedDetections);
     });
 
