@@ -441,7 +441,7 @@ module.exports = function (grunt) {
           compass: false
         },
         files: {
-          '.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'
+          '<%= yeoman.client %>/app/app.css' : '<%= yeoman.client %>/app/app.scss'
         }
       }
     },
