@@ -39,8 +39,15 @@ exports.create = function (req, res) {
         logger.detections(logLine);
     }
 
-    //[Lindsay Thurmond:10/1/14] TODO: save to database
-
-
-    res.send(200, 'ok');
+    var detections = req.body;
+    beaconDetectionService.saveDetections(detections, function(err, detections) {
+        if (err) {
+            return res.send(500, err);
+        }
+        if (!detections) {
+            return res.send(404);
+        }
+        console.log(detections);
+        return res.json(201, detections);
+    });
 };

@@ -24,6 +24,24 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
             }
         ]
     }
+
+    Sends list of saved beacon detections as response body.
+
+    [
+        {
+            "_id" : "5431902254596fdb1742756e",
+            "time" : "1970-01-17T07:37:27.363Z" //[Lindsay Thurmond:10/6/14] TODO: fix date format
+            "uuid" : "1000000000000000",
+            "major" : 1,
+            "minor" : 1,
+            "tx" : -65,
+            "rssi" : -75,
+            "distance" : 1.6,
+            "agentId" : "5431902254596fdb1742756d"
+        },
+        ...
+    ]
+
  */
 exports.create = function (req, res) {
 
@@ -56,8 +74,8 @@ exports.create = function (req, res) {
         if (!detections) {
             return res.send(404);
         }
-        return res.json(200);
-
+        console.log(detections);
+        return res.json(200, detections);
     });
 
 }

@@ -4,6 +4,10 @@ var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
 
+var beaconDetectionService = require('../../service/beacon-detection.service.js');
+var agentService = require('../../service/agent.service.js');
+
+
 // make sure seed data is done loading
 beforeEach(function (done) {
     app.mongoReadyPromise.then(function () {
@@ -29,6 +33,14 @@ describe('Test /api/beaconevents API', function () {
                 tx: -65,
                 rssi: -75,
                 distance: 1.6
+            },  {
+                time: "1409847363",
+                uuid: "1000000000000000",
+                major: 1,
+                minor: 1,
+                tx: -65,
+                rssi: -75,
+                distance: 3.7
             }
         ]
     };
@@ -124,6 +136,26 @@ describe('Test /api/beaconevents API', function () {
             });
     });
 
-    //[Lindsay Thurmond:10/5/14] TODO: test that detections are saved to the database
+    it('POST /api/beaconevents -> should save the detections to the database', function (done) {
+        request(app)
+            .post('/api/beaconevents')
+            .send(beaconEvent)
+            .set('x-access-token', token)
+            .expect(200)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+                // check that detections were saved to the database
+                var savedDetections = res.body;
+//                savedDetections.should.be.instanceof(Array);
+                // should have a mongo id now
+//                savedDetections[0].should.have.property('_id');
+                savedDetections.should.have.property('_id');
+                //[Lindsay Thurmond:10/6/14] TODO: this should return multiple detections
+
+                done();
+            });
+    });
 
 });
