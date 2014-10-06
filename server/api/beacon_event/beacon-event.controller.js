@@ -14,18 +14,18 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
         agentId: "540756a9a36b267c0a5965dd",
         detections: [
             {
-                time: "1409847363.458166",
+                time: "1409847363.458166", //[Lindsay Thurmond:10/6/14] TODO: fix time format
                 uuid: "1000000000000000",
-                major: "1",
-                minor: "1",
-                tx: "-65",
-                rssi: "-75",
+                major: 1,
+                minor: 1,
+                tx: -65,
+                rssi: -75,
                 distance: 1.6
             }
         ]
     }
  */
-exports.index = function (req, res) {
+exports.create = function (req, res) {
 
     var beaconEvent = req.body;
 
@@ -41,6 +41,7 @@ exports.index = function (req, res) {
 
     //[Lindsay Thurmond:10/5/14] TODO: update to use promises instead
 
+    // if the agent is specified, update with latest detection information
     beaconEventService.updateAgentWithMostRecentPing(beaconEvent, function(err, agent) {
         if (err || !agent) {
             logger.log('error', err);
@@ -59,7 +60,4 @@ exports.index = function (req, res) {
 
     });
 
-    //[Lindsay Thurmond:10/1/14] TODO: save detections to database
-
-    //[Lindsay Thurmond:10/1/14] TODO: save to database regardless of whether an agent id is specified
 }

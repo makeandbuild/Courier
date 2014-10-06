@@ -24,10 +24,10 @@ describe('Test /api/beaconevents API', function () {
             {
                 time: "1409847363.458166",
                 uuid: "1000000000000000",
-                major: "1",
-                minor: "1",
-                tx: "-65",
-                rssi: "-75",
+                major: 1,
+                minor: 1,
+                tx: -65,
+                rssi: -75,
                 distance: 1.6
             }
         ]
