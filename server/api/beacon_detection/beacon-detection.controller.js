@@ -50,10 +50,11 @@ function handleError(res, err) {
  * @param res
  */
 exports.index = function (req, res) {
-    var uuid = req.params.uuid;
-    var agentId = req.params.agentId;
-    var startDate = req.params.enddate;
-    var endDate = req.params.enddate;
+    var uuid = req.query.uuid;
+    var agentId = req.query.agentId;
+    //[Lindsay Thurmond:10/7/14] TODO: date range doesn't work yet
+    var startDate = req.query.startdate;
+    var endDate = req.query.enddate;
     beaconDetectionService.findFilteredDetections(uuid, agentId, startDate, endDate,
         function (err, detections) {
             if (err) {
