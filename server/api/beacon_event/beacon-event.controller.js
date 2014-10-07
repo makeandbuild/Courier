@@ -66,7 +66,7 @@ exports.create = function (req, res) {
 
     var detections = beaconEventService.convertEventToDetections(beaconEvent);
 
-    beaconDetectionService.saveDetections(detections, function(err, savedDetections) {
+    beaconDetectionService.createDetections(detections, function(err, savedDetections) {
         if (err) {
             return res.send(500, err);
         }

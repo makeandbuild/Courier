@@ -7,7 +7,7 @@ var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');
 
 function handleError(res, err) {
-  return res.send(500, err);
+    return res.send(500, err);
 }
 
 
@@ -21,27 +21,27 @@ function handleError(res, err) {
  * Optional query parameters:
  *  startdate
  *  enddate
- *  beacon
- *  agent
+ *  uuid
+ *  agentId
  *
  * GET /api/beacondetections?startdate= ->
  * GET /api/beacondetections?enddate= ->
- * GET /api/beacondetections?beacon= ->
- * GET /api/beacondetections?agent= ->
+ * GET /api/beacondetections?uuid= ->
+ * GET /api/beacondetections?agentId= ->
  *
-    [
-        {
-           "_id" : "5432bbbbe4ca5c9a22bc765f",
-           "distance" : 1.91,
-           "major" : 1,
-           "uuid" : "123e4567e89b12d3a456426655440000",
-           "tx" : -62,
-           "time" "2014-10-06T15:56:43.793Z",
-           "rssi" : -75,
-           "minor" : 2,
-           "agentId" : "5432bbbbe4ca5c9a22bc765e"
-        }
-    ]
+ [
+ {
+    "_id" : "5432bbbbe4ca5c9a22bc765f",
+    "distance" : 1.91,
+    "major" : 1,
+    "uuid" : "123e4567e89b12d3a456426655440000",
+    "tx" : -62,
+    "time" "2014-10-06T15:56:43.793Z",
+    "rssi" : -75,
+    "minor" : 2,
+    "agentId" : "5432bbbbe4ca5c9a22bc765e"
+ }
+ ]
  *
  * Filter Options:
  *
@@ -49,13 +49,18 @@ function handleError(res, err) {
  * @param req
  * @param res
  */
-exports.index = function(req, res) {
-    beaconDetectionService.findDetections(function (err, detections) {
-        if (err) {
-            return handleError(res, err);
-        }
-        return res.json(200, detections);
-    });
+exports.index = function (req, res) {
+    var uuid = req.params.uuid;
+    var agentId = req.params.agentId;
+    var startDate = req.params.enddate;
+    var endDate = req.params.enddate;
+    beaconDetectionService.findFilteredDetections(uuid, agentId, startDate, endDate,
+        function (err, detections) {
+            if (err) {
+                return handleError(res, err);
+            }
+            return res.json(200, detections);
+        });
 }
 
 /**
@@ -74,7 +79,7 @@ exports.create = function (req, res) {
     }
 
     var detections = req.body;
-    beaconDetectionService.createDetection(detections, function(err, detections) {
+    beaconDetectionService.createDetection(detections, function (err, detections) {
         if (err) {
             return res.send(500, err);
         }

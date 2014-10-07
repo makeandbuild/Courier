@@ -100,7 +100,7 @@ module.exports = function (complete) {
             }
         ];
 
-        beaconDetectionService.saveDetections(sampleDetections, function () {
+        beaconDetectionService.createDetections(sampleDetections, function () {
             console.log('finished populating detections');
             detectionsLoaded = true;
             if (usersLoaded === true && agentsLoaded === true) {
