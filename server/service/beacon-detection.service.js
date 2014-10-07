@@ -5,8 +5,30 @@
 
 var BeaconDetection = require('./../models/beacon-detection.model.js');
 
-function findDetections(callback) {
-    BeaconDetection.find(callback);
+function findDetections(callback, optionalFilters) {
+    if (optionalFilters) {
+        BeaconDetection.find(optionalFilters, callback);
+    } else {
+        BeaconDetection.find(callback);
+    }
+}
+
+function findDetectionsByBeaconId(beaconId, callback) {
+    var filters = {_id: beaconId};
+    findDetections(callback, filters);
+}
+
+exports.findDetectionsByBeaconUuid = function(uuid, callback) {
+    var filters = {uuid: uuid};
+    findDetections(callback, filters);
+}
+
+function findDetectionsByAgentId(agentId, callback) {
+    //[Lindsay Thurmond:10/7/14] TODO: implement me
+}
+
+function findDetectionsByDateRange(startDate, endDate, callback) {
+    //[Lindsay Thurmond:10/6/14] TODO: implement me
 }
 
 /**
@@ -16,7 +38,7 @@ function findDetections(callback) {
  * @param callback
  * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
-function saveDetection(beaconDetection, callback, timeAsMs) {
+function createDetection(beaconDetection, callback, timeAsMs) {
 
     BeaconDetection.create(beaconDetection, function(err, savedDetection) {
         if (err) {
@@ -67,5 +89,8 @@ function saveDetections(beaconDetections, callback, timeAsMs) {
 }
 
 exports.findDetections = findDetections;
-exports.saveDetection = saveDetection;
+exports.findDetectionsByDateRange = findDetectionsByDateRange;
+exports.findDetectionsByBeaconId = findDetectionsByBeaconId;
+exports.findDetectionsByAgentId = findDetectionsByAgentId;
+exports.createDetection = createDetection;
 exports.saveDetections = saveDetections;

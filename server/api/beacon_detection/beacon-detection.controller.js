@@ -13,9 +13,21 @@ function handleError(res, err) {
 
 //[Lindsay Thurmond:10/3/14] TODO: get by date
 //[Lindsay Thurmond:10/3/14] TODO: get by agent
+//[Lindsay Thurmond:10/6/14] TODO: get by beacon uuid
 /**
- * GET /api/beacondetections
- * Get unfiltered array of all beacon detections.
+ * GET /api/beacondetections -> unfiltered array of all beacon detections
+ *
+ * //[Lindsay Thurmond:10/7/14] TODO: filtering still in progress
+ * Optional query parameters:
+ *  startdate
+ *  enddate
+ *  beacon
+ *  agent
+ *
+ * GET /api/beacondetections?startdate= ->
+ * GET /api/beacondetections?enddate= ->
+ * GET /api/beacondetections?beacon= ->
+ * GET /api/beacondetections?agent= ->
  *
     [
         {
@@ -30,6 +42,9 @@ function handleError(res, err) {
            "agentId" : "5432bbbbe4ca5c9a22bc765e"
         }
     ]
+ *
+ * Filter Options:
+ *
  *
  * @param req
  * @param res
@@ -59,7 +74,7 @@ exports.create = function (req, res) {
     }
 
     var detections = req.body;
-    beaconDetectionService.saveDetection(detections, function(err, detections) {
+    beaconDetectionService.createDetection(detections, function(err, detections) {
         if (err) {
             return res.send(500, err);
         }

@@ -88,6 +88,15 @@ module.exports = function (complete) {
                 tx: 4,
                 rssi: 2,
                 distance: 2.2
+            },
+            {
+                time: Date.now(),
+                uuid: '8uf98asu',
+                major: 1,
+                minor: 1,
+                tx: -65,
+                rssi: -75,
+                distance: 3.7
             }
         ];
 
