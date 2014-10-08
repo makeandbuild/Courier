@@ -3,7 +3,17 @@
 var BeaconDetection = require('./../models/beacon-detection.model.js');
 var mongoose = require('mongoose');
 
-//[Lindsay Thurmond:10/8/14] TODO: finish pulling dao related code from beacon-detection.service
+exports.findAllDetectionsPromise = function () {
+    return BeaconDetection.find().exec();
+}
+
+exports.findFilteredDetectionsPromise = function (filters) {
+    return BeaconDetection.find(filters).exec();
+}
+
+exports.createDetectionPromise = function (detection) {
+    return BeaconDetection.create(detection); // returns a promise without needing .exec()
+};
 
 exports.createDetectionsPromise = function (detections) {
     var promise = new mongoose.Promise;

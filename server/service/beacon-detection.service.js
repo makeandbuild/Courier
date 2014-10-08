@@ -5,17 +5,16 @@
 
 var when = require('when');
 var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
-var BeaconDetection = require('./../models/beacon-detection.model.js');
 
-function findDetections(callback, optionalFilters) {
+function findDetections(optionalFilters) {
     if (optionalFilters) {
-        BeaconDetection.find(optionalFilters, callback);
+        return when(beaconDetectionDao.findFilteredDetectionsPromise(optionalFilters));
     } else {
-        BeaconDetection.find(callback);
+        return when(beaconDetectionDao.findAllDetectionsPromise());
     }
 }
 
-function findFilteredDetections(uuid, agentId, startDate, endDate, callback) {
+function findFilteredDetections(uuid, agentId, startDate, endDate) {
     var filters;
     if (uuid || agentId || startDate || endDate) {
         filters = {};
@@ -28,17 +27,17 @@ function findFilteredDetections(uuid, agentId, startDate, endDate, callback) {
         }
         //[Lindsay Thurmond:10/7/14] TODO: start & end dates
     }
-    findDetections(callback, filters);
+    return findDetections(filters);
 };
 
-function findDetectionsByUuid(uuid, callback) {
+function findDetectionsByUuid(uuid) {
     var filters = {uuid: uuid};
-    findDetections(callback, filters);
+    return findDetections(filters);
 }
 
-function findDetectionsByAgentId(agentId, callback) {
+function findDetectionsByAgentId(agentId) {
     var filters = {agentId: agentId};
-    findDetections(callback, filters);
+    return findDetections(filters);
 }
 
 function findDetectionsByDateRange(startDate, endDate, callback) {
@@ -52,18 +51,22 @@ function findDetectionsByDateRange(startDate, endDate, callback) {
  * @param callback
  * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
-function createDetection(beaconDetection, callback, timeAsMs) {
+function createDetection(beaconDetection, timeAsMs) {
+    var promise = when(beaconDetectionDao.createDetectionPromise(beaconDetection));
 
-    BeaconDetection.create(beaconDetection, function (err, savedDetection) {
-        if (err) {
-            return callback(err);
-        }
+    if (timeAsMs && timeAsMs === true) {
+        var defer = when.defer();
+        promise.then(function(savedDetection){
+            if (savedDetection.time) {
+                savedDetection.time = savedDetection.time.getTime();
+            }
+            defer.resolve(savedDetection);
+        })
+        return defer.promise;
 
-        if (timeAsMs && timeAsMs === true && savedDetection.time) {
-            savedDetection.time = savedDetection.time.getTime();
-        }
-        return callback(null, savedDetection);
-    });
+    } else {
+        return promise;
+    }
 }
 
 /**
@@ -97,21 +100,10 @@ function createDetections(beaconDetections, timeAsMs) {
     }
 }
 
-//[Lindsay Thurmond:10/7/14] TODO:  still figuring out the best way to use promises, cleanup below
-
-exports.getDeleteAllDetectionsPromise = function getDeleteAllDetectionsPromise() {
-    return BeaconDetection.remove({}).exec();
+exports.deleteAllDetections = function deleteAllDetections() {
+    return when(beaconDetectionDao.deleteAllDetections());
 }
 
-function deleteAllDetections(callback) {
-    var deferred = when.defer();
-
-    BeaconDetection.remove({}, function (err) {
-        deferred.promise.nodeify(callback);
-    });
-
-    return deferred.promise;
-}
 
 exports.findDetections = findDetections;
 exports.findDetectionsByDateRange = findDetectionsByDateRange;
@@ -120,4 +112,3 @@ exports.findFilteredDetections = findFilteredDetections;
 exports.findDetectionsByUuid = findDetectionsByUuid;
 exports.createDetection = createDetection;
 exports.createDetections = createDetections;
-exports.deleteAllDetections = deleteAllDetections;

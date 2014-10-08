@@ -6,14 +6,8 @@ var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');
 
-function handleError(res, err) {
-    return res.send(500, err);
-}
-
 
 //[Lindsay Thurmond:10/3/14] TODO: get by date
-//[Lindsay Thurmond:10/3/14] TODO: get by agent
-//[Lindsay Thurmond:10/6/14] TODO: get by beacon uuid
 /**
  * GET /api/beacondetections -> unfiltered array of all beacon detections
  *
@@ -55,12 +49,11 @@ exports.index = function (req, res) {
     //[Lindsay Thurmond:10/7/14] TODO: date range doesn't work yet
     var startDate = req.query.startdate;
     var endDate = req.query.enddate;
-    beaconDetectionService.findFilteredDetections(uuid, agentId, startDate, endDate,
-        function (err, detections) {
-            if (err) {
-                return handleError(res, err);
-            }
+    beaconDetectionService.findFilteredDetections(uuid, agentId, startDate, endDate)
+        .then(function (detections) {
             return res.json(200, detections);
+        }, function (err) {
+            return handleError(res, err);
         });
 }
 
@@ -79,15 +72,19 @@ exports.create = function (req, res) {
         logger.detections(logLine);
     }
 
-    var detections = req.body;
-    beaconDetectionService.createDetection(detections, function (err, detections) {
-        if (err) {
-            return res.send(500, err);
-        }
-        if (!detections) {
-            return res.send(404);
-        }
-        console.log(detections);
-        return res.json(201, detections);
-    }, true);
+    var detection = req.body;
+    beaconDetectionService.createDetection(detection, true)
+        .then(function (detection) {
+            if (!detection) {
+                return res.send(404);
+            }
+            console.log(detection);
+            return res.json(201, detection);
+        }, function (err) {
+            return handleError(res, err);
+        });
 };
+
+function handleError(res, err) {
+    return res.send(500, err);
+}

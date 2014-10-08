@@ -64,7 +64,7 @@ describe('Test /api/beacondetections API', function () {
             done();
         } else {
             // clear all detections from db, then populate with sample data above
-            beaconDetectionService.getDeleteAllDetectionsPromise()
+            beaconDetectionService.deleteAllDetections()
                 .then(createSampleBeaconDetection()
                     .then(function (newDetections) {
                         sampleDetections = newDetections;

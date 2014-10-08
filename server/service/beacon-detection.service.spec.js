@@ -56,7 +56,7 @@ describe('Beacon detection service methods', function () {
             done();
         } else {
             // clear all detections from db, then populate with sample data above
-            beaconDetectionService.getDeleteAllDetectionsPromise()
+            beaconDetectionService.deleteAllDetections()
                 .then(createSampleBeaconDetection()
                     .then(function (newDetections) {
                         sampleDetections = newDetections;
@@ -67,38 +67,38 @@ describe('Beacon detection service methods', function () {
     });
 
     it('should find all detections', function (done) {
-        beaconDetectionService.findDetections(function (err, detections) {
-            if (err) {
+        beaconDetectionService.findDetections()
+            .then(function(detections){
+                detections.should.be.instanceOf(Array);
+                detections.length.should.be.greaterThan(0);
+                done();
+            }, function(err){
                 done(err);
-            }
-            detections.should.be.instanceOf(Array);
-            detections.length.should.be.greaterThan(0);
-            done();
-        });
+            });
     });
 
     it('should find all detections for beacon with uuid = ' + sampleDetections[0].uuid, function (done) {
-        beaconDetectionService.findDetectionsByUuid(sampleDetections[0].uuid, function (err, detections) {
-            if (err) {
+        beaconDetectionService.findDetectionsByUuid(sampleDetections[0].uuid)
+            .then(function (detections) {
+                detections.should.be.instanceOf(Array);
+                detections.should.have.lengthOf(2);
+                done();
+            }, function (err) {
                 console.log(err);
                 done(err);
-            }
-            detections.should.be.instanceOf(Array);
-            detections.should.have.lengthOf(2);
-            done();
-        });
+            });
     });
 
     it('should find all detections for beacon with agentId = ' + sampleDetections[0].agentId, function (done) {
-        beaconDetectionService.findDetectionsByAgentId(sampleDetections[0].agentId, function (err, detections) {
-            if (err) {
+        beaconDetectionService.findDetectionsByAgentId(sampleDetections[0].agentId)
+            .then(function (detections) {
+                detections.should.be.instanceOf(Array);
+                detections.should.have.lengthOf(1);
+                done();
+            }, function (err) {
                 console.log(err);
                 done(err);
-            }
-            detections.should.be.instanceOf(Array);
-            detections.should.have.lengthOf(1);
-            done();
-        });
+            });
     });
 
     //[Lindsay Thurmond:10/7/14] TODO: add date ranges to this test
@@ -106,15 +106,15 @@ describe('Beacon detection service methods', function () {
         var agentId = sampleDetections[0].agentId;
         var uuid = sampleDetections[0].uuid;
 
-        beaconDetectionService.findFilteredDetections(uuid, agentId, null, null, function (err, detections) {
-            if (err) {
+        beaconDetectionService.findFilteredDetections(uuid, agentId, null, null)
+            .then(function (detections) {
+                detections.should.be.instanceOf(Array);
+                detections.should.have.lengthOf(1);
+                done();
+            }, function (err) {
                 console.log(err);
                 done(err);
-            }
-            detections.should.be.instanceOf(Array);
-            detections.should.have.lengthOf(1);
-            done();
-        });
+            });
     });
 
 });

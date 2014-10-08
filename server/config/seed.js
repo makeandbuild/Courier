@@ -5,8 +5,6 @@
 
 'use strict';
 
-var mongoose = require('mongoose');
-
 var beaconService = require('../service/beacon.service.js');
 var beaconDetectionService = require('../service/beacon-detection.service.js');
 var agentService = require('../service/agent.service.js');
