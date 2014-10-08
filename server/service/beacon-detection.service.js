@@ -4,7 +4,7 @@
 'use strict';
 
 var when = require('when');
-
+var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
 var BeaconDetection = require('./../models/beacon-detection.model.js');
 
 function findDetections(callback, optionalFilters) {
@@ -54,7 +54,7 @@ function findDetectionsByDateRange(startDate, endDate, callback) {
  */
 function createDetection(beaconDetection, callback, timeAsMs) {
 
-    BeaconDetection.create(beaconDetection, function(err, savedDetection) {
+    BeaconDetection.create(beaconDetection, function (err, savedDetection) {
         if (err) {
             return callback(err);
         }
@@ -67,39 +67,34 @@ function createDetection(beaconDetection, callback, timeAsMs) {
 }
 
 /**
- * Create an array of beacon detections.  Callback will contain an array of the saved detections.
+ * Create an array of beacon detections.
+ * Promise will contain an array of the saved detections.
  *
  * @param beaconDetections
- * @param callback
  * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
-function createDetections(beaconDetections, callback, timeAsMs) {
-    // Depending on how many we are trying to insert at once, we may want to change to insert
-    // (draw back is that it bypasses the mongoose schema validation).  For now
-    // I'm sticking with create() until it becomes a problem.
-    // BeaconDetection.collection.insert(beaconDetections, callback);
-    BeaconDetection.create(beaconDetections, function() {
-
-        // wrap up results in an array to make easier to use
-        var err = arguments[0];
-        if(err) {
-            return callback(err);
-        }
-
-        var savedDetections = [];
-        for (var i = 1; i < arguments.length; i++) {
-            var savedDetection = arguments[i];
-            if (timeAsMs && timeAsMs === true) {
+function createDetections(beaconDetections, timeAsMs) {
+    var promise = when(beaconDetectionDao.createDetectionsPromise(beaconDetections));
+    if (timeAsMs && timeAsMs === true) {
+        var defer = when.defer();
+        // convert dates to ms timestamps
+        promise.then(function (detections) {
+            var savedDetections = [];
+            detections.forEach(function(savedDetection){
                 // flip the dates back to ms for consistency
                 if (savedDetection.time) {
                     savedDetection.time = savedDetection.time.getTime();
                 }
-            }
-            savedDetections.push(savedDetection);
-        }
-        return callback(null, savedDetections);
-    });
-
+                savedDetections.push(savedDetection);
+            });
+            defer.resolve(savedDetections);
+        }, function(err) {
+            defer.reject(err);
+        });
+        return defer.promise;
+    } else {
+        return promise;
+    }
 }
 
 //[Lindsay Thurmond:10/7/14] TODO:  still figuring out the best way to use promises, cleanup below
@@ -111,7 +106,7 @@ exports.getDeleteAllDetectionsPromise = function getDeleteAllDetectionsPromise()
 function deleteAllDetections(callback) {
     var deferred = when.defer();
 
-    BeaconDetection.remove({}, function(err) {
+    BeaconDetection.remove({}, function (err) {
         deferred.promise.nodeify(callback);
     });
 

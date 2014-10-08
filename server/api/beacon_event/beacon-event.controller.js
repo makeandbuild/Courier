@@ -25,7 +25,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
         ]
     }
 
-    Sends list of saved beacon detections as response body.
+ Sends list of saved beacon detections as response body.
 
     [
         {
@@ -58,7 +58,7 @@ exports.create = function (req, res) {
     //[Lindsay Thurmond:10/5/14] TODO: update to use promises instead
 
     // if the agent is specified, update with latest detection information
-    beaconEventService.updateAgentWithMostRecentPing(beaconEvent, function(err, agent) {
+    beaconEventService.updateAgentWithMostRecentPing(beaconEvent, function (err, agent) {
         if (err || !agent) {
             logger.log('error', err);
         }
@@ -66,15 +66,15 @@ exports.create = function (req, res) {
 
     var detections = beaconEventService.convertEventToDetections(beaconEvent);
 
-    beaconDetectionService.createDetections(detections, function(err, savedDetections) {
-        if (err) {
+    beaconDetectionService.createDetections(detections, true)
+        .then(function (savedDetections) {
+            if (!savedDetections) {
+                return res.send(404);
+            }
+            console.log(savedDetections);
+            return res.json(200, savedDetections);
+        }, function (err) {
             return res.send(500, err);
-        }
-        if (!savedDetections) {
-            return res.send(404);
-        }
-        console.log(savedDetections);
-        return res.json(200, savedDetections);
-    }, true);
+        });
 
 }

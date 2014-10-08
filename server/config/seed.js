@@ -5,15 +5,16 @@
 
 'use strict';
 
-var User = require('../models/user.model.js');
-var Agent = require('../models/agent.model.js');
-var BeaconDetection = require('../models/beacon-detection.model.js');
 var mongoose = require('mongoose');
 
 var beaconService = require('../service/beacon.service.js');
+var beaconDetectionService = require('../service/beacon-detection.service.js');
 var agentService = require('../service/agent.service.js');
 
+var userDao = require('../dao/user.dao.js');
 var beaconDao = require('../dao/beacon.dao.js');
+var agentDao = require('../dao/agent.dao.js');
+var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
 
 module.exports = function (complete) {
 
@@ -21,31 +22,27 @@ module.exports = function (complete) {
     var savedBeacons;
 
     // delete users
-    User.find({}).remove().exec()
+    userDao.deleteAllUsers()
         // then populate users
         .then(function () {
-            var promise = new mongoose.Promise;
-            User.create({
-                    provider: 'local',
-                    name: 'Test User',
-                    email: 'test@test.com',
-                    password: 'test'
-                }, {
-                    provider: 'local',
-                    role: 'admin',
-                    name: 'Admin',
-                    email: 'admin@admin.com',
-                    password: 'admin'
-                }
-                , function (err) {
-                    if (err) {
-                        promise.reject(err);
-                    } else {
-                        console.log('finished populating users');
-                        promise.resolve();
-                    }
-                });
-            return promise;
+            var createPromise = userDao.createUsers([{
+                provider: 'local',
+                name: 'Test User',
+                email: 'test@test.com',
+                password: 'test'
+            }, {
+                provider: 'local',
+                role: 'admin',
+                name: 'Admin',
+                email: 'admin@admin.com',
+                password: 'admin'
+            }]);
+
+            createPromise.then(function() {
+                console.log('finished populating users');
+            });
+
+            return createPromise;
         })
         // then delete beacons
         .then(function () {
@@ -53,7 +50,7 @@ module.exports = function (complete) {
         })
         // then populate beacons
         .then(function () {
-            var createPromise = beaconService.createBeaconsPromise([
+            var createPromise = beaconService.createBeacons([
                 {
                     name: 'Beacon 55',
                     uuid: '6fdg76hdf',
@@ -84,7 +81,7 @@ module.exports = function (complete) {
         })
         // then delete agents
         .then(function () {
-            return Agent.find({}).remove().exec();
+            return agentDao.deleteAllAgents();
         })
         // then populate agents
         .then(function () {
@@ -121,12 +118,12 @@ module.exports = function (complete) {
         })
         // then delete detections
         .then(function () {
-            return BeaconDetection.find({}).remove().exec();
+            return beaconDetectionDao.deleteAllDetections();
         })
         // then populate detections
         .then(function () {
-            var promise = new mongoose.Promise;
-            BeaconDetection.create({
+            var createPromise = beaconDetectionService.createDetections([
+                {
                     time: Date.now(),
                     uuid: savedBeacons[0].uuid,
                     major: 11111,
@@ -155,16 +152,13 @@ module.exports = function (complete) {
                     rssi: -75,
                     distance: 3.7,
                     agentId: savedAgents[2]._id
-                }, function (err) {
-                    if (err) {
-                        promise.reject(err);
-                    } else {
-                        console.log('finished populating beacon detections');
-                        promise.resolve();
-                    }
                 }
-            );
-            return promise;
+            ]);
+
+            createPromise.then(function () {
+                console.log('finished populating beacon detections');
+            });
+            return createPromise;
         }
     )
         .then(function () {

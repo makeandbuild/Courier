@@ -22,3 +22,12 @@ exports.createAgentsPromise = function(agents) {
     });
     return promise;
 }
+
+
+exports.deleteAgentByIdPromise = function (id) {
+    return Agent.findById(id).remove().exec();
+}
+
+exports.deleteAllAgents = function() {
+    return Agent.find({}).remove().exec();
+}

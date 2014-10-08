@@ -20,7 +20,7 @@ exports.createBeacon = function (beacon) {
     return when(beaconDao.createBeaconPromise(beacon));
 };
 
-exports.createBeaconsPromise = function (beacons) {
+exports.createBeacons = function (beacons) {
     return when(beaconDao.createBeaconsPromise(beacons));
 }
 

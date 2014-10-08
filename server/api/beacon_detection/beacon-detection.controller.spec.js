@@ -42,9 +42,11 @@ var sampleDetections = [
 //[Lindsay Thurmond:10/7/14] TODO: cleanup promises
 function createSampleBeaconDetection() {
     var beaconDetections = when.defer();
-    beaconDetectionService.createDetections(sampleDetections, function (err, newDetections) {
-        beaconDetections.resolve(newDetections);
-    }, true);
+    beaconDetectionService.createDetections(sampleDetections, true)
+        .then(function(newDetections){
+            beaconDetections.resolve(newDetections);
+
+        });
     return beaconDetections.promise;
 }
 
