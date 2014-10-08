@@ -5,6 +5,8 @@
 
 var _ = require('lodash');
 var Beacon = require('./../models/beacon.model.js');
+var mongoose = require('mongoose');
+var beaconDao = require('../dao/beacon.dao.js');
 
 
 exports.findBeacons = function (callback) {
@@ -19,6 +21,14 @@ exports.findBeaconById = function (id, callback) {
 exports.createBeacon = function (beacon, callback) {
     Beacon.create(beacon, callback);
 };
+
+exports.createBeaconsPromise = function(beacons, optionalCallback) {
+    var promise = beaconDao.createBeaconsPromise(beacons);
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
+}
 
 exports.updateBeacon = function (beacon, callback) {
     if (!beacon) {

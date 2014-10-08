@@ -5,6 +5,7 @@
 
 var _ = require('lodash');
 var Agent = require('./../models/agent.model.js');
+var agentDao = require('../dao/agent.dao.js');
 
 
 exports.findAgents = function (callback) {
@@ -23,6 +24,14 @@ exports.createAgent = function(agent, callback) {
 
     //[Lindsay Thurmond:10/1/14] TODO: if already exists - set saved approved status, otherwise unapproved
 };
+
+exports.createAgentsPromise = function(agents, optionalCallback) {
+    var promise = agentDao.createAgentsPromise(agents);
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
+}
 
 // Updates an existing agent in the DB
 exports.updateAgent = function (agent, callback) {
