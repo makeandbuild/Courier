@@ -167,10 +167,10 @@ module.exports = function (complete) {
         }
     )
         .then(function () {
-            console.log('done populating seed data');
+            console.log('Seed data complete!');
             complete();
         }, function (err) {
-            console.log('error loading seed data: ' + err);
+            console.log('Error loading seed data: ' + err);
         });
 }
 

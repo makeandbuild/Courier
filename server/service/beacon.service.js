@@ -3,23 +3,33 @@
  */
 'use strict';
 
-var _ = require('lodash');
 var Beacon = require('./../models/beacon.model.js');
 var mongoose = require('mongoose');
 var beaconDao = require('../dao/beacon.dao.js');
 
 
-exports.findBeacons = function (callback) {
-    Beacon.find(callback);
+exports.findBeacons = function (optionalCallback) {
+    var promise = beaconDao.findBeaconsPromise();
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
 }
 
-
-exports.findBeaconById = function (id, callback) {
-    Beacon.findById(id, callback);
+exports.findBeaconById = function (id, optionalCallback) {
+    var promise = beaconDao.findBeaconByIdPromise(id);
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
 }
 
-exports.createBeacon = function (beacon, callback) {
-    Beacon.create(beacon, callback);
+exports.createBeacon = function (beacon, optionalCallback) {
+    var promise = beaconDao.createBeaconPromise(beacon);
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
 };
 
 exports.createBeaconsPromise = function(beacons, optionalCallback) {
@@ -30,46 +40,28 @@ exports.createBeaconsPromise = function(beacons, optionalCallback) {
     return promise;
 }
 
-exports.updateBeacon = function (beacon, callback) {
+exports.updateBeacon = function (beacon, optionalCallback) {
+    //[Lindsay Thurmond:10/8/14] TODO: make util method for instant fail case
     if (!beacon) {
-        callback('Cannot update empty beacon');
-    }
-    var beaconId;
-    if (beacon._id) {
-        beaconId = beacon._id;
-        delete beacon._id;
-    }
-    Beacon.findById(beaconId, function (err, beaconToUpdate) {
-        if (err) {
-            return callback(err);
+        var promise = new mongoose.Promise;
+        if(optionalCallback) {
+            optionalCallback.addBack(optionalCallback);
         }
-        if (!beaconToUpdate) {
-            return callback(err);
-        }
-        var updated = _.merge(beaconToUpdate, beacon);
-        updated.save(function (err) {
-            if (err) {
-                return callback(err);
-            }
-            return callback(null, beaconToUpdate);
-        });
-    });
+        promise.reject('Cannot update empty beacon');
+        return promise;
+    }
+
+    promise = beaconDao.updateBeaconPromise(beacon);
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
 }
 
-// Deletes an beacon from the DB
-exports.deleteBeacon = function (id, callback) {
-    Beacon.findById(id, function (err, beaconToDelete) {
-        if (err) {
-            return callback(err);
-        }
-        if (!beaconToDelete) {
-            callback(err);
-        }
-        beaconToDelete.remove(function (err) {
-            if (err) {
-                callback(err);
-            }
-            return callback();
-        });
-    });
+exports.deleteBeacon = function (id, optionalCallback) {
+    var promise = beaconDao.deleteBeaconByIdPromise(id);
+    if (optionalCallback) {
+        promise.addBack(optionalCallback);
+    }
+    return promise;
 };
