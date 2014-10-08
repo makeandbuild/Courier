@@ -1,77 +1,94 @@
-/**
- * Using Rails-like standard naming convention for endpoints.
- * GET     /beacons              ->  index
- * POST    /beacons              ->  create
- * GET     /beacons/:id          ->  show
- * PUT     /beacons/:id          ->  update
- * DELETE  /beacons/:id          ->  destroy
- */
-
 'use strict';
 
-var _ = require('lodash');
-var Beacon = require('./../../models/beacon.model.js');
 var beaconService = require('../../service/beacon.service.js');
 
-// Get list of beacons
-// GET /beacons
+/**
+ * Get list of beacons
+ * GET /beacons
+ *
+ * @param req
+ * @param res
+ */
 exports.index = function (req, res) {
-    beaconService.findBeacons(function (err, beacons) {
-        if (err) {
+    beaconService.findBeacons()
+        .then(function (beacons) {
+            return res.json(200, beacons);
+        }, function (err) {
             return handleError(res, err);
-        }
-        return res.json(200, beacons);
-    });
+        });
 };
 
-// Get a single beacon
-// GET /beacons/:id
+/**
+ * Get a single beacon
+ * GET /beacons/:id
+ *
+ * @param req
+ * @param res
+ */
 exports.show = function (req, res) {
-    beaconService.findBeaconById(req.params.id, function (err, beacon) {
-        if (err) {
+    beaconService.findBeaconById(req.params.id)
+        .then(function (beacon) {
+            if (!beacon) {
+                return res.send(404);
+            }
+            return res.json(beacon);
+        }, function (err) {
             return handleError(res, err);
-        }
-        if (!beacon) {
-            return res.send(404);
-        }
-        return res.json(beacon);
-    });
+        });
 };
 
-// Creates a new beacon in the DB.
-// POST /beacons
+/**
+ * Creates a new beacon in the DB.
+ * POST /beacons
+ *
+ * @param req
+ * @param res
+ */
 exports.create = function (req, res) {
-    beaconService.createBeacon(req.body, function (err, beacon) {
-        if (err) {
+    beaconService.createBeacon(req.body)
+        .then(function (beacon) {
+            return res.json(201, beacon);
+        }, function (err) {
             return handleError(res, err);
-        }
-        return res.json(201, beacon);
-    });
+        });
 };
 
-// Updates an existing beacon in the DB.
-// PUT /beacons/:id
+/**
+ * Updates an existing beacon in the DB.
+ * PUT /beacons/:id
+ *
+ * @param req
+ * @param res
+ */
 exports.update = function (req, res) {
-    beaconService.updateBeacon(req.body, function (err, beacon) {
-        if (err) {
+    var beacon = req.body;
+    beaconService.updateBeacon(beacon)
+        .then(function (beacon) {
+            if (!beacon) {
+                return res.send(404);
+            }
+            return res.json(200, beacon);
+        }, function (err) {
             return handleError(res, err);
-        }
-        if (!beacon) {
-            return res.send(404);
-        }
-        return res.json(200, beacon);
-    });
+        });
 };
 
-// Deletes a beacon from the DB.
-// DELETE /beacons/:id
+
+/**
+ * Deletes a beacon from the DB.
+ * DELETE /beacons/:id
+ *
+ * @param req
+ * @param res
+ */
 exports.destroy = function (req, res) {
-    beaconService.deleteBeacon(req.params.id, function (err, beacon) {
-        if (err) {
+    var beaconId = req.params.id;
+    beaconService.deleteBeacon(beaconId)
+        .then(function () {
+            return res.send(204);
+        }, function (err) {
             return handleError(res, err);
-        }
-        return res.send(204);
-    });
+        });
 };
 
 function handleError(res, err) {

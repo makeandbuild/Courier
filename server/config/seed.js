@@ -6,13 +6,14 @@
 'use strict';
 
 var User = require('../models/user.model.js');
-var Beacon = require('../models/beacon.model.js');
 var Agent = require('../models/agent.model.js');
 var BeaconDetection = require('../models/beacon-detection.model.js');
 var mongoose = require('mongoose');
 
 var beaconService = require('../service/beacon.service.js');
 var agentService = require('../service/agent.service.js');
+
+var beaconDao = require('../dao/beacon.dao.js');
 
 module.exports = function (complete) {
 
@@ -48,7 +49,7 @@ module.exports = function (complete) {
         })
         // then delete beacons
         .then(function () {
-            return Beacon.find({}).remove().exec();
+            return beaconDao.deleteAllBeacons();
         })
         // then populate beacons
         .then(function () {

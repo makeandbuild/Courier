@@ -69,3 +69,7 @@ exports.updateBeaconPromise = function (beacon) {
 exports.deleteBeaconByIdPromise = function (id) {
     return Beacon.findById(id).remove().exec();
 }
+
+exports.deleteAllBeacons = function() {
+    return Beacon.find({}).remove().exec();
+}
