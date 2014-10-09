@@ -3,10 +3,13 @@
  */
 'use strict';
 
+var when = require('when');
+
 var agentService = require('./agent.service.js');
 
 /**
  * Converts beacon event to an array of beacon detections.
+ *
  * @param beaconEvent
  * @returns {Array}
  */
@@ -22,16 +25,21 @@ function convertEventToDetections(beaconEvent) {
     return detections;
 }
 
-function findMostRecentPing(beaconEvent, callback) {
+/**
+ *
+ * @param beaconEvent
+ * @returns {*}
+ */
+function findMostRecentPing(beaconEvent) {
 
     if (!beaconEvent) {
-        return callback('No beacon event specified');
+        throw Error('No beacon event specified');
     }
     if (!beaconEvent.detections) {
-        return callback('Pings array is empty');
+        throw Error('Pings array is empty');
     }
     if (!beaconEvent.detections instanceof Array) {
-        return callback('Pings is expected to be an array');
+        throw Error('Pings is expected to be an array');
     }
 
     var pings = beaconEvent.detections;
@@ -44,45 +52,54 @@ function findMostRecentPing(beaconEvent, callback) {
     });
 
     if (mostRecentPing) {
-        return callback(null, mostRecentPing);
+        return mostRecentPing;
     } else {
-        return callback('No recent ping found');
+        throw Error('No recent ping found');
     }
 
 }
 
- function updateAgentWithMostRecentPing(beaconEvent, callback) {
+ function updateAgentWithMostRecentPingPromise(beaconEvent) {
     if (!beaconEvent) {
-        return callback('No beacon event specified');
+        return when.reject('No beacon event specified');
     }
     if (!beaconEvent.agentId) {
-        return callback('No agent found');
+        return when.reject('No agent found');
     }
 
-    findMostRecentPing(beaconEvent, function (err, mostRecentPing) {
-        if (err) {
-            return callback(err);
-        }
-        if (mostRecentPing) {
-            var agentId = beaconEvent.agentId;
-            agentService.findAgentById(agentId)
-                .then(function(foundAgent){
-                    if (!foundAgent) {
-                        return callback('Could not find agent');
-                    }
+     var promise = when();
 
-                    // update agent with new heartbeat (time + id)
+     try {
+         var mostRecentPing = findMostRecentPing(beaconEvent);
 
-                    foundAgent.lastSeen = mostRecentPing.time;
-                    foundAgent.lastSeenBy = mostRecentPing.uuid;
+         var agentId = beaconEvent.agentId;
+         agentService.findAgentById(agentId)
+             .then(function(foundAgent){
+                 if (!foundAgent) {
+                     promise.reject('Could not find agent');
+                     return;
+                 }
 
-                    agentService.updateAgent(foundAgent, callback);
-                });
-        }
+                 // update agent with new heartbeat (time + id)
 
-    });
+                 foundAgent.lastSeen = mostRecentPing.time;
+                 foundAgent.lastSeenBy = mostRecentPing.uuid;
+
+                 agentService.updateAgent(foundAgent)
+                     .then(function(agent){
+                         promise.resolve(agent);
+                     }, function(err){
+                         promise.reject(err);
+                     });
+             });
+
+     } catch(err) {
+        promise.reject(err);
+     }
+     return promise;
+
 }
 
 exports.convertEventToDetections = convertEventToDetections;
 exports.findMostRecentPing = findMostRecentPing;
-exports.updateAgentWithMostRecentPing = updateAgentWithMostRecentPing;
+exports.updateAgentWithMostRecentPingPromise = updateAgentWithMostRecentPingPromise;
