@@ -6,6 +6,14 @@ var mongoose = require('mongoose');
 //[Lindsay Thurmond:10/8/14] TODO: finish pulling dao related code from user.service
 
 
+exports.findUsersPromise = function () {
+    return User.find({}, '-salt -hashedPassword').exec();
+}
+
+exports.findUserByIdPromise = function (id) {
+    return User.findById(id).exec();
+}
+
 exports.createUsers = function (users) {
     var promise = new mongoose.Promise;
     User.create(users, function () {

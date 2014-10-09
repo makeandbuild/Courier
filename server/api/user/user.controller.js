@@ -3,6 +3,7 @@
 var User = require('./../../models/user.model.js');
 var config = require('../../config/environment');
 var tokenService = require('../../service/token.service.js');
+var userService = require('../../service/user.service.js');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -15,26 +16,27 @@ var validationError = function(res, err) {
  * GET /api/users
  */
 exports.index = function(req, res) {
-  User.find({}, '-salt -hashedPassword', function (err, users) {
-    if(err) return res.send(500, err);
-    res.json(200, users);
-  });
+    userService.findUsers()
+        .then(function(users){
+            res.json(200, users);
+        }, function(err){
+            return res.send(500, err);
+        });
 };
 
 /**
  * Creates a new user
- *
  * POST /api/users
  */
-exports.create = function (req, res, next) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.role = 'user';
-  newUser.save(function(err, user) {
-    if (err) return validationError(res, err);
-    var token = tokenService.createToken(user);
-    res.json({ token: token });
-  });
+exports.create = function (req, res) {
+    var newUser = req.body;
+    userService.createUser(newUser)
+        .then(function (user) {
+            var token = tokenService.createToken(user);
+            res.json({ token: token });
+        }, function (err) {
+            return validationError(res, err);
+        });
 };
 
 /**
@@ -43,14 +45,19 @@ exports.create = function (req, res, next) {
  * GET /api/users/:id
  */
 exports.show = function (req, res, next) {
-  var userId = req.params.id;
+    var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
-    if (err) return next(err);
-    if (!user) return res.send(401);
-    res.json(user.profile);
-  });
+    userService.findUserById(userId)
+        .then(function (user) {
+            if (!user) return res.send(401);
+            res.json(user.profile);
+        }, function (err) {
+            //[Lindsay Thurmond:10/9/14] TODO: why next() here? this isn't middleware
+            return next(err);
+        });
 };
+
+//[Lindsay Thurmond:10/9/14] TODO: finish refactoring from here down to separate service/dao layers and use promises
 
 /**
  * Deletes a user
@@ -70,7 +77,7 @@ exports.destroy = function(req, res) {
  *
  * PUT /api/users/:id/password
  */
-exports.changePassword = function(req, res, next) {
+exports.changePassword = function(req, res) {
   var userId = req.user._id;
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
@@ -112,6 +119,6 @@ exports.me = function(req, res, next) {
 /**
  * Authentication callback
  */
-exports.authCallback = function(req, res, next) {
+exports.authCallback = function(req, res) {
   res.redirect('/');
 };
