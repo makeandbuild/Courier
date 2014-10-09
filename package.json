@@ -25,6 +25,7 @@
     "socket.io": "~1.0.6",
     "socketio-jwt": "^2.0.2",
     "static-favicon": "~1.0.1",
+    "underscore.string": "^2.3.3",
     "when": "^3.5.0"
   },
   "devDependencies": {

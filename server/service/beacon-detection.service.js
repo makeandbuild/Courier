@@ -5,6 +5,7 @@
 
 var when = require('when');
 var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
+var dateQueryParser = require('../utils/date.query.parser.js');
 
 function findDetections(optionalFilters) {
     if (optionalFilters) {
@@ -14,9 +15,9 @@ function findDetections(optionalFilters) {
     }
 }
 
-function findFilteredDetections(uuid, agentId, startDate, endDate) {
+function findFilteredDetections(uuid, agentId, time) {
     var filters;
-    if (uuid || agentId || startDate || endDate) {
+    if (uuid || agentId || time) {
         filters = {};
 
         if (uuid) {
@@ -25,7 +26,9 @@ function findFilteredDetections(uuid, agentId, startDate, endDate) {
         if (agentId) {
             filters.agentId = agentId;
         }
-        //[Lindsay Thurmond:10/7/14] TODO: start & end dates
+        if (time) {
+            filters.time = dateQueryParser.convertQueryToMongoFilter(time);
+        }
     }
     return findDetections(filters);
 };
@@ -40,15 +43,18 @@ function findDetectionsByAgentId(agentId) {
     return findDetections(filters);
 }
 
-function findDetectionsByDateRange(startDate, endDate, callback) {
-    //[Lindsay Thurmond:10/6/14] TODO: implement me
+function findDetectionsByDateRange(time) {
+    var filters;
+    if (time) {
+        filters = {time: dateQueryParser.convertQueryToMongoFilter(time)};
+    }
+    return findDetections(filters);
 }
 
 /**
  * Create a single beacon detection
  *
  * @param beaconDetection
- * @param callback
  * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
 function createDetection(beaconDetection, timeAsMs) {
@@ -69,6 +75,13 @@ function createDetection(beaconDetection, timeAsMs) {
     }
 }
 
+//function changeDetectionTimeStringToDate(detection) {
+//    if (detection && detection.time && detection.time instanceof String) {
+//        // convert to date
+//        detection.time = moment.utc(detection.time).toDate();
+//    }
+//}
+
 /**
  * Create an array of beacon detections.
  * Promise will contain an array of the saved detections.
@@ -77,6 +90,8 @@ function createDetection(beaconDetection, timeAsMs) {
  * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
 function createDetections(beaconDetections, timeAsMs) {
+//    beaconDetections.forEach(changeDetectionTimeStringToDate);
+
     var promise = when(beaconDetectionDao.createDetectionsPromise(beaconDetections));
     if (timeAsMs && timeAsMs === true) {
         var defer = when.defer();
