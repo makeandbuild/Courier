@@ -65,18 +65,19 @@ function findMostRecentPing(beaconEvent, callback) {
         }
         if (mostRecentPing) {
             var agentId = beaconEvent.agentId;
-            agentService.findAgentById(agentId, function(err, foundAgent) {
-                if (!foundAgent) {
-                    return callback('Could not find agent');
-                }
+            agentService.findAgentById(agentId)
+                .then(function(foundAgent){
+                    if (!foundAgent) {
+                        return callback('Could not find agent');
+                    }
 
-                // update agent with new heartbeat (time + id)
+                    // update agent with new heartbeat (time + id)
 
-                foundAgent.lastSeen = mostRecentPing.time;
-                foundAgent.lastSeenBy = mostRecentPing.uuid;
+                    foundAgent.lastSeen = mostRecentPing.time;
+                    foundAgent.lastSeenBy = mostRecentPing.uuid;
 
-                agentService.updateAgent(foundAgent, callback);
-            });
+                    agentService.updateAgent(foundAgent, callback);
+                });
         }
 
     });

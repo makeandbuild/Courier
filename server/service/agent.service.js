@@ -4,76 +4,79 @@
 'use strict';
 
 var _ = require('lodash');
+var when = require('when');
+
 var Agent = require('./../models/agent.model.js');
 var agentDao = require('../dao/agent.dao.js');
 
-
-exports.findAgents = function (callback) {
-    Agent.find(callback);
+/**
+ * Finds list of all agents
+ *
+ * @returns {*}
+ */
+exports.findAgents = function () {
+    return when(agentDao.findAgentsPromise());
 }
 
-
-exports.findAgentById = function (id, callback) {
-    Agent.findById(id, callback);
+/**
+ * Finds an agent by id
+ *
+ * @param id
+ * @returns {*}
+ */
+exports.findAgentById = function (id) {
+    return when(agentDao.findAgentByIdPromise(id));
 }
 
-exports.createAgent = function(agent, callback) {
+/**
+ * Creates a single agent
+ *
+ * @param agent
+ * @returns {*}
+ */
+exports.createAgent = function(agent) {
     //[Lindsay Thurmond:10/1/14] TODO: check for existing agents first - ids will be mac addresses
     //[Lindsay Thurmond:10/1/14] TODO: add registrationDate to json in mongo
-    Agent.create(agent, callback);
+    return when(agentDao.createAgentPromise(agent));
 
     //[Lindsay Thurmond:10/1/14] TODO: if already exists - set saved approved status, otherwise unapproved
 };
 
-exports.createAgentsPromise = function(agents, optionalCallback) {
-    var promise = agentDao.createAgentsPromise(agents);
-    if (optionalCallback) {
-        promise.addBack(optionalCallback);
-    }
-    return promise;
+/**
+ * Creates all agents in array
+ *
+ * @param agents
+ * @returns {*}
+ */
+exports.createAgents = function(agents) {
+    return when(agentDao.createAgentsPromise(agents));
 }
 
-// Updates an existing agent in the DB
-exports.updateAgent = function (agent, callback) {
+/**
+ * Updates an existing agent
+ *
+ * @param agent
+ * @returns {*}
+ */
+exports.updateAgent = function (agent) {
     if (!agent) {
-        callback('Cannot update empty agent');
+        return when.reject('Cannot update empty agent');
     }
-    var agentId;
-    if (agent._id) {
-        agentId = agent._id;
-        delete agent._id;
-    }
-    Agent.findById(agentId, function (err, agentToUpdate) {
-        if (err) {
-            return callback(err);
-        }
-        if (!agentToUpdate) {
-            return callback(err);
-        }
-        var updated = _.merge(agentToUpdate, agent);
-        updated.save(function (err) {
-            if (err) {
-                return callback(err);
-            }
-            return callback(null, agentToUpdate);
-        });
-    });
+    return when(agentDao.updateAgentPromise(agent));
 };
 
-// Deletes an agent from the DB
-exports.deleteAgent = function (id, callback) {
-    Agent.findById(id, function (err, agentToDelete) {
-        if (err) {
-            return callback(err);
-        }
-        if (!agentToDelete) {
-            callback(err);
-        }
-        agentToDelete.remove(function (err) {
-            if (err) {
-                callback(err);
-            }
-            return callback();
-        });
-    });
+/**
+ * Deletes an agent
+ */
+exports.deleteAgent = function (id) {
+    return when(agentDao.deleteAgentByIdPromise(id));
+};
+
+/**
+ * Deletes all agents
+ *
+ * @returns {*}
+ */
+exports.deleteAllAgents = function () {
+    return when(agentDao.deleteAllAgents());
 };

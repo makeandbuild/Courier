@@ -83,7 +83,7 @@ module.exports = function (complete) {
         })
         // then populate agents
         .then(function () {
-            var createPromise = agentService.createAgentsPromise([
+            var createPromise = agentService.createAgents([
                 {
                     name: 'Agent 1',
                     location: 'entry way',
