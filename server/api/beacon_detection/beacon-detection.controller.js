@@ -91,6 +91,7 @@ exports.create = function (req, res) {
 
 			connection.onopen = function (session) {
 	   			// Publish a play audio event
+	   			logger.log("MADE IT HERE!")
 			   session.publish('com.makeandbuild.rpi.audio.play', ['https://s3.amazonaws.com/makeandbuild/courier/audio/1.wav']);
 			};
 
