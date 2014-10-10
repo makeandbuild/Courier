@@ -4,6 +4,7 @@ var User = require('./../../models/user.model.js');
 var config = require('../../config/environment');
 var tokenService = require('../../service/token.service.js');
 var userService = require('../../service/user.service.js');
+var _str = require('underscore.string');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -57,19 +58,20 @@ exports.show = function (req, res, next) {
         });
 };
 
-//[Lindsay Thurmond:10/9/14] TODO: finish refactoring from here down to separate service/dao layers and use promises
-
 /**
  * Deletes a user
  * restriction: 'admin'
  *
  * DELETE /api/users/:id
  */
-exports.destroy = function(req, res) {
-  User.findByIdAndRemove(req.params.id, function(err, user) {
-    if(err) return res.send(500, err);
-    return res.send(204);
-  });
+exports.destroy = function (req, res) {
+    var userId = req.params.id;
+    userService.deleteUser(userId)
+        .then(function () {
+            return res.send(204);
+        }, function (err) {
+            return res.send(500, err);
+        });
 };
 
 /**
@@ -82,18 +84,19 @@ exports.changePassword = function(req, res) {
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
 
-  User.findById(userId, function (err, user) {
-    if(user.authenticate(oldPass)) {
-      user.password = newPass;
-      user.save(function(err) {
-        if (err) return validationError(res, err);
-        res.send(200);
-      });
-    } else {
-      res.send(403);
-    }
-  });
+    userService.changePassword(userId, oldPass, newPass)
+        .then(function (user) {
+            res.send(200);
+        }, function (err) {
+            if (_str(err).startsWith('403')) {
+                return res.send(403);
+            }
+            return validationError(res, err);
+        });
 };
+
+
+//[Lindsay Thurmond:10/9/14] TODO: finish refactoring from here down to separate service/dao layers and use promises
 
 /**
  * Get my info

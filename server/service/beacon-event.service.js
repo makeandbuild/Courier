@@ -67,7 +67,7 @@ function findMostRecentPing(beaconEvent) {
         return when.reject('No agent found');
     }
 
-     var promise = when();
+     var defer = when.defer();
 
      try {
          var mostRecentPing = findMostRecentPing(beaconEvent);
@@ -76,7 +76,7 @@ function findMostRecentPing(beaconEvent) {
          agentService.findAgentById(agentId)
              .then(function(foundAgent){
                  if (!foundAgent) {
-                     promise.reject('Could not find agent');
+                     defer.reject('Could not find agent');
                      return;
                  }
 
@@ -87,16 +87,16 @@ function findMostRecentPing(beaconEvent) {
 
                  agentService.updateAgent(foundAgent)
                      .then(function(agent){
-                         promise.resolve(agent);
+                         defer.resolve(agent);
                      }, function(err){
-                         promise.reject(err);
+                         defer.reject(err);
                      });
              });
 
      } catch(err) {
-        promise.reject(err);
+        defer.reject(err);
      }
-     return promise;
+     return defer.promise;
 
 }
 

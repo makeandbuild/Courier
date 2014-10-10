@@ -39,16 +39,6 @@ var sampleDetections = [
     }
 ];
 
-function createSampleBeaconDetection() {
-    var beaconDetections = when.defer();
-    beaconDetectionService.createDetections(sampleDetections, true)
-        .then(function(newDetections){
-            beaconDetections.resolve(newDetections);
-
-        });
-    return beaconDetections.promise;
-}
-
 describe('Beacon detection service methods', function () {
 
     beforeEach(function (done) {
@@ -57,12 +47,15 @@ describe('Beacon detection service methods', function () {
         } else {
             // clear all detections from db, then populate with sample data above
             beaconDetectionService.deleteAllDetections()
-                .then(createSampleBeaconDetection()
-                    .then(function (newDetections) {
-                        sampleDetections = newDetections;
-                        done();
-                    })
-            );
+                .then(function () {
+                    return beaconDetectionService.createDetections(sampleDetections, true);
+                })
+                .then(function (newDetections) {
+                    sampleDetections = newDetections;
+                    done();
+                }, function (err) {
+                    done(err);
+                });
         }
     });
 
