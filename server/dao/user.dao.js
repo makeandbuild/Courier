@@ -6,7 +6,23 @@ var mongoose = require('mongoose');
 //[Lindsay Thurmond:10/8/14] TODO: finish pulling dao related code from user.service
 
 
-exports.createUsers = function (users) {
+exports.findUsersPromise = function () {
+    return User.find({}, '-salt -hashedPassword').exec();
+}
+
+exports.findUserByEmailPromise = function(email) {
+    return User.findOne({ email: email }).exec();
+}
+
+exports.findUserByIdPromise = function (id) {
+    return User.findById(id).exec();
+}
+
+exports.findUserByIdWithoutPasswordPromise = function (id) {
+    return User.findOne({ _id: id }, '-salt -hashedPassword').exec();
+}
+
+exports.createUsersPromise = function (users) {
     var promise = new mongoose.Promise;
     User.create(users, function () {
 
@@ -30,6 +46,6 @@ exports.deleteUserByIdPromise = function (id) {
     return User.findById(id).remove().exec();
 }
 
-exports.deleteAllUsers = function() {
+exports.deleteAllUsers = function () {
     return User.find({}).remove().exec();
 }

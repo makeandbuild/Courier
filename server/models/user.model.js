@@ -139,9 +139,4 @@ UserSchema.methods = {
   }
 };
 
-//[Lindsay Thurmond:9/26/14] TODO: lindsay testing
-UserSchema.statics.findByEmail = function (email, cb) {
-    this.findOne({ email: email }, cb);
-}
-
 module.exports = mongoose.model('User', UserSchema);

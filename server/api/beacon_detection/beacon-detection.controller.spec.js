@@ -3,8 +3,11 @@
 var should = require('should');
 var app = require('../../app');
 var request = require('supertest');
-var beaconDetectionService = require('../../service/beacon-detection.service.js');
+var moment = require('moment');
 var when = require('when');
+
+var beaconDetectionService = require('../../service/beacon-detection.service.js');
+var dateQueryParser = require('../../utils/date.query.parser.js');
 
 var sampleDetections = [
     {
@@ -36,19 +39,19 @@ var sampleDetections = [
         rssi: -75,
         distance: 2.9,
         agentId: '98sd7f9asd87po'
+    },
+    {
+        time: '2014-01-01T00:00:00.000Z',
+        uuid: 'aufoiasufasiduf7',
+        major: 11,
+        minor: 10,
+        tx: -44,
+        rssi: -66,
+        distance: 4.1,
+        agentId: '5f7as65f7s'
     }
 ];
 
-//[Lindsay Thurmond:10/7/14] TODO: cleanup promises
-function createSampleBeaconDetection() {
-    var beaconDetections = when.defer();
-    beaconDetectionService.createDetections(sampleDetections, true)
-        .then(function(newDetections){
-            beaconDetections.resolve(newDetections);
-
-        });
-    return beaconDetections.promise;
-}
 
 describe('Test /api/beacondetections API', function () {
 
@@ -60,18 +63,21 @@ describe('Test /api/beacondetections API', function () {
     });
 
     beforeEach(function (done) {
-        if (sampleDetections[0]._id) {
-            done();
-        } else {
+//        if (sampleDetections[0]._id) {
+//            done();
+//        } else {
             // clear all detections from db, then populate with sample data above
             beaconDetectionService.deleteAllDetections()
-                .then(createSampleBeaconDetection()
-                    .then(function (newDetections) {
-                        sampleDetections = newDetections;
-                        done();
-                    })
-            );
-        }
+                .then(function () {
+                    return beaconDetectionService.createDetections(sampleDetections, true);
+                })
+                .then(function (newDetections) {
+                    sampleDetections = newDetections;
+                    done();
+                }, function (err) {
+                    done(err);
+                });
+//        }
     });
 
     var AUTHORIZED_USERNAME = 'test@test.com';
@@ -185,6 +191,60 @@ describe('Test /api/beacondetections API', function () {
                 detections.should.be.instanceof(Array);
                 detections.should.have.lengthOf(2);
                 detections[0].should.have.property('uuid', sampleDetections[1].uuid);
+                done();
+            });
+    });
+
+    it('GET /api/beacondetections?time=[value] -> should respond with detections created today', function (done) {
+        var anytimeToday =
+            dateQueryParser.createRangeQuery(moment().startOf('day').toISOString(), moment().endOf('day').toISOString());
+
+        request(app)
+            .get('/api/beacondetections?time=' + anytimeToday)
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                var detections = res.body;
+                detections.should.be.instanceof(Array);
+                detections.should.have.lengthOf(3);
+                done();
+            });
+    });
+
+    it('GET /api/beacondetections?time=[value] -> should respond with detections created today', function (done) {
+        var anytimeToday =
+            dateQueryParser.createRangeQuery(moment().startOf('day').toISOString());
+
+        request(app)
+            .get('/api/beacondetections?time=' + anytimeToday)
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                var detections = res.body;
+                detections.should.be.instanceof(Array);
+                detections.should.have.lengthOf(3);
+                done();
+            });
+    });
+
+    it('GET /api/beacondetections?time=[value] -> should respond with detections created prior to today', function (done) {
+        var beforeToday =
+            dateQueryParser.createRangeQuery(null, moment().startOf('day').subtract('days', 1).toISOString());
+
+        request(app)
+            .get('/api/beacondetections?time=' + beforeToday)
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                var detections = res.body;
+                detections.should.be.instanceof(Array);
+                detections.should.have.lengthOf(1);
                 done();
             });
     });
