@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var Agent = require('../../models/agent.model.js');
 var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');

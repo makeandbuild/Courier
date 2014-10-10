@@ -1,6 +1,5 @@
 'use strict';
 
-var Agent = require('./../../models/agent.model.js');
 var agentService = require('../../service/agent.service.js');
 
 /**

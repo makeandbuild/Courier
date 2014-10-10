@@ -1,6 +1,5 @@
 'use strict';
 
-var User = require('./../../models/user.model.js');
 var config = require('../../config/environment');
 var tokenService = require('../../service/token.service.js');
 var userService = require('../../service/user.service.js');

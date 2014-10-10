@@ -11,6 +11,10 @@ function findUsers() {
     return when(userDao.findUsersPromise());
 }
 
+function findUserByEmail(email) {
+    return when(userDao.findUserByEmailPromise(email));
+}
+
 /**
  * WARNING: returns password info!
  *
@@ -78,6 +82,7 @@ function changePassword(userId, oldPass, newPass) {
 }
 
 exports.findUsers = findUsers;
+exports.findUserByEmail = findUserByEmail;
 exports.findUserByIdWithPassword = findUserByIdWithPassword;
 exports.findUserByIdWithoutPassword = findUserByIdWithoutPassword;
 exports.createUser = createUser;

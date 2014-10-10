@@ -10,6 +10,10 @@ exports.findUsersPromise = function () {
     return User.find({}, '-salt -hashedPassword').exec();
 }
 
+exports.findUserByEmailPromise = function(email) {
+    return User.findOne({ email: email }).exec();
+}
+
 exports.findUserByIdPromise = function (id) {
     return User.findById(id).exec();
 }

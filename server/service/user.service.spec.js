@@ -37,6 +37,17 @@ describe('User service methods', function () {
             });
     });
 
+    it('should find a user by email', function (done) {
+        var emailToFind = databaseUsers[0].email;
+        userService.findUserByEmail(emailToFind)
+            .then(function (user) {
+                user.should.have.property('email', emailToFind);
+                done();
+            }, function (err) {
+                done(err);
+            });
+    });
+
     it('should find a user by id with password info', function (done) {
         var lookUpId = databaseUsers[0]._id;
         userService.findUserByIdWithPassword(lookUpId)
