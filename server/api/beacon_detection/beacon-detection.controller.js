@@ -79,6 +79,20 @@ exports.create = function (req, res) {
                 return res.send(404);
             }
             console.log(detection);
+
+            //Emit event to Rules Engine - skipping rules engine for testing purposes now
+            var connection = new autobahn.Connection({
+         		url: 'ws://courier.makeandbuildatl.com:9015/ws',
+         		realm: 'realm1'
+      		});
+
+			connection.onopen = function (session) {
+	   			// Publish a play audio event
+			   session.publish('com.makeandbuild.rpi.audio.play', ['https://s3.amazonaws.com/makeandbuild/courier/audio/1.wav']);
+			};
+
+			connection.open();
+
             return res.json(201, detection);
         }, function (err) {
             return handleError(res, err);
