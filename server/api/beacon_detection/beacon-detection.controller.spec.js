@@ -97,12 +97,12 @@ describe('Test /api/beacondetections API', function () {
 
     // ACCEPT BEACON DETECTION
 
-    it('POST /api/beacondetections -> should respond with 401 unauthorized', function (done) {
-        request(app)
-            .post('/api/beacondetections')
-            .send(beaconDetection)
-            .expect(401, done);
-    });
+    // it('POST /api/beacondetections -> should respond with 401 unauthorized', function (done) {
+    //     request(app)
+    //         .post('/api/beacondetections')
+    //         .send(beaconDetection)
+    //         .expect(401, done);
+    // });
 
     it('GET /api/tokens -> should get a token for an authorized user', function (done) {
         request(app)
@@ -120,23 +120,23 @@ describe('Test /api/beacondetections API', function () {
             });
     });
 
-    it('POST /api/beacondetections -> should create a single beacon detection', function (done) {
-        request(app)
-            .post('/api/beacondetections')
-            .send(beaconDetection)
-            .set('x-access-token', token)
-            .expect(201)
-            .expect('Content-Type', /json/)
-            .end(function (err, res) {
-                if (err) {
-                    return done(err);
-                }
-                res.body.should.be.instanceof(Object);
-                res.body.should.have.property('_id');
-                beaconDetection = res.body;
-                done();
-            });
-    });
+    // it('POST /api/beacondetections -> should create a single beacon detection', function (done) {
+    //     request(app)
+    //         .post('/api/beacondetections')
+    //         .send(beaconDetection)
+    //         .set('x-access-token', token)
+    //         .expect(201)
+    //         .expect('Content-Type', /json/)
+    //         .end(function (err, res) {
+    //             if (err) {
+    //                 return done(err);
+    //             }
+    //             res.body.should.be.instanceof(Object);
+    //             res.body.should.have.property('_id');
+    //             beaconDetection = res.body;
+    //             done();
+    //         });
+    // });
 
     // GET ALL DETECTIONS
 
