@@ -7,14 +7,22 @@ var config = require('../config/environment');
 
 var userDao = require('../dao/user.dao.js');
 
-//[Lindsay Thurmond:10/1/14] TODO: pull service methods out of controller
-
 function findUsers() {
     return when(userDao.findUsersPromise());
 }
 
-function findUserById(id) {
+/**
+ * WARNING: returns password info!
+ *
+ * @param id
+ * @returns {*}
+ */
+function findUserByIdWithPassword(id) {
     return when(userDao.findUserByIdPromise(id));
+}
+
+function findUserByIdWithoutPassword(id) {
+    return when(userDao.findUserByIdWithoutPasswordPromise(id));
 }
 
 //[Lindsay Thurmond:10/10/14] TODO: is there a better way to do this?
@@ -33,17 +41,25 @@ function createUser(user) {
     return defer.promise;
 };
 
+function createUsers(users) {
+    return when(userDao.createUsersPromise(users));
+}
+
 /**
  * Deletes a user
  */
-function deleteUser(id) {
+function deleteUserById(id) {
     return when(userDao.deleteUserByIdPromise(id));
 };
+
+function deleteAllUsers() {
+    return when(userDao.deleteAllUsers());
+}
 
 //[Lindsay Thurmond:10/10/14] TODO: is there a cleaner way to do this?
 function changePassword(userId, oldPass, newPass) {
     var defer = when.defer();
-    findUserById(userId)
+    findUserByIdWithPassword(userId)
         .then(function (user) {
             if (user.authenticate(oldPass)) {
                 user.password = newPass;
@@ -62,7 +78,10 @@ function changePassword(userId, oldPass, newPass) {
 }
 
 exports.findUsers = findUsers;
-exports.findUserById = findUserById;
+exports.findUserByIdWithPassword = findUserByIdWithPassword;
+exports.findUserByIdWithoutPassword = findUserByIdWithoutPassword;
 exports.createUser = createUser;
-exports.deleteUser = deleteUser;
+exports.createUsers = createUsers;
+exports.deleteUserById = deleteUserById;
+exports.deleteAllUsers = deleteAllUsers;
 exports.changePassword = changePassword;

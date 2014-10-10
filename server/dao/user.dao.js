@@ -14,7 +14,11 @@ exports.findUserByIdPromise = function (id) {
     return User.findById(id).exec();
 }
 
-exports.createUsers = function (users) {
+exports.findUserByIdWithoutPasswordPromise = function (id) {
+    return User.findOne({ _id: id }, '-salt -hashedPassword').exec();
+}
+
+exports.createUsersPromise = function (users) {
     var promise = new mongoose.Promise;
     User.create(users, function () {
 
@@ -38,6 +42,6 @@ exports.deleteUserByIdPromise = function (id) {
     return User.findById(id).remove().exec();
 }
 
-exports.deleteAllUsers = function() {
+exports.deleteAllUsers = function () {
     return User.find({}).remove().exec();
 }

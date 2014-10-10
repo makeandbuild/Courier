@@ -6,8 +6,8 @@ var tokenService = require('../../service/token.service.js');
 var userService = require('../../service/user.service.js');
 var _str = require('underscore.string');
 
-var validationError = function(res, err) {
-  return res.json(422, err);
+var validationError = function (res, err) {
+    return res.json(422, err);
 };
 
 /**
@@ -16,11 +16,11 @@ var validationError = function(res, err) {
  *
  * GET /api/users
  */
-exports.index = function(req, res) {
+exports.index = function (req, res) {
     userService.findUsers()
-        .then(function(users){
+        .then(function (users) {
             res.json(200, users);
-        }, function(err){
+        }, function (err) {
             return res.send(500, err);
         });
 };
@@ -48,12 +48,11 @@ exports.create = function (req, res) {
 exports.show = function (req, res, next) {
     var userId = req.params.id;
 
-    userService.findUserById(userId)
+    userService.findUserByIdWithPassword(userId)
         .then(function (user) {
             if (!user) return res.send(401);
             res.json(user.profile);
         }, function (err) {
-            //[Lindsay Thurmond:10/9/14] TODO: why next() here? this isn't middleware
             return next(err);
         });
 };
@@ -66,7 +65,7 @@ exports.show = function (req, res, next) {
  */
 exports.destroy = function (req, res) {
     var userId = req.params.id;
-    userService.deleteUser(userId)
+    userService.deleteUserById(userId)
         .then(function () {
             return res.send(204);
         }, function (err) {
@@ -79,10 +78,10 @@ exports.destroy = function (req, res) {
  *
  * PUT /api/users/:id/password
  */
-exports.changePassword = function(req, res) {
-  var userId = req.user._id;
-  var oldPass = String(req.body.oldPassword);
-  var newPass = String(req.body.newPassword);
+exports.changePassword = function (req, res) {
+    var userId = req.user._id;
+    var oldPass = String(req.body.oldPassword);
+    var newPass = String(req.body.newPassword);
 
     userService.changePassword(userId, oldPass, newPass)
         .then(function (user) {
@@ -96,32 +95,34 @@ exports.changePassword = function(req, res) {
 };
 
 
-//[Lindsay Thurmond:10/9/14] TODO: finish refactoring from here down to separate service/dao layers and use promises
-
 /**
  * Get my info
  *
  * GET /api/users/me
  */
-exports.me = function(req, res, next) {
+exports.me = function (req, res, next) {
     var user = req.user;
     if (!user) {
         return res.send(401);
     }
 
     var userId = user._id;
-    User.findOne({
-        _id: userId
-    }, '-salt -hashedPassword', function (err, user) { // don't ever give out the password or salt
-        if (err) return next(err);
-        if (!user) return res.json(401);
-        res.json(user);
-    });
-};
+
+    userService.findUserByIdWithoutPassword(userId)
+        .then(function (user) {
+            if (!user) {
+                return res.json(401);
+            }
+            res.json(user);
+        }, function (err) {
+            return next(err);
+        });
+}
+
 
 /**
  * Authentication callback
  */
-exports.authCallback = function(req, res) {
-  res.redirect('/');
+exports.authCallback = function (req, res) {
+    res.redirect('/');
 };

@@ -9,10 +9,12 @@ var beaconService = require('../service/beacon.service.js');
 var beaconDetectionService = require('../service/beacon-detection.service.js');
 var agentService = require('../service/agent.service.js');
 
-var userDao = require('../dao/user.dao.js');
+var userService = require('../service/user.service.js');
 var beaconDao = require('../dao/beacon.dao.js');
 var agentDao = require('../dao/agent.dao.js');
 var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
+
+var seedData = require('./seedData.js');
 
 module.exports = function (complete) {
 
@@ -20,21 +22,10 @@ module.exports = function (complete) {
     var savedBeacons;
 
     // delete users
-    userDao.deleteAllUsers()
+    userService.deleteAllUsers()
         // then populate users
         .then(function () {
-            var createPromise = userDao.createUsers([{
-                provider: 'local',
-                name: 'Test User',
-                email: 'test@test.com',
-                password: 'test'
-            }, {
-                provider: 'local',
-                role: 'admin',
-                name: 'Admin',
-                email: 'admin@admin.com',
-                password: 'admin'
-            }]);
+            var createPromise = userService.createUsers(seedData.users);
 
             createPromise.then(function() {
                 console.log('finished populating users');
@@ -48,29 +39,7 @@ module.exports = function (complete) {
         })
         // then populate beacons
         .then(function () {
-            var createPromise = beaconService.createBeacons([
-                {
-                    name: 'Beacon 55',
-                    uuid: '6fdg76hdf',
-                    major: 89,
-                    minor: 90987,
-                    active: true
-                },
-                {
-                    name: 'Beacon 900',
-                    uuid: 'fgh8dfhdf09',
-                    major: 466,
-                    minor: 77,
-                    active: true
-                },
-                {
-                    name: 'Beacon 8798797',
-                    uuid: 'sd098fdg0sd98f',
-                    major: 6554,
-                    minor: 232,
-                    active: true
-                }
-            ]);
+            var createPromise = beaconService.createBeacons(seedData.beacons);
             createPromise.then(function (beacons) {
                 savedBeacons = beacons;
                 console.log('finished populating beacons');
@@ -83,31 +52,7 @@ module.exports = function (complete) {
         })
         // then populate agents
         .then(function () {
-            var createPromise = agentService.createAgents([
-                {
-                    name: 'Agent 1',
-                    location: 'entry way',
-                    capabilities: ['audio'],
-                    approvedStatus: 'Pending',
-                    operationalStatus: 'Success',
-                    lastSeenBy: savedBeacons[0].uuid,
-                    lastSeen: Date.now()
-                },
-                {
-                    name: 'Agent 2',
-                    location: 'great room',
-                    capabilities: ['audio'],
-                    approvedStatus: 'Approved',
-                    operationalStatus: 'Success'
-                },
-                {
-                    name: 'Agent 3',
-                    location: 'situation room',
-                    capabilities: ['audio'],
-                    approvedStatus: 'Denied',
-                    operationalStatus: 'Failure'
-                }
-            ]);
+            var createPromise = agentService.createAgents(seedData.agents);
             createPromise.then(function (agents) {
                 savedAgents = agents;
                 console.log('finished populating agents');
