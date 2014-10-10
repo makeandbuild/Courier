@@ -7,7 +7,7 @@ var tokenAuth = require('../../auth/middleware/token-auth.js');
 var router = express.Router();
 
 // route middleware that will happen on every request
-//router.use(tokenAuth);
+router.use(tokenAuth);
 
 router.get('/', controller.index);
 router.post('/', controller.create);
