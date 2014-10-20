@@ -15,6 +15,7 @@ app.controller('AgentCtrl', function($scope, $http, $location, $routeParams) {
 		console.log($routeParams);
 		$http.get('/api/agents/' + $routeParams.agentId).success(function(awesomeThings) {
 			$scope.agent = awesomeThings;
+            $scope.properties = awesomeThings.properties
 		});
 	}
 

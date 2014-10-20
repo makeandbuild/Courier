@@ -32,6 +32,7 @@ exports.show = function (req, res) {
             if (!agent) {
                 return res.send(404);
             }
+            agent = agent[0]
             return res.json(agent);
         }, function (err) {
             return handleError(res, err);

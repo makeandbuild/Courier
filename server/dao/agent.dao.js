@@ -10,7 +10,7 @@ exports.findAgentsPromise = function () {
 }
 
 exports.findAgentByIdPromise = function (id) {
-    return Agent.findById(id).exec();
+    return Agent.find({_id:id}).exec();
 }
 
 exports.createAgentPromise = function (agent) {

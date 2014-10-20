@@ -13,3 +13,8 @@ npm-*.log
 .DS_Store
 courier.log
 detections.log
+client/app/app.css.map
+gradlew
+gradle/
+gradlew.bat
+.gradle/
