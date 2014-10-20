@@ -70,4 +70,7 @@ Instructions are posted in the wiki https://github.com/makeandbuild/Courier/wiki
 
 ## API Docs
 WARNING: THESE ARE NOT EVEN CLOSE TO BEING CORRECT OR UP TO DATE YET.  The base template is the only thing there now.
-Currently in development here: http://makeandbuild.github.io/Courier/
+
+Development is in the '''gh-pages''' branch.
+
+Current docs can be viewed at http://makeandbuild.github.io/Courier/
