@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var AgentSchema = new Schema({
     id: String, // unique id for the agent - such as mac address
     name: String,
+    registered: Date,
     location: String,
     lastSeen: Date,
     lastSeenBy: String, // beacon id

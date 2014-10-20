@@ -1,5 +1,7 @@
 'use strict';
 
+var moment = require('moment');
+
 exports.users = [
     {
         provider: 'local',
@@ -42,26 +44,32 @@ exports.beacons = [
 
 exports.agents = [
     {
+        id: '00:0a:95:9d:68:16',
         name: 'Agent 1',
         location: 'entry way',
         capabilities: ['audio'],
         approvedStatus: 'Pending',
         operationalStatus: 'Success',
         lastSeenBy: exports.beacons[0].uuid,
-        lastSeen: Date.now()
+        lastSeen: Date.now(),
+        registered: moment().day(-1)
     },
     {
+        id: '00:1C:B3:09:85:15',
         name: 'Agent 2',
         location: 'great room',
         capabilities: ['audio'],
         approvedStatus: 'Approved',
-        operationalStatus: 'Success'
+        operationalStatus: 'Success',
+        registered: moment().day(-2)
     },
     {
+        id: '00:A0:C9:14:C8:29',
         name: 'Agent 3',
         location: 'situation room',
         capabilities: ['audio'],
         approvedStatus: 'Denied',
-        operationalStatus: 'Failure'
+        operationalStatus: 'Failure',
+        registered: moment().day(-7)
     }
 ];

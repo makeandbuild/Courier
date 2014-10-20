@@ -42,6 +42,19 @@ exports.show = function (req, res) {
  * Creates a new agent in the DB.
  * POST /agents
  *
+ * Example:
+ * {
+ *   "id": "00:0a:95:9d:68:16",
+ *   "name": "Agent 1",
+ *   "location": "entry way",
+ *   "capabilities": ["audio"],
+ *   "approvedStatus": "Pending",
+ *   "operationalStatus": "Success",
+ *   "lastSeenBy": "77876565",
+ *   "lastSeen": "2014-10-06T15:56:43.793Z",
+ *   "registered": "2014-10-01T15:56:43.793Z
+ * }
+ *
  * @param req
  * @param res
  */
