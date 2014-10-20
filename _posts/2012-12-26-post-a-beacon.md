@@ -1,7 +1,7 @@
 ---
-category: Stuff
-path: '/stuff'
-title: 'Post a thing'
+category: beacon
+path: '/beacons'
+title: 'Post a beacon'
 type: 'POST'
 
 layout: nil

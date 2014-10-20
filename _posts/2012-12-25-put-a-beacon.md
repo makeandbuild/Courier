@@ -1,17 +1,24 @@
 ---
-category: Stuff
-path: '/stuff'
-title: 'Get stuff'
-type: 'GET'
+category: beacon
+path: '/beacons/:id'
+title: 'Update a beacon'
+type: 'PUT'
 
 layout: nil
 ---
 
-This method allows users to retrieve stuff.
+This method allows the user to retrieve his stuff.
 
 ### Request
 
+* **`:id`** is the id the thing to update.
 * The headers must include a **valid authentication token**.
+* **The body can't be empty** and must include at least the name attribute, a `string` that will be used as the name of the thing.
+
+```Authentication: bearer f862f658-ad89-4fcb-995b-7a4c50554ff6```
+```{
+    name: 'My new thing'
+}```
 
 ### Response
 
