@@ -4,7 +4,6 @@ var _ = require('lodash');
 var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');
-var autobahn = require('autobahn')
 
 
 /**
@@ -62,45 +61,54 @@ exports.index = function (req, res) {
 
 /**
  * POST /api/beacondetections
- * Create a single beacon detection.
+ * Creates one or more beacon detections.
  *
  * @param req
  * @param res
  */
 exports.create = function (req, res) {
+    var bodyContent = req.body;
+
     // logging
-    var logLine = JSON.stringify(req.body);
-    console.log(req.body);
+    var logLine = JSON.stringify(bodyContent);
+    console.log(bodyContent);
     if (config.log.beaconDetections === true) {
         logger.detections(logLine);
     }
 
-    var detection = req.body;
-    beaconDetectionService.createDetection(detection, true)
-        .then(function (detection) {
-            if (!detection) {
-                return res.send(404);
-            }
-            console.log(detection);
+    // handle multiple
+    if (bodyContent instanceof Array) {
+        var detections = bodyContent;
+        //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
+        beaconDetectionService.createDetectionsOneByOne(detections)
+            .then(function (result) {
+                //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
+                return res.json(201, result);
+            }, function (err) {
+                // something unexpected happened
+                return handleError(res, err);
+            });
+    }
+    // assume single
+    else {
+        var detection = bodyContent;
+        beaconDetectionService.createDetection(detection, true)
+            .then(function (detection) {
+                if (!detection) {
+                    return res.send(404);
+                }
+                console.log(detection);
 
-            //Emit event to Rules Engine - skipping rules engine for testing purposes now
-            var connection = new autobahn.Connection({
-         		url: 'ws://courier.makeandbuildatl.com:9015/ws',
-         		realm: 'realm1'
-      		});
 
-			connection.onopen = function (session) {
-	   			// Publish a play audio event
-	   			logger.log("error", "MADE IT HERE!")
-			   session.publish('com.makeandbuild.rpi.audio.play', ['https://s3.amazonaws.com/makeandbuild/courier/audio/1.wav']);
-			};
+                //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
+                //Emit event to Rules Engine - skipping rules engine for testing purposes now
+//            beaconDetectionService.sendDetectionToRulesHandler();
 
-			connection.open();
-
-            return res.json(201, detection);
-        }, function (err) {
-            return handleError(res, err);
-        });
+                return res.json(201, detection);
+            }, function (err) {
+                return handleError(res, err);
+            });
+    }
 };
 
 function handleError(res, err) {

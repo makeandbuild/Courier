@@ -6,6 +6,8 @@
 var when = require('when');
 var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
 var dateQueryParser = require('../utils/date.query.parser.js');
+var logger = require('../utils/logger.js');
+var autobahn = require('autobahn');
 
 function findDetections(optionalFilters) {
     if (optionalFilters) {
@@ -115,8 +117,61 @@ function createDetections(beaconDetections, timeAsMs) {
     }
 }
 
+/**
+ *
+ * @param beaconDetections
+ * @returns {*} promise that all save attempts have completed.  Promise will
+ * always be resolved so you need to check the response to see if there are any errors in it.
+ */
+function createDetectionsOneByOne(beaconDetections) {
+    var savedDetections = [];
+    var failures = [];
+
+    var createPromises = [];
+    beaconDetections.forEach(function(detection){
+        var promise = createDetection(detection);
+        createPromises.push(promise);
+    });
+
+    var defer = when.defer();
+
+    var settled = when.settle(createPromises);
+    settled.then(function(descriptors) {
+        descriptors.forEach(function(d) {
+            if(d.state === 'rejected') {
+                failures.push(d.reason);
+            } else {
+                savedDetections.push(d.value);
+            }
+        });
+        defer.resolve({succeeded: savedDetections, failed: failures});
+    });
+
+    return defer.promise;
+}
+
 exports.deleteAllDetections = function deleteAllDetections() {
     return when(beaconDetectionDao.deleteAllDetections());
+}
+
+/**
+ * [Lindsay Thurmond:10/21/14] TODO: this needs work, right now its hardcoded for proof of concept purposes
+ */
+function sendDetectionToRulesHandler() {
+
+    //Emit event to Rules Engine - skipping rules engine for testing purposes now
+    var connection = new autobahn.Connection({
+        url: 'ws://courier.makeandbuildatl.com:9015/ws',
+        realm: 'realm1'
+    });
+
+    connection.onopen = function (session) {
+        // Publish a play audio event
+        logger.log("error", "MADE IT HERE!")
+        session.publish('com.makeandbuild.rpi.audio.play', ['https://s3.amazonaws.com/makeandbuild/courier/audio/1.wav']);
+    };
+
+    connection.open();
 }
 
 
@@ -127,3 +182,5 @@ exports.findFilteredDetections = findFilteredDetections;
 exports.findDetectionsByUuid = findDetectionsByUuid;
 exports.createDetection = createDetection;
 exports.createDetections = createDetections;
+exports.createDetectionsOneByOne = createDetectionsOneByOne;
+exports.sendDetectionToRulesHandler = sendDetectionToRulesHandler;
