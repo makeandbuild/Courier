@@ -28,6 +28,10 @@ exports.findAgentById = function (id) {
     return when(agentDao.findAgentByIdPromise(id));
 }
 
+exports.findAgentByCustomId = function (id) {
+    return when(agentDao.findAgentByCustomIdPromise(id));
+}
+
 /**
  * Creates a single agent
  *

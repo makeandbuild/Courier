@@ -15,6 +15,7 @@
         <thead>
             <tr >
                 <th class="col-md-3"><a href="">ID</a></th>
+                <th class="col-md-3"><a href="">Mongo ID</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
                 <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Status</a></th>
@@ -24,6 +25,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.id)" class="beaconRow">
+                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.id}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>
@@ -45,6 +47,7 @@
             <thead>
                 <tr >
                     <th class="col-md-3"><a href="">ID</a></th>
+                    <th class="col-md-3"><a href="">Mongo ID</a></th>
                     <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
                     <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
                     <th class="col-md-3 status-section"><a href="" ng-click="predicate = 'approvedStatus'; reverse=false">Approve</a></th>
@@ -53,6 +56,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="agent in pendingAgents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.id)" class="beaconRow">
+                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.id}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>

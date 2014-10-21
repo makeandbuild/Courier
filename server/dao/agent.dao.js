@@ -13,6 +13,10 @@ exports.findAgentByIdPromise = function (id) {
     return Agent.findById(id).exec();
 }
 
+exports.findAgentByCustomIdPromise = function (id) {
+    return Agent.findOne({id:id}).exec();
+}
+
 exports.createAgentPromise = function (agent) {
     return Agent.create(agent); // returns a promise without needing .exec()
 };

@@ -60,12 +60,38 @@ exports.show = function (req, res) {
  */
 exports.create = function (req, res) {
     var agent = req.body;
-    agentService.createAgent(agent)
-        .then(function (agent) {
-            return res.json(201, agent);
-        }, function (err) {
-            return handleError(res, err);
-        });
+
+    agentService.findAgentByCustomId(agent.id)
+    .then(function (agentfound) {
+        if (!agentfound){
+            console.log("agent unfound, creating");
+            agentService.createAgent(agent).then(function (agent) {
+                res.json(201, agent);
+            }).catch(function (err) {
+                console.log("error creating unfound" + error);
+//                handleError(res, err);
+                res.json(400, {
+                    message: "unable to create new agent",
+                    error: err
+                })
+            });
+        }else {
+            agentfound.location = agent.location;
+            agentfound.name = agent.name;
+            agentfound.id = agent.id;
+            agentService.updateAgent(agentfound)
+                .then(function (agent) {
+                    res.json(200, agent);
+                }).catch(function (err) {
+                    res.json(400, {
+                        message: "unable to update found agent",
+                        error: err
+                    })
+                })
+        }
+    }).catch(function(error){
+        console.log("fail")
+    })
 };
 
 /**

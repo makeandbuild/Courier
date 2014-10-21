@@ -19,6 +19,7 @@ describe('Test /api/agents API', function () {
     var token;
 
     var agent = {
+        id: 'idtester',
         name: 'Agent Tester',
         location: 'test location',
         capabilities: ['audio', 'visual'],
