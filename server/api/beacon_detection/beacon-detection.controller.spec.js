@@ -131,9 +131,14 @@ describe('Test /api/beacondetections API', function () {
                 if (err) {
                     return done(err);
                 }
-                res.body.should.be.instanceof(Object);
-                res.body.should.have.property('_id');
-                beaconDetection = res.body;
+
+                var responseBody = res.body;
+                responseBody.should.be.instanceof(Object);
+                responseBody.should.have.property('succeeded');
+                responseBody.succeeded.should.have.lengthOf(1);
+                responseBody.succeeded[0].should.have.property('_id');
+                responseBody.should.have.property('failed');
+                responseBody.failed.should.be.empty;
                 done();
             });
     });
@@ -177,7 +182,6 @@ describe('Test /api/beacondetections API', function () {
                 responseBody.succeeded.should.have.lengthOf(2);
                 responseBody.should.have.property('failed');
                 responseBody.failed.should.be.empty;
-                beaconDetection = res.body;
                 done();
             });
     });

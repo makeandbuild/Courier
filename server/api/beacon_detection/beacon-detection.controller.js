@@ -67,48 +67,35 @@ exports.index = function (req, res) {
  * @param res
  */
 exports.create = function (req, res) {
-    var bodyContent = req.body;
+    var detections = req.body;
+
+    if (!(detections instanceof Array)) {
+        // assume single object sent and wrap in array
+        detections = [detections];
+    }
 
     // logging
-    var logLine = JSON.stringify(bodyContent);
-    console.log(bodyContent);
+    var logLine = JSON.stringify(detections);
+    console.log(detections);
     if (config.log.beaconDetections === true) {
         logger.detections(logLine);
     }
 
-    // handle multiple
-    if (bodyContent instanceof Array) {
-        var detections = bodyContent;
-        //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
-        beaconDetectionService.createDetectionsOneByOne(detections)
-            .then(function (result) {
-                //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
-                return res.json(201, result);
-            }, function (err) {
-                // something unexpected happened
-                return handleError(res, err);
-            });
-    }
-    // assume single
-    else {
-        var detection = bodyContent;
-        beaconDetectionService.createDetection(detection, true)
-            .then(function (detection) {
-                if (!detection) {
-                    return res.send(404);
-                }
-                console.log(detection);
+    // should always have an array of detections by now
+    beaconDetectionService.createDetectionsOneByOne(detections)
+        .then(function (result) {
 
-
-                //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
-                //Emit event to Rules Engine - skipping rules engine for testing purposes now
+            //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
+            //Emit event to Rules Engine - skipping rules engine for testing purposes now
 //            beaconDetectionService.sendDetectionToRulesHandler();
 
-                return res.json(201, detection);
-            }, function (err) {
-                return handleError(res, err);
-            });
-    }
+
+            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
+            return res.json(201, result);
+        }, function (err) {
+            // something unexpected happened
+            return handleError(res, err);
+        });
 };
 
 function handleError(res, err) {
