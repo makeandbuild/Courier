@@ -19,6 +19,26 @@
                 <label for="location" class="col-md-2">Location</label>
                 <input type="text" name="location" ng-model="agent.location" value="">
             </div>
+            <div class="row">
+                <label for="capabilities" class="col-md-2">Capabilities</label>
+                <input type="text" name="capabilities" ng-model="agent.capabilities" value="">
+            </div>
+            <div class="row">
+                <label for="lastSeen" class="col-md-2">Last Seen</label>
+                <input type="text" name="lastSeen" ng-model="agent.lastSeen" value="" readonly>
+            </div>
+            <div class="row">
+                <label for="registered" class="col-md-2">Registered</label>
+                <input type="text" name="registered" ng-model="agent.registered" value="" readonly>
+            </div>
+            <div class="row">
+                <label for="approvedStatus" class="col-md-2">Status</label>
+                <select ng-model="agent.approvedStatus" name="approvedStatus" value="">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Denied">Denied</option>
+                </select>
+            </div>
 
             <div class="button" ng-click="submit(agent)">Submit</div>
 
