@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var AgentSchema = new Schema({
-    id: String, // unique id for the agent - such as mac address
+    customId: String, // unique id for the agent - such as mac address
     name: String,
     registered: Date,
     location: String,

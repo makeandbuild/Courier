@@ -19,7 +19,7 @@ describe('Test /api/agents API', function () {
     var token;
 
     var agent = {
-        id: 'idtester',
+        customId: 'idtester',
         name: 'Agent Tester',
         location: 'test location',
         capabilities: ['audio', 'visual'],
@@ -95,13 +95,13 @@ describe('Test /api/agents API', function () {
 
     it('GET /api/agents/:id -> should respond with 401 unauthorized', function (done) {
         request(app)
-            .get('/api/agents/' + agent._id)
+            .get('/api/agents/' + agent.customId)
             .expect(401, done);
     });
 
     it('GET /api/agents/:id -> should respond with a single agent', function (done) {
         request(app)
-            .get('/api/agents/' + agent._id)
+            .get('/api/agents/' + agent.customId)
             .set('x-access-token', token)
             .expect(200)
             .expect('Content-Type', /json/)

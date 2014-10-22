@@ -9,12 +9,12 @@ exports.findAgentsPromise = function () {
     return Agent.find().exec();
 }
 
-exports.findAgentByIdPromise = function (id) {
-    return Agent.findById(id).exec();
+exports.findAgentByUnderscoreIdPromise = function (_id) {
+    return Agent.findById(_id).exec();
 }
 
 exports.findAgentByCustomIdPromise = function (id) {
-    return Agent.findOne({id:id}).exec();
+    return Agent.findOne({customId:id}).exec();
 }
 
 exports.createAgentPromise = function (agent) {

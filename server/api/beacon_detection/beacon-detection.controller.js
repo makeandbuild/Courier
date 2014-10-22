@@ -81,6 +81,17 @@ exports.create = function (req, res) {
         logger.detections(logLine);
     }
 
+    // update agents with most recent - more of a nice to have, don't need to block the response for it
+    beaconDetectionService.updateAgentsWithMostRecentDetectionPromise(detections)
+        .then(function (descriptors) {
+            descriptors.forEach(function (d) {
+                if (d.state === 'rejected') {
+                    console.log('Error updating agents with most recent detection: ' + d.reason);
+                }
+            })
+        });
+
+
     // should always have an array of detections by now
     beaconDetectionService.createDetectionsOneByOne(detections)
         .then(function (result) {

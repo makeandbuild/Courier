@@ -46,6 +46,7 @@ describe('Test /api/beaconevents API', function () {
     };
 
     var agent = {
+        customId: 'dummy mac address for test',
         name: 'Agent For Beacon Event Test',
         location: 'test location',
         capabilities: ['audio', 'visual'],
@@ -87,7 +88,7 @@ describe('Test /api/beaconevents API', function () {
                 res.body.should.have.property('_id');
                 agent = res.body;
                 // update agent with generated id
-                beaconEvent.agentId = agent._id;
+                beaconEvent.agentId = agent.customId;
                 done();
             });
     });
@@ -116,7 +117,7 @@ describe('Test /api/beaconevents API', function () {
 
                 // check that agent has been updated
                 request(app)
-                    .get('/api/agents/' + agent._id)
+                    .get('/api/agents/' + agent.customId)
                     .set('x-access-token', token)
                     .expect(200)
                     .expect('Content-Type', /json/)
@@ -130,7 +131,8 @@ describe('Test /api/beaconevents API', function () {
                         agent.should.have.property('lastSeenBy', '1000000000000000');
 
                         // cleanup
-                        request(app).delete('/api/agents/' + agent._id).set('x-access-token', token).expect(200, done());
+                        //[Lindsay Thurmond:10/22/14] TODO: change to just use service instead of DELETE rest call here
+                        request(app).delete('/api/agents/' + agent.customId).set('x-access-token', token).expect(200, done());
                     });
             });
     });

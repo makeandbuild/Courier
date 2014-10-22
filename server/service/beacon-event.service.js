@@ -17,7 +17,7 @@ function convertEventToDetections(beaconEvent) {
     var detections = [];
 
     if (beaconEvent && beaconEvent.detections) {
-        beaconEvent.detections.forEach(function(detection) {
+        beaconEvent.detections.forEach(function (detection) {
             detection.agentId = beaconEvent.agentId;
             detections.push(detection);
         })
@@ -30,7 +30,7 @@ function convertEventToDetections(beaconEvent) {
  * @param beaconEvent
  * @returns {*}
  */
-function findMostRecentPing(beaconEvent) {
+function findMostRecentDetection(beaconEvent) {
 
     if (!beaconEvent) {
         throw Error('No beacon event specified');
@@ -42,24 +42,24 @@ function findMostRecentPing(beaconEvent) {
         throw Error('Pings is expected to be an array');
     }
 
-    var pings = beaconEvent.detections;
+    var detections = beaconEvent.detections;
 
-    var mostRecentPing;
-    pings.forEach(function (ping) {
-        if (!mostRecentPing || mostRecentPing.time < ping.time) {
-            mostRecentPing = ping;
+    var mostRecentDetection;
+    detections.forEach(function (detection) {
+        if (!mostRecentDetection || mostRecentDetection.time < detection.time) {
+            mostRecentDetection = detection;
         }
     });
 
-    if (mostRecentPing) {
-        return mostRecentPing;
+    if (mostRecentDetection) {
+        return mostRecentDetection;
     } else {
-        throw Error('No recent ping found');
+        throw Error('No recent detection found');
     }
 
 }
 
- function updateAgentWithMostRecentPingPromise(beaconEvent) {
+function updateAgentWithMostRecentPingPromise(beaconEvent) {
     if (!beaconEvent) {
         return when.reject('No beacon event specified');
     }
@@ -67,39 +67,39 @@ function findMostRecentPing(beaconEvent) {
         return when.reject('No agent found');
     }
 
-     var defer = when.defer();
+    var defer = when.defer();
 
-     try {
-         var mostRecentPing = findMostRecentPing(beaconEvent);
+    try {
+        var mostRecentPing = findMostRecentDetection(beaconEvent);
 
-         var agentId = beaconEvent.agentId;
-         agentService.findAgentById(agentId)
-             .then(function(foundAgent){
-                 if (!foundAgent) {
-                     defer.reject('Could not find agent');
-                     return;
-                 }
+        var agentId = beaconEvent.agentId;
+        agentService.findAgentByCustomId(agentId)
+            .then(function (foundAgent) {
+                if (!foundAgent) {
+                    defer.reject('Could not find agent');
+                    return;
+                }
 
-                 // update agent with new heartbeat (time + id)
+                // update agent with new heartbeat (time + id)
 
-                 foundAgent.lastSeen = mostRecentPing.time;
-                 foundAgent.lastSeenBy = mostRecentPing.uuid;
+                foundAgent.lastSeen = mostRecentPing.time;
+                foundAgent.lastSeenBy = mostRecentPing.uuid;
 
-                 agentService.updateAgent(foundAgent)
-                     .then(function(agent){
-                         defer.resolve(agent);
-                     }, function(err){
-                         defer.reject(err);
-                     });
-             });
+                agentService.updateAgent(foundAgent)
+                    .then(function (agent) {
+                        defer.resolve(agent);
+                    }, function (err) {
+                        defer.reject(err);
+                    });
+            });
 
-     } catch(err) {
+    } catch (err) {
         defer.reject(err);
-     }
-     return defer.promise;
+    }
+    return defer.promise;
 
 }
 
 exports.convertEventToDetections = convertEventToDetections;
-exports.findMostRecentPing = findMostRecentPing;
+exports.findMostRecentDetection = findMostRecentDetection;
 exports.updateAgentWithMostRecentPingPromise = updateAgentWithMostRecentPingPromise;

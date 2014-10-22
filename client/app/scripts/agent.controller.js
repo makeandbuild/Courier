@@ -28,9 +28,9 @@ app.controller('AgentCtrl', function($scope, $http, $location, $routeParams) {
 				$location.path('/agents')
 			});
 
-		} else if(agent.id){
+		} else if(agent.customId){
             var newAgent = {
-                id: agent.id,
+                customId: agent.customId,
                 name: agent.name,
                 location: agent.location
             };

@@ -44,7 +44,7 @@ exports.beacons = [
 
 exports.agents = [
     {
-        id: '00:0a:95:9d:68:16',
+        customId: '00:0a:95:9d:68:16',
         name: 'Agent 1',
         location: 'entry way',
         capabilities: ['audio'],
@@ -55,7 +55,7 @@ exports.agents = [
         registered: moment().day(-1)
     },
     {
-        id: '00:1C:B3:09:85:15',
+        customId: '00:1C:B3:09:85:15',
         name: 'Agent 2',
         location: 'great room',
         capabilities: ['audio'],
@@ -64,7 +64,7 @@ exports.agents = [
         registered: moment().day(-2)
     },
     {
-        id: '00:A0:C9:14:C8:29',
+        customId: '00:A0:C9:14:C8:29',
         name: 'Agent 3',
         location: 'situation room',
         capabilities: ['audio'],
