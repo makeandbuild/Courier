@@ -261,5 +261,24 @@ Response - Success/Failure Mix:
 
 ### PUT
 
+Successful updates return a status code of *`200 Ok`*.  The response body contains the updated resource JSON object.
+
+Example: `PUT /beacons`
+Response:
+```{
+  "_id" : "5447ddf95b6df7f50c445a9b",
+  "name" : "New Name",
+  "uuid" : "9090",
+  "major" : 89,
+  "minor" : 90987,
+  "__v" : 0
+}
+```
+
+
+_Note: Batch update is not yet supported._
+
 ### DELETE
+
+Successful deletes return a status code of *`204 No Content`* with an empty response body. 
 
