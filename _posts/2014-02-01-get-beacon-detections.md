@@ -47,15 +47,56 @@ Example time ranges:
 Sends back a collection of beacon detections.
 
 ```Status: 200 OK```
-```{
-    {
-        id: thing_1,
-        name: 'My first thing'
-    },
-    {
-        id: thing_2,
-        name: 'My second thing'
-    }
-}```
+```[
+  {
+     "_id" : "5447adb6be39b4cd09ef0c92",
+     "__v" : 0,
+     "time" : "2014-10-22T13:14:30.329Z",
+     "uuid" : "787654ffrgy",
+     "major" : 1,
+     "minor" : 1,
+     "tx" : -65,
+     "rssi" : -75,
+     "distance" : 3.7,
+     "agentId" : "98asd7fa9s8d7fa"
+  },
+  {
+     "_id" : "5447adb6be39b4cd09ef0c93",
+     "__v" : 0,
+     "time" : "2014-10-22T13:14:30.329Z",
+     "uuid" : "787654ffrgy",
+     "major" : 1,
+     "minor" : 1,
+     "tx" : -61,
+     "rssi" : -72,
+     "distance" : 3.1,
+     "agentId" : "98sd7f9asd87po"
+  },
+  {
+     "_id" : "5447adb6be39b4cd09ef0c94",
+     "__v" : 0,
+     "time" : "2014-10-22T13:14:30.329Z",
+     "uuid" : "aufoiasufasiduf7",
+     "major" : 1,
+     "minor" : 1,
+     "tx" : -68,
+     "rssi" : -75,
+     "distance" : 2.9,
+     "agentId" : "98sd7f9asd87po"
+  },
+  {
+     "_id" : "5447adb6be39b4cd09ef0c95",
+     "__v" : 0,
+     "time" : "2014-01-01T00:00:00.000Z",
+     "uuid" : "aufoiasufasiduf7",
+     "major" : 11,
+     "minor" : 10,
+     "tx" : -44,
+     "rssi" : -66,
+     "distance" : 4.1,
+     "agentId" : "5f7as65f7s"
+  }
+]
+```
 
 For errors responses, see the [response status codes documentation](#response-status-codes).

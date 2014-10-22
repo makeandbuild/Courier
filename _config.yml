@@ -1,5 +1,5 @@
 ---
-exclude: ['README.markdown']
+exclude: ['README.markdown', node_modules, client]
 permalink: ':title'
 highlighter: pygments
 safe: false
