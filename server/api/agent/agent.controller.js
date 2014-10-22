@@ -19,7 +19,7 @@ exports.index = function (req, res) {
 };
 
 /**
- * Get a single agent
+ * Get a single agent - id is the custom id for the agent (probably the mac address), not the mongo id
  * GET /agents/:id
  *
  * @param req
