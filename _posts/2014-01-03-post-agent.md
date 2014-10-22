@@ -1,13 +1,13 @@
 ---
-category: beacon detections
-path: '/beacondetections'
-title: 'Post beacon detections'
+category: agent
+path: '/agents'
+title: 'Post agent'
 type: 'POST'
 
 layout: nil
 ---
 
-This method allows users to create new beacon detections.
+This method allows users to create a new agent.
 
 ### Request
 

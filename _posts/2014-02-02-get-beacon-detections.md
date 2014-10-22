@@ -7,13 +7,11 @@ type: 'GET'
 layout: nil
 ---
 
-This method allows users to retrieve stuff.
+Get a collection of beacon detections.
 
 ### Request
 
-* The headers must include a **valid authentication token**.
-
-### Filters
+#### Filters
 
 Optional query parameters:
 
@@ -38,8 +36,6 @@ Example time ranges:
   - ```time=gt 2014-10-09T08:40```
   - ```time=lte 2014-10-09T08:40```
   - ```time=lt 2014-10-09T08:40```
-
-
 
 
 ### Response

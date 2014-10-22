@@ -1,7 +1,7 @@
 ---
 category: agent
 path: '/agents/:id'
-title: 'Get agent'
+title: 'Get single agent'
 type: 'GET'
 
 layout: nil

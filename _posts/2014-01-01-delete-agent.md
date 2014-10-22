@@ -1,7 +1,7 @@
 ---
 category: agent
 path: '/agents/:id'
-title: 'Delete an agent'
+title: 'Delete agent'
 type: 'DELETE'
 
 layout: nil
