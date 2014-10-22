@@ -69,7 +69,16 @@ logger.log('error', 'Error message!');
 Instructions are posted in the wiki https://github.com/makeandbuild/Courier/wiki/IntelliJ-Setup
 
 ## API Docs
-WARNING: THESE ARE NOT EVEN CLOSE TO BEING CORRECT OR UP TO DATE YET.  The base template is the only thing there now.
+*WARNING: DOCS ARE NOT UP TO DATE YET*
+
+Most of the site is still in boiler plate sample format.  The only pages that are currently up to date are the following:
+
+* Authenticate - http://makeandbuild.github.io/Courier/#/authentication
+* Response Format - http://makeandbuild.github.io/Courier/#/response-format
+* GET /beacondetections - http://makeandbuild.github.io/Courier/#/get-beacon-detections
+* POST /beacondetections - http://makeandbuild.github.io/Courier/#/post-beacon-detections
+
+_For everything else please refer to the documentation in the code itself._
 
 Development is in the ```gh-pages``` branch.
 
