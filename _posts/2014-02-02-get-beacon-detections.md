@@ -17,7 +17,7 @@ Optional query parameters:
 
 1. *```uuid```*: beacon uuid
     - ```GET /api/beacondetections?uuid=<your value here>```
-1. *```agentId```*: agent mongo id
+1. *```agentId```*: agent custom id (most likely the mac address)
     - ```GET /api/beacondetections?agentId=<your value here>```
 1. *```time```*:
     - ```GET /api/beacondetections?time=<your value here>```
