@@ -25,12 +25,12 @@
         </thead>
         <tbody>
             <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.id)" class="beaconRow">
-                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.id}}</a></td>
-                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
-                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
-                <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent.id}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent._id}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent.name}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent.location}}</a></td>
                 <td class="col-md-1 status-section"><a href="/agent/{{agent._id}}"><i class="glyphicon" ng-class="agent.operationalStatus == 'Failure' ? 'glyphicon-remove-sign' :'glyphicon-ok-sign'"></i></a></td>
-                <td class="col-md-1"><a href="/agent/{{agent._id}}">{{agent.lastSeen}}</a></td>
+                <td class="col-md-1"><a href="/agent/{{agent.id}}">{{agent.lastSeen}}</a></td>
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-minus" ng-click="deleteAgent(agent)"></span>
                 </td>
@@ -56,10 +56,10 @@
             </thead>
             <tbody>
                 <tr ng-repeat="agent in pendingAgents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.id)" class="beaconRow">
-                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.id}}</a></td>
-                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent._id}}</a></td>
-                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.name}}</a></td>
-                    <td class="col-md-3"><a href="/agent/{{agent._id}}">{{agent.location}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent.id}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent._id}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent.name}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent.id}}">{{agent.location}}</a></td>
                     <td class="col-md-3">
                         <div class="col-md-6 icon-section ">
                             <span class="glyphicon glyphicon-ok" ng-click="approveAgent(agent)"></span>

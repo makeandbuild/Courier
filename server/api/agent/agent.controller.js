@@ -26,16 +26,29 @@ exports.index = function (req, res) {
  * @param res
  */
 exports.show = function (req, res) {
+//    var agentId = req.params.id;
+//    agentService.findAgentById(agentId)
+//        .then(function (agent) {
+//            if (!agent) {
+//                return res.send(404);
+//            }
+//            return res.json(agent);
+//        }, function (err) {
+//            return handleError(res, err);
+//        });
     var agentId = req.params.id;
-    agentService.findAgentById(agentId)
-        .then(function (agent) {
-            if (!agent) {
-                return res.send(404);
+
+    agentService.findAgentByCustomId(agentId)
+        .then(function (agentfound) {
+            if (!agentfound){
+                res.json(400, {
+                    message: "unable to find agent",
+                    error: err
+                });
+            }else {
+                res.json(200, agentfound._doc);
             }
-            return res.json(agent);
-        }, function (err) {
-            return handleError(res, err);
-        });
+        })
 };
 
 /**
@@ -68,8 +81,6 @@ exports.create = function (req, res) {
             agentService.createAgent(agent).then(function (agent) {
                 res.json(201, agent);
             }).catch(function (err) {
-                console.log("error creating unfound" + error);
-//                handleError(res, err);
                 res.json(400, {
                     message: "unable to create new agent",
                     error: err
@@ -90,9 +101,26 @@ exports.create = function (req, res) {
                 })
         }
     }).catch(function(error){
-        console.log("fail")
+        console.log("failed everything, just quit")
     })
 };
+
+exports.findByCustomId = function(req, res){
+    var agent = req.body;
+    var id = agent.id;
+
+    agentService.findAgentByCustomId(agent.id)
+        .then(function (agentfound) {
+            if (!agentfound){
+                res.json(400, {
+                    message: "unable to find agent",
+                    error: err
+                });
+            }else {
+                res.json(200, agent);
+            }
+        })
+}
 
 /**
  * Updates an existing agent in the DB.
