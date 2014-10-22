@@ -39,16 +39,14 @@ exports.show = function (req, res) {
     var agentId = req.params.id;
 
     agentService.findAgentByCustomId(agentId)
-        .then(function (agentfound) {
-            if (!agentfound){
-                res.json(400, {
-                    message: "unable to find agent",
-                    error: err
-                });
-            }else {
-                res.json(200, agentfound._doc);
+        .then(function (agentFound) {
+            if (!agentFound) {
+                return res.json(404, 'Unable to find agent');
             }
-        })
+            return res.json(200, agentFound._doc);
+        }, function (err) {
+            return handleError(res, err);
+        });
 };
 
 /**
@@ -57,7 +55,7 @@ exports.show = function (req, res) {
  *
  * Example:
  * {
- *   "id": "00:0a:95:9d:68:16",
+ *   "customId": "00:0a:95:9d:68:16",
  *   "name": "Agent 1",
  *   "location": "entry way",
  *   "capabilities": ["audio"],
@@ -74,9 +72,9 @@ exports.show = function (req, res) {
 exports.create = function (req, res) {
     var agent = req.body;
 
-    agentService.findAgentByCustomId(agent.id)
-    .then(function (agentfound) {
-        if (!agentfound){
+    agentService.findAgentByCustomId(agent.customId)
+    .then(function (agentFound) {
+        if (!agentFound){
             console.log("agent unfound, creating");
             agentService.createAgent(agent).then(function (agent) {
                 res.json(201, agent);
@@ -87,10 +85,10 @@ exports.create = function (req, res) {
                 })
             });
         }else {
-            agentfound.location = agent.location;
-            agentfound.name = agent.name;
-            agentfound.id = agent.id;
-            agentService.updateAgent(agentfound)
+            agentFound.location = agent.location;
+            agentFound.name = agent.name;
+            agentFound.customId = agent.customId;
+            agentService.updateAgent(agentFound)
                 .then(function (agent) {
                     res.json(200, agent);
                 }).catch(function (err) {
@@ -107,11 +105,11 @@ exports.create = function (req, res) {
 
 exports.findByCustomId = function(req, res){
     var agent = req.body;
-    var id = agent.id;
+    var customId = agent.customId;
 
-    agentService.findAgentByCustomId(agent.id)
-        .then(function (agentfound) {
-            if (!agentfound){
+    agentService.findAgentByCustomId(customId)
+        .then(function (agentFound) {
+            if (!agentFound){
                 res.json(400, {
                     message: "unable to find agent",
                     error: err

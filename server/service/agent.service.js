@@ -19,17 +19,17 @@ exports.findAgents = function () {
 }
 
 /**
- * Finds an agent by id
+ * Finds an agent by _id
  *
- * @param id
+ * @param _id
  * @returns {*}
  */
-exports.findAgentById = function (id) {
-    return when(agentDao.findAgentByIdPromise(id));
+exports.findAgentByUnderscoreId = function (_id) {
+    return when(agentDao.findAgentByUnderscoreIdPromise(_id));
 }
 
-exports.findAgentByCustomId = function (id) {
-    return when(agentDao.findAgentByCustomIdPromise(id));
+exports.findAgentByCustomId = function (customId) {
+    return when(agentDao.findAgentByCustomIdPromise(customId));
 }
 
 /**

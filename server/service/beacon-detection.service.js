@@ -8,6 +8,8 @@ var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
 var dateQueryParser = require('../utils/date.query.parser.js');
 var logger = require('../utils/logger.js');
 var autobahn = require('autobahn');
+var _ = require('lodash');
+var agentService = require('./agent.service.js');
 
 function findDetections(optionalFilters) {
     if (optionalFilters) {
@@ -64,7 +66,7 @@ function createDetection(beaconDetection, timeAsMs) {
 
     if (timeAsMs && timeAsMs === true) {
         var defer = when.defer();
-        promise.then(function(savedDetection){
+        promise.then(function (savedDetection) {
             if (savedDetection.time) {
                 savedDetection.time = savedDetection.time.getTime();
             }
@@ -100,7 +102,7 @@ function createDetections(beaconDetections, timeAsMs) {
         // convert dates to ms timestamps
         promise.then(function (detections) {
             var savedDetections = [];
-            detections.forEach(function(savedDetection){
+            detections.forEach(function (savedDetection) {
                 // flip the dates back to ms for consistency
                 if (savedDetection.time) {
                     savedDetection.time = savedDetection.time.getTime();
@@ -108,7 +110,7 @@ function createDetections(beaconDetections, timeAsMs) {
                 savedDetections.push(savedDetection);
             });
             defer.resolve(savedDetections);
-        }, function(err) {
+        }, function (err) {
             defer.reject(err);
         });
         return defer.promise;
@@ -128,7 +130,7 @@ function createDetectionsOneByOne(beaconDetections) {
     var failures = [];
 
     var createPromises = [];
-    beaconDetections.forEach(function(detection){
+    beaconDetections.forEach(function (detection) {
         var promise = createDetection(detection);
         createPromises.push(promise);
     });
@@ -136,9 +138,9 @@ function createDetectionsOneByOne(beaconDetections) {
     var defer = when.defer();
 
     var settled = when.settle(createPromises);
-    settled.then(function(descriptors) {
-        descriptors.forEach(function(d) {
-            if(d.state === 'rejected') {
+    settled.then(function (descriptors) {
+        descriptors.forEach(function (d) {
+            if (d.state === 'rejected') {
                 failures.push(d.reason);
             } else {
                 savedDetections.push(d.value);
@@ -174,6 +176,57 @@ function sendDetectionToRulesHandler() {
     connection.open();
 }
 
+function updateAgentsWithMostRecentDetectionPromise(detections) {
+    // sort detections by agent
+    var agentIdToDetections = _.groupBy(detections, function (detection) {
+        return detection.agentId;
+    });
+
+    // remove any detections that didn't have an agent id specified
+    delete agentIdToDetections.undefined;
+
+    var promises = [];
+
+    _.forEach(agentIdToDetections, function (allDetections, agentId) {
+        // which detection is most recent for the agent?
+        var mostRecentDetection = _.max(allDetections, function (detection) {
+            return detection.time;
+        });
+
+        var defer = when.defer();
+
+        // update agent with most recent detection if needed
+        agentService.findAgentByCustomId(agentId)
+            .then(function (foundAgent) {
+                if (!foundAgent) {
+                    defer.reject('Could not find agent');
+                    return;
+                }
+
+                // update agent with new heartbeat (time + id)
+                if (mostRecentDetection.time > foundAgent.lastSeen) {
+
+                    foundAgent.lastSeen = mostRecentDetection.time;
+                    foundAgent.lastSeenBy = mostRecentDetection.uuid;
+
+                    agentService.updateAgent(foundAgent)
+                        .then(function (agent) {
+                            defer.resolve(agent);
+                        }, function (err) {
+                            defer.reject(err);
+                        });
+                } else {
+                    // nothing to update, just resolve the promise with original agent
+                    defer.resolve(foundAgent);
+                }
+            });
+        promises.push(defer.promise);
+    });
+
+    return when.settle(promises);
+
+}
+
 
 exports.findDetections = findDetections;
 exports.findDetectionsByDateRange = findDetectionsByDateRange;
@@ -184,3 +237,4 @@ exports.createDetection = createDetection;
 exports.createDetections = createDetections;
 exports.createDetectionsOneByOne = createDetectionsOneByOne;
 exports.sendDetectionToRulesHandler = sendDetectionToRulesHandler;
+exports.updateAgentsWithMostRecentDetectionPromise = updateAgentsWithMostRecentDetectionPromise;
