@@ -20,7 +20,8 @@ function createToken(user) {
         return {
             token: token,
             expires: expires,
-            user: user.toJSON()
+            // make only send enough to identify the user (don't want to send password, etc)
+            user: {_id: user._id, email:user.email}
         };
     }
 }

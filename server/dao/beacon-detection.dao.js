@@ -2,6 +2,7 @@
 
 var BeaconDetection = require('./../models/beacon-detection.model.js');
 var mongoose = require('mongoose');
+var when = require('when');
 
 exports.findAllDetectionsPromise = function () {
     return BeaconDetection.find().exec();
@@ -12,7 +13,15 @@ exports.findFilteredDetectionsPromise = function (filters) {
 }
 
 exports.createDetectionPromise = function (detection) {
-    return BeaconDetection.create(detection); // returns a promise without needing .exec()
+    var defer = when.defer();
+    BeaconDetection.create(detection)
+        .then(function (saved) {
+            defer.resolve(saved);
+        }, function (err) {
+            // wrap up the failed data with the error
+            defer.reject({error: err, data: detection});
+        });
+    return defer.promise;
 };
 
 exports.createDetectionsPromise = function (detections) {

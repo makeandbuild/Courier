@@ -4,7 +4,6 @@ var _ = require('lodash');
 var config = require('../../config/environment');
 var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');
-var autobahn = require('autobahn')
 
 
 /**
@@ -62,43 +61,39 @@ exports.index = function (req, res) {
 
 /**
  * POST /api/beacondetections
- * Create a single beacon detection.
+ * Creates one or more beacon detections.
  *
  * @param req
  * @param res
  */
 exports.create = function (req, res) {
+    var detections = req.body;
+
+    if (!(detections instanceof Array)) {
+        // assume single object sent and wrap in array
+        detections = [detections];
+    }
+
     // logging
-    var logLine = JSON.stringify(req.body);
-    console.log(req.body);
+    var logLine = JSON.stringify(detections);
+    console.log(detections);
     if (config.log.beaconDetections === true) {
         logger.detections(logLine);
     }
 
-    var detection = req.body;
-    beaconDetectionService.createDetection(detection, true)
-        .then(function (detection) {
-            if (!detection) {
-                return res.send(404);
-            }
-            console.log(detection);
+    // should always have an array of detections by now
+    beaconDetectionService.createDetectionsOneByOne(detections)
+        .then(function (result) {
 
+            //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
             //Emit event to Rules Engine - skipping rules engine for testing purposes now
-            var connection = new autobahn.Connection({
-         		url: 'ws://courier.makeandbuildatl.com:9015/ws',
-         		realm: 'realm1'
-      		});
+//            beaconDetectionService.sendDetectionToRulesHandler();
 
-			connection.onopen = function (session) {
-	   			// Publish a play audio event
-	   			logger.log("error", "MADE IT HERE!")
-			   session.publish('com.makeandbuild.rpi.audio.play', ['https://s3.amazonaws.com/makeandbuild/courier/audio/1.wav']);
-			};
 
-			connection.open();
-
-            return res.json(201, detection);
+            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
+            return res.json(201, result);
         }, function (err) {
+            // something unexpected happened
             return handleError(res, err);
         });
 };
