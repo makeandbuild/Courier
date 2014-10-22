@@ -3,6 +3,15 @@
 !.gitmodules
 *~
 
+.idea
+*.iml
+
 components/
 
 _site/
+node_modules
+bower_components
+
+.DS_Store
+courier.log
+detections.log
