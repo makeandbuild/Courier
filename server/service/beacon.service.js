@@ -13,7 +13,11 @@ exports.findBeacons = function () {
 }
 
 exports.findBeaconById = function (id) {
-    return when(beaconDao.findBeaconByIdPromise(id));
+    return when(beaconDao.findBeaconsPromise(id));
+}
+
+exports.findByUuid = function (uuid) {
+    return when(beaconDao.findByUuidPromise(uuid));
 }
 
 exports.createBeacon = function (beacon) {

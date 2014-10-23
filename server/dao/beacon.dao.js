@@ -14,6 +14,10 @@ exports.findBeaconByIdPromise = function (id) {
     return Beacon.findById(id).exec();
 }
 
+exports.findByUuidPromise = function(uuid){
+    return Beacon.findOne({uuid:uuid}).exec();
+}
+
 exports.createBeaconPromise = function (beacon) {
     return Beacon.create(beacon); // returns a promise without needing .exec()
 };
