@@ -62,6 +62,7 @@ function findDetectionsByDateRange(time) {
  * @param timeAsMs optional: if you want the time formatted as a ms timestamp
  */
 function createDetection(beaconDetection, timeAsMs) {
+    beaconDetection.time = new Date()
     var promise = when(beaconDetectionDao.createDetectionPromise(beaconDetection));
 
     if (timeAsMs && timeAsMs === true) {
