@@ -74,7 +74,7 @@ module.exports = function (complete) {
                     tx: 3,
                     rssi: 1,
                     distance: 1.2,
-                    agentId: savedAgents[0]._id
+                    agentId: savedAgents[0].customId
                 },
                 {
                     time: Date.now(),
@@ -84,7 +84,7 @@ module.exports = function (complete) {
                     tx: 4,
                     rssi: 2,
                     distance: 2.2,
-                    agentId: savedAgents[1]._id
+                    agentId: savedAgents[1].customId
                 },
                 {
                     time: Date.now(),
@@ -94,7 +94,7 @@ module.exports = function (complete) {
                     tx: -65,
                     rssi: -75,
                     distance: 3.7,
-                    agentId: savedAgents[2]._id
+                    agentId: savedAgents[2].customId
                 }
             ]);
 

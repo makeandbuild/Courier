@@ -20,6 +20,10 @@ exports.findAgentByCustomIdPromise = function (id) {
 exports.createAgentPromise = function (agent) {
     agent.lastSeen = new Date;
     agent.registered = new Date;
+
+    if(!agent.approvedStatus)
+        agent.approvedStatus='Pending'
+
     return Agent.create(agent); // returns a promise without needing .exec()
 };
 

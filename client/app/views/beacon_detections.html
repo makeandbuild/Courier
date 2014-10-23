@@ -15,6 +15,7 @@
             <thead>
             <tr>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'time'; reverse=false">Time</a></th>
+                <th class="col-md-1"><a href="" ng-click="predicate = 'agentId'; reverse=false">Custom Agent ID</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'uuid'; reverse=!reverse">UUID</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'major'; reverse=!reverse">Major</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Minor</a></th>
@@ -27,6 +28,9 @@
             <tr ng-repeat="detection in detections |  orderBy:predicate:reverse | filter:searchText" ng-click="setSelected(beacon.id)" class="beaconRow">
                 <td class="col-md-1">
                     <a href="/beacon/{{detection._id}}" >{{detection.time}}</a>
+                </td>
+                <td class="col-md-1">
+                    <a href="/agent/{{detection.agentId}}" >{{detection.agentId}}</a>
                 </td>
                 <td class="col-md-1">
                     {{detection.uuid}}
