@@ -143,7 +143,7 @@ describe('Test /api/beacondetections API', function () {
             });
     });
 
-    it('POST /api/beacondetections -> should create multiple beacon detections', function (done) {
+    it('POST /api/beacondetections -> should create multiple beacon detections and update agents with last seen info', function (done) {
         request(app)
             .post('/api/beacondetections')
             .send([

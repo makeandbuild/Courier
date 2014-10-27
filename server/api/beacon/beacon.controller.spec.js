@@ -93,13 +93,13 @@ describe('Test /api/beacons API', function () {
 
     it('GET /api/beacons/:id -> should respond with 401 unauthorized', function (done) {
         request(app)
-            .get('/api/beacons/' + beacon._id)
+            .get('/api/beacons/' + beacon.uuid)
             .expect(401, done);
     });
 
     it('GET /api/beacons/:id -> should respond with a single beacon', function (done) {
         request(app)
-            .get('/api/beacons/' + beacon._id)
+            .get('/api/beacons/' + beacon.uuid)
             .set('x-access-token', token)
             .expect(200)
             .expect('Content-Type', /json/)

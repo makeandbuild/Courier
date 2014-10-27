@@ -11,7 +11,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
  *
  * Optional query parameters:
  *  1) uuid: beacon uuid
- *  2) agentId: agent mongo id
+ *  2) agentId: agent custom id (generally the mac address)
  *  3) time:
  *      Supported comparators:
  *          - gt = greater than
@@ -40,7 +40,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
  *          "time" "2014-10-06T15:56:43.793Z",
  *          "rssi" : -75,
  *          "minor" : 2,
- *          "agentId" : "5432bbbbe4ca5c9a22bc765e"
+ *          "agentId" : "00:A0:C9:14:C8:29"
  *       }
  *   ]
  *
