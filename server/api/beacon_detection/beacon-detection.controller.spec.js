@@ -97,12 +97,12 @@ describe('Test /api/beacondetections API', function () {
 
     // ACCEPT BEACON DETECTION
 
-    // it('POST /api/beacondetections -> should respond with 401 unauthorized', function (done) {
-    //     request(app)
-    //         .post('/api/beacondetections')
-    //         .send(beaconDetection)
-    //         .expect(401, done);
-    // });
+    it('POST /api/beacondetections -> should respond with 401 unauthorized', function (done) {
+        request(app)
+            .post('/api/beacondetections')
+            .send(beaconDetection)
+            .expect(401, done);
+    });
 
     it('GET /api/tokens -> should get a token for an authorized user', function (done) {
         request(app)
@@ -116,6 +116,61 @@ describe('Test /api/beacondetections API', function () {
                 }
                 res.body.should.be.instanceof(Object);
                 token = res.body.token;
+                done();
+            });
+    });
+
+    it('POST /api/beacondetections -> should not create empty beacon detection', function (done) {
+        request(app)
+            .post('/api/beacondetections')
+            .send({})
+            .set('x-access-token', token)
+            .expect(204, done());// didn't error, but nothing created
+    });
+
+    it('POST /api/beacondetections -> should not create empty beacon detections', function (done) {
+        request(app)
+            .post('/api/beacondetections')
+            .send([
+                {},
+                {},
+                {}
+            ])
+            .set('x-access-token', token)
+            .expect(204, done());// didn't error, but nothing created
+    });
+
+    it('POST /api/beacondetections -> should create the non empty detections', function (done) {
+        request(app)
+            .post('/api/beacondetections')
+            .send([
+                {
+                    time: Date.now(),
+                    uuid: '787654ffrgy',
+                    major: 1,
+                    minor: 1,
+                    tx: -65,
+                    rssi: -75,
+                    distance: 3.7,
+                    agentId: '98asd7fa9s8d7fa'
+                },
+                {}
+            ])
+            .set('x-access-token', token)
+            .expect(201)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+
+                var responseBody = res.body;
+                responseBody.should.be.instanceof(Object);
+                responseBody.should.have.property('succeeded');
+                responseBody.succeeded.should.have.lengthOf(1);
+                responseBody.succeeded[0].should.have.property('_id');
+                responseBody.should.have.property('failed');
+                responseBody.failed.should.be.empty;
                 done();
             });
     });

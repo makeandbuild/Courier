@@ -81,6 +81,15 @@ exports.create = function (req, res) {
         logger.detections(logLine);
     }
 
+    // remove empty detections from list to save
+    detections = _.remove(detections, function (detection) {
+        return !_.isEmpty(detection);
+    });
+    if (detections.length === 0) {
+        // all detections are empty, that's fine it just means the beacon is out of range, but we don't need to save them
+        return res.send(204, 'No detections to save');
+    }
+
     // update agents with most recent - more of a nice to have, don't need to block the response for it
     beaconDetectionService.updateAgentsWithMostRecentDetectionPromise(detections)
         .then(function (descriptors) {
