@@ -1,8 +1,25 @@
 Raspberry Pi Setup Instructions
 ===============================
 
+Setup SD Card
+------------
+Download the following SD Formatter: https://www.sdcard.org/downloads/formatter_4/
+
+Format the SD Card (Quick Format should work fine, if not use the Full format option).
+
+Download NOOBS (Offline and network install): http://www.raspberrypi.org/downloads/
+
+Copy the contents of the zip to the formatted SD Card and safely unmount the card once completed.
+
 NOOBS Install
 -------------
+Plug in your keyboard, mouse, and monitor.
+
+Now plug in the USB power cable to your Pi.
+
+The Pi will boot up and you will see a window will appear with a operating systems that you can install. 
+
+Select Raspbian and follow the instructions to complete install.
 
 Configuration
 -------------
