@@ -86,7 +86,8 @@ exports.create = function (req, res) {
         return !_.isEmpty(detection);
     });
     if (detections.length === 0) {
-        // all detections are empty, that's fine it just means the beacon is out of range, but we don't need to save them
+        // all detections are empty, that's fine it just means the
+        // beacon is out of range, but we don't need to save them
         return res.send(204, 'No detections to save');
     }
 
@@ -101,14 +102,14 @@ exports.create = function (req, res) {
         });
 
 
+    //[Lindsay Thurmond:10/29/14] TODO: do we really need to wait for this to end to start saving? make async?
+    // publish needed events
+    beaconDetectionService.processEventsFromDetections(detections);
+
+
     // should always have an array of detections by now
     beaconDetectionService.createDetectionsOneByOne(detections)
         .then(function (result) {
-
-            //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
-            //Emit event to Rules Engine - skipping rules engine for testing purposes now
-            beaconDetectionService.publishDetectionEvent();
-
 
             //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
             return res.json(201, result);

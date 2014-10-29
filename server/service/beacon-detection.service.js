@@ -158,9 +158,56 @@ exports.deleteAllDetections = function deleteAllDetections() {
     return when(beaconDetectionDao.deleteAllDetections());
 }
 
-function publishDetectionEvent() {
-    //[Lindsay Thurmond:10/29/14] TODO: publish actual detection data
-    eventPublisherService.publishEvent('com.makeandbuild.detections', ['beacon no longer detected']);
+//[Lindsay Thurmond:10/29/14] TODO: cleanup
+var cache = {};
+
+/**
+ * Analyzes the detections to decide which types of events to publish.
+ * Possible event types are:
+ *  - enter
+ *  - exit
+ *  - range changes
+ *
+ * @param detections
+ */
+function processEventsFromDetections(detections) {
+    // sort detections by agent
+    var agentIdToDetections = _.groupBy(detections, function (detection) {
+        return detection.agentId;
+    });
+
+    // remove any detections that didn't have an agent id specified
+    delete agentIdToDetections.undefined;
+
+    _.forEach(agentIdToDetections, function (detections, agentId) {
+
+        if (!cache[agentId]) {
+            cache[agentId] = [];
+        }
+
+        var seenBeacons = cache[agentId];
+
+        detections.forEach(function (detection) {
+
+            var currentBeacon = seenBeacons[detection.uuid];
+            if (!currentBeacon) {
+                // first time this agent has seen this beacon
+                //[Lindsay Thurmond:10/29/14] TODO: fire enter region event
+                eventPublisherService.publishEvent('com.makeandbuild.detections', [detection.uuid, 'enter'])
+
+                // add beacon to cache so we know we've previously seen it
+                currentBeacon = { time: detection.time, distance: detection.distance };
+                seenBeacons[detection.uuid] = currentBeacon;
+            }
+
+            //[Lindsay Thurmond:10/29/14] TODO: other events
+
+        });
+
+
+    });
+
+
 }
 
 function updateAgentsWithMostRecentDetectionPromise(detections) {
@@ -223,5 +270,5 @@ exports.findDetectionsByUuid = findDetectionsByUuid;
 exports.createDetection = createDetection;
 exports.createDetections = createDetections;
 exports.createDetectionsOneByOne = createDetectionsOneByOne;
-exports.publishDetectionEvent = publishDetectionEvent;
 exports.updateAgentsWithMostRecentDetectionPromise = updateAgentsWithMostRecentDetectionPromise;
+exports.processEventsFromDetections = processEventsFromDetections;
