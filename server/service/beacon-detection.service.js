@@ -7,9 +7,10 @@ var when = require('when');
 var beaconDetectionDao = require('../dao/beacon-detection.dao.js');
 var dateQueryParser = require('../utils/date.query.parser.js');
 var logger = require('../utils/logger.js');
-var autobahn = require('autobahn');
 var _ = require('lodash');
 var agentService = require('./agent.service.js');
+var config = require('../config/environment');
+var eventPublisherService = require('./event.publisher.service.js');
 
 function findDetections(optionalFilters) {
     if (optionalFilters) {
@@ -157,24 +158,9 @@ exports.deleteAllDetections = function deleteAllDetections() {
     return when(beaconDetectionDao.deleteAllDetections());
 }
 
-/**
- * [Lindsay Thurmond:10/21/14] TODO: this needs work, right now its hardcoded for proof of concept purposes
- */
-function sendDetectionToRulesHandler() {
-
-    //Emit event to Rules Engine - skipping rules engine for testing purposes now
-    var connection = new autobahn.Connection({
-        url: 'ws://courier.makeandbuildatl.com:9015/ws',
-        realm: 'realm1'
-    });
-
-    connection.onopen = function (session) {
-        // Publish a play audio event
-        logger.log("error", "MADE IT HERE!")
-        session.publish('com.makeandbuild.rpi.audio.play', ['https://s3.amazonaws.com/makeandbuild/courier/audio/1.wav']);
-    };
-
-    connection.open();
+function publishDetectionEvent() {
+    //[Lindsay Thurmond:10/29/14] TODO: publish actual detection data
+    eventPublisherService.publishEvent('com.makeandbuild.detections', ['beacon no longer detected']);
 }
 
 function updateAgentsWithMostRecentDetectionPromise(detections) {
@@ -200,7 +186,7 @@ function updateAgentsWithMostRecentDetectionPromise(detections) {
         agentService.findAgentByCustomId(agentId)
             .then(function (foundAgent) {
                 if (!foundAgent) {
-                    defer.reject('Could not find agent');
+                    defer.reject('Could not find agent with id = ' + agentId);
                     return;
                 }
 
@@ -237,5 +223,5 @@ exports.findDetectionsByUuid = findDetectionsByUuid;
 exports.createDetection = createDetection;
 exports.createDetections = createDetections;
 exports.createDetectionsOneByOne = createDetectionsOneByOne;
-exports.sendDetectionToRulesHandler = sendDetectionToRulesHandler;
+exports.publishDetectionEvent = publishDetectionEvent;
 exports.updateAgentsWithMostRecentDetectionPromise = updateAgentsWithMostRecentDetectionPromise;

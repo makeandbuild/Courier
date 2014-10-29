@@ -95,7 +95,7 @@ exports.create = function (req, res) {
         .then(function (descriptors) {
             descriptors.forEach(function (d) {
                 if (d.state === 'rejected') {
-                    console.log('Error updating agents with most recent detection: ' + d.reason);
+                    console.log('Problem updating agents with most recent detection: ' + d.reason);
                 }
             })
         });
@@ -107,7 +107,7 @@ exports.create = function (req, res) {
 
             //[Lindsay Thurmond:10/21/14] TODO: send to rules engine
             //Emit event to Rules Engine - skipping rules engine for testing purposes now
-//            beaconDetectionService.sendDetectionToRulesHandler();
+            beaconDetectionService.publishDetectionEvent();
 
 
             //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened

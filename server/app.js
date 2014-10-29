@@ -12,6 +12,9 @@ var mongoose = require('mongoose');
 var config = require('./config/environment');
 var when = require('when');
 
+// open wamp connection
+require('./service/event.publisher.service.js').openConnection();
+
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
 
