@@ -83,3 +83,23 @@ _For everything else please refer to the documentation in the code itself._
 Development is in the ```gh-pages``` branch.
 
 Current docs can be viewed at http://makeandbuild.github.io/Courier/
+
+## Wamp Routing
+We have a crossbar.io router configured in the .crossbar folder of this project.
+
+Install crossbar
+```
+pip install crossbar
+```
+Verify install
+```
+crossbar version
+```
+Ensure ```NODE_PATH``` is set to ```/usr/local/bin/node``` in your ```.profile``` or ```.bash_profile```
+Start crossbar router
+```
+cd <wherever your repo lives>/Courier
+crossbar start
+```
+
+
