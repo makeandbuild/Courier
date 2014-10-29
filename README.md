@@ -85,7 +85,7 @@ Development is in the ```gh-pages``` branch.
 Current docs can be viewed at http://makeandbuild.github.io/Courier/
 
 ## Wamp Routing
-We have a crossbar.io router configured in the .crossbar folder of this project.
+We have a _crossbar.io_ router configured in the ```.crossbar``` folder of this project.
 
 Install crossbar
 ```
