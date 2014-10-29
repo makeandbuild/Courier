@@ -96,6 +96,7 @@ Verify install
 crossbar version
 ```
 Ensure ```NODE_PATH``` is set to ```/usr/local/bin/node``` in your ```.profile``` or ```.bash_profile```
+
 Start crossbar router
 ```
 cd <wherever your repo lives>/Courier
