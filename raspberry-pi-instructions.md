@@ -74,6 +74,8 @@ We're all on DHCP on the office wireless, so using avahi can make it easier to c
 # apt-get install libnss-mdns
 ```
 
+You can modify the hostname by editing `/etc/hostname` and also `/etc/hosts`
+
 **Bluetooth**
 
 ```
