@@ -51,9 +51,6 @@ angular.module('courierApp', [
 			.when('/:param', {
 				templateUrl: 'app/views/main.html',
 				controller: 'MainCtrl'
-			})
-			.otherwise({
-				redirectTo: '/'
 			});
 
 		$locationProvider.html5Mode(true);
