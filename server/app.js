@@ -11,6 +11,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 var when = require('when');
+var cors = require('cors');
 
 // open wamp connection
 require('./service/event.publisher.service.js').openConnection();
@@ -21,6 +22,8 @@ mongoose.connect(config.mongo.uri, config.mongo.options);
 
 // Setup server
 var app = express();
+
+app.use(cors());
 
 // Populate DB with sample data
 var promiseMongoSeedComplete = when.promise(function(resolve, reject, notify) {
