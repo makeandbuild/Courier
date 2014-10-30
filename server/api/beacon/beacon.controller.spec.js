@@ -68,7 +68,7 @@ describe('Test /api/beacons API', function () {
             });
     });
 
-    // GET ALL BEACONS
+    // GET BEACONS
 
     it('GET /api/beacons -> should respond with 401 unauthorized', function (done) {
         request(app)
@@ -88,6 +88,21 @@ describe('Test /api/beacons API', function () {
                 done();
             });
     });
+
+    it('GET /api/beacons?detectedBy -> should respond with JSON array of beacons', function (done) {
+        request(app)
+            .get('/api/beacons?detectedBy=Kitchen')
+            .set('x-access-token', token)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+                if (err) return done(err);
+                res.body.should.be.instanceof(Array);
+                res.body.should.have.lengthOf(3);
+                done();
+            });
+    });
+
 
     // GET SINGLE BEACON
 
