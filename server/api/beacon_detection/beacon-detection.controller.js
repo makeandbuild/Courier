@@ -81,6 +81,12 @@ exports.create = function (req, res) {
         logger.detections(logLine);
     }
 
+    //[Lindsay Thurmond:10/29/14] TODO: do we really need to wait for this to end to start saving? make async?
+    // publish needed events
+    // Do this before removing empty detections from list, b/c empty detections are
+    // an indication that there aren't any beacons in range anymore
+    beaconDetectionService.processEventsFromDetections(detections);
+
     // remove empty detections from list to save
     detections = _.remove(detections, function (detection) {
         return !_.isEmpty(detection);
@@ -101,22 +107,21 @@ exports.create = function (req, res) {
             })
         });
 
+    // pretend like we saved, but just pass back an empty array - YES THIS IS GOING TO BREAK THE TESTS
+    return res.json(201, []);
 
-    //[Lindsay Thurmond:10/29/14] TODO: do we really need to wait for this to end to start saving? make async?
-    // publish needed events
-    beaconDetectionService.processEventsFromDetections(detections);
-
-
+    //[Lindsay Thurmond:10/30/14] TODO: THIS IS TEMPORARILY TURNED OFF SO WE DON'T SAVE DETECTIONS TO MONGO UNTIL AFTER THE MOVEMBER EVENT
+    //[Lindsay Thurmond:10/30/14] TODO: BECAUSE WE DON'T WANT TO USE UP ALL THE SPACE ON THE PI
     // should always have an array of detections by now
-    beaconDetectionService.createDetectionsOneByOne(detections)
-        .then(function (result) {
-
-            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
-            return res.json(201, result);
-        }, function (err) {
-            // something unexpected happened
-            return handleError(res, err);
-        });
+//    beaconDetectionService.createDetectionsOneByOne(detections)
+//        .then(function (result) {
+//
+//            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
+//            return res.json(201, result);
+//        }, function (err) {
+//            // something unexpected happened
+//            return handleError(res, err);
+//        });
 };
 
 function handleError(res, err) {
