@@ -15,6 +15,12 @@ module.exports = function (app) {
 //        next();
 //    });
 
+    app.all('*', function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+
     // Insert routes below
     app.use('/api/tokens', require('./api/token'));
     app.use('/api/agents', require('./api/agent'));
