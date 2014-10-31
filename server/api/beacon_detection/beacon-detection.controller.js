@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var config = require('../../config/environment');
-var logger = require('../../utils/logger.js');
 var beaconDetectionService = require('../../service/beacon-detection.service.js');
 
 

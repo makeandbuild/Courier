@@ -2,7 +2,7 @@ var jwt = require('jwt-simple');
 var moment = require('moment');
 var config = require('../config/environment/index');
 var when = require('when');
-var logger = require('../utils/logger.js');
+//var logger = require('../utils/logger.js');
 
 var userService = require('./user.service.js');
 
@@ -64,7 +64,8 @@ function findAuthedUser(username, password) {
 
         }, function(err){
             defer.reject('Authentication failed');
-            logger.courier(err);
+//            logger.courier(err);
+            console.log(err);
         });
 
     return defer.promise;

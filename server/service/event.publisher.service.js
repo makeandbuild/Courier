@@ -9,7 +9,7 @@ var session;
 /**
  * Call when app starts up.
  */
-exports.openConnection = function () {
+exports.openConnection = function openConnection() {
 
     connection = new autobahn.Connection({
         url: config.crossbarUrl,
@@ -29,7 +29,7 @@ exports.openConnection = function () {
     connection.open();
 }
 
-exports.publishEvent = function (topic, args) {
+exports.publishEvent = function publishEvent(topic, args) {
 
 //    var connection = new autobahn.Connection({
 //        url: config.crossbarUrl,
