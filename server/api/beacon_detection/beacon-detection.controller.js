@@ -76,10 +76,10 @@ exports.create = function (req, res) {
 
     // logging
     var logLine = JSON.stringify(detections);
-    console.log(detections);
-    if (config.log.beaconDetections === true) {
-        logger.detections(logLine);
-    }
+    console.log(logLine);
+//    if (config.log.beaconDetections === true) {
+//        logger.detections(logLine);
+//    }
 
     //[Lindsay Thurmond:10/29/14] TODO: do we really need to wait for this to end to start saving? make async?
     // publish needed events
@@ -110,8 +110,6 @@ exports.create = function (req, res) {
     // pretend like we saved, but just pass back an empty array - YES THIS IS GOING TO BREAK THE TESTS
     return res.json(201, []);
 
-    //[Lindsay Thurmond:10/30/14] TODO: THIS IS TEMPORARILY TURNED OFF SO WE DON'T SAVE DETECTIONS TO MONGO UNTIL AFTER THE MOVEMBER EVENT
-    //[Lindsay Thurmond:10/30/14] TODO: BECAUSE WE DON'T WANT TO USE UP ALL THE SPACE ON THE PI
     // should always have an array of detections by now
 //    beaconDetectionService.createDetectionsOneByOne(detections)
 //        .then(function (result) {
@@ -123,6 +121,16 @@ exports.create = function (req, res) {
 //            return handleError(res, err);
 //        });
 };
+
+//[Lindsay Thurmond:10/31/14] TODO: we probably don't actually want to expose this, I'm just exposing it for convenience for now
+exports.destroyAll = function (req, res) {
+    beaconDetectionService.deleteAllDetections()
+        .then(function () {
+            res.send(204);
+        }, function (err) {
+            return handleError(res, err);
+        });
+}
 
 function handleError(res, err) {
     return res.send(500, err);

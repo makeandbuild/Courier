@@ -11,5 +11,6 @@ router.use(tokenAuth);
 
 router.get('/', controller.index);
 router.post('/', controller.create);
+router.delete('/', controller.destroyAll);
 
 module.exports = router;
