@@ -11,35 +11,27 @@ var session;
  */
 exports.openConnection = function openConnection() {
 
-    connection = new autobahn.Connection({
-        url: config.crossbarUrl,
-        realm: 'realm1'
-    });
-
-    connection.onopen = function (ses) {
-        session = ses;
-        console.log('WAMP connection is open');
-    };
-
-    // fired when connection was lost (or could not be established)
-    connection.onclose = function (reason, details) {
-        console.log("WAMP connection lost: " + reason);
-    }
-
-    connection.open();
+//    connection = new autobahn.Connection({
+//        url: config.crossbarUrl,
+//        realm: 'realm1'
+//    });
+//
+//    connection.onopen = function (ses) {
+//        session = ses;
+//        console.log('WAMP connection is open');
+//    };
+//
+//    // fired when connection was lost (or could not be established)
+//    connection.onclose = function (reason, details) {
+//        console.log("WAMP connection lost: " + reason);
+//    }
+//
+//    connection.open();
 }
 
 exports.publishEvent = function publishEvent(topic, args) {
 
-//    var connection = new autobahn.Connection({
-//        url: config.crossbarUrl,
-//        realm: 'realm1'
-//    });
+//    session.publish(topic, args);
+//    console.log('Published an event for: ' + topic);
 
-//    connection.onopen = function (session) {
-    session.publish(topic, args);
-    console.log('Published an event for: ' + topic);
-//    };
-
-//    connection.open();
 }
