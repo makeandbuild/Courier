@@ -84,7 +84,7 @@ exports.create = function (req, res) {
     // publish needed events
     // Do this before removing empty detections from list, b/c empty detections are
     // an indication that there aren't any beacons in range anymore
-    beaconDetectionService.processEventsFromDetections(detections);
+//    beaconDetectionService.processEventsFromDetections(detections);
 
     // remove empty detections from list to save
     detections = _.remove(detections, function (detection) {
@@ -104,6 +104,10 @@ exports.create = function (req, res) {
                     console.log('Problem updating agents with most recent detection: ' + d.reason);
                 }
             })
+        }, function (err) {
+            console.log(err);
+        }).otherwise(function (err) {
+            console.log(err);
         });
 
     // pretend like we saved, but just pass back an empty array - YES THIS IS GOING TO BREAK THE TESTS
