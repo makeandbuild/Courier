@@ -75,7 +75,7 @@ exports.create = function (req, res) {
 
     // logging
     var logLine = JSON.stringify(detections);
-    console.log(logLine);
+//    console.log(logLine);
 //    if (config.log.beaconDetections === true) {
 //        logger.detections(logLine);
 //    }
