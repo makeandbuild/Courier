@@ -46,25 +46,6 @@ Run Mocha Tests
 grunt mochaTest
 ```
 
-#### Logging
-Logging is configured to use Winston in the ```\utils\logger.js``` file.  The following log files are configured:
- 1. ```courier.log``` - use for general purpose logging
- 1. ```pings.log``` - used to log pings sent from the agent
- 
-Usage
-```
-var logger = require('/utils/logger.js');
-// log to pings.log
-logger.pings(logLine);
-
-// log to courier.log
-logger.courier('error', 'Error message!');
-// or
-logger.log('error', 'Error message!');
-
-```
- 
-
 ### Intellij Setup
 Instructions are posted in the wiki https://github.com/makeandbuild/Courier/wiki/IntelliJ-Setup
 
