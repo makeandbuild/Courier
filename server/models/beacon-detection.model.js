@@ -14,7 +14,7 @@ var BeaconDetectionSchema = new Schema({
         distance: Number
     },
     {
-        capped: { max: 100 }
+        capped: { size: 107374182, max: 100 }
     }
 );
 

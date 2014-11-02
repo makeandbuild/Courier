@@ -84,7 +84,7 @@ exports.create = function (req, res) {
     // publish needed events
     // Do this before removing empty detections from list, b/c empty detections are
     // an indication that there aren't any beacons in range anymore
-//    beaconDetectionService.processEventsFromDetections(detections);
+    beaconDetectionService.processEventsFromDetections(detections);
 
     // remove empty detections from list to save
     detections = _.remove(detections, function (detection) {
@@ -111,29 +111,29 @@ exports.create = function (req, res) {
         });
 
     // pretend like we saved, but just pass back an empty array - YES THIS IS GOING TO BREAK THE TESTS
-    return res.json(201, []);
+//    return res.json(201, []);
 
     // should always have an array of detections by now
-//    beaconDetectionService.createDetectionsOneByOne(detections)
-//        .then(function (result) {
-//
-//            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
-//            return res.json(201, result);
-//        }, function (err) {
-//            // something unexpected happened
-//            return handleError(res, err);
-//        });
+    beaconDetectionService.createDetectionsOneByOne(detections)
+        .then(function (result) {
+
+            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
+            return res.json(201, result);
+        }, function (err) {
+            // something unexpected happened
+            return handleError(res, err);
+        });
 };
 
 //[Lindsay Thurmond:10/31/14] TODO: we probably don't actually want to expose this, I'm just exposing it for convenience for now
-exports.destroyAll = function (req, res) {
-    beaconDetectionService.deleteAllDetections()
-        .then(function () {
-            res.send(204);
-        }, function (err) {
-            return handleError(res, err);
-        });
-}
+//exports.destroyAll = function (req, res) {
+//    beaconDetectionService.deleteAllDetections()
+//        .then(function () {
+//            res.send(204);
+//        }, function (err) {
+//            return handleError(res, err);
+//        });
+//}
 
 function handleError(res, err) {
     return res.send(500, err);

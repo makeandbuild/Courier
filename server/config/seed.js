@@ -60,9 +60,9 @@ module.exports = function (complete) {
             return createPromise;
         })
         // then delete detections
-        .then(function () {
-            return beaconDetectionDao.deleteAllDetections();
-        })
+//        .then(function () {
+//            return beaconDetectionDao.deleteAllDetections();
+//        })
         // then populate detections
         .then(function () {
             var createPromise = beaconDetectionService.createDetections([

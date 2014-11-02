@@ -49,10 +49,10 @@ exports.createDetectionsPromise = function (detections) {
     return promise;
 }
 
-exports.deleteDetectionByIdPromise = function (id) {
-    return BeaconDetection.findById(id).remove().exec();
-}
-
-exports.deleteAllDetections = function() {
-    return BeaconDetection.find({}).remove().exec();
-}
+//exports.deleteDetectionByIdPromise = function (id) {
+//    return BeaconDetection.findById(id).remove().exec();
+//}
+//
+//exports.deleteAllDetections = function() {
+//    return BeaconDetection.find({}).remove().exec();
+//}

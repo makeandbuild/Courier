@@ -153,9 +153,9 @@ function createDetectionsOneByOne(beaconDetections) {
     return defer.promise;
 }
 
-exports.deleteAllDetections = function deleteAllDetections() {
-    return when(beaconDetectionDao.deleteAllDetections());
-}
+//exports.deleteAllDetections = function deleteAllDetections() {
+//    return when(beaconDetectionDao.deleteAllDetections());
+//}
 
 //[Lindsay Thurmond:10/29/14] TODO: cleanup
 var cache = {};
