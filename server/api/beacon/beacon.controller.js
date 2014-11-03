@@ -1,6 +1,8 @@
 'use strict';
 
 var beaconService = require('../../service/beacon.service.js');
+var detectionEventService = require('../../rules/service/detection.event.service.js');
+var sampleData = require('./sampleBeaconData.js');
 
 /**
  * Get list of beacons
@@ -21,88 +23,36 @@ exports.index = function (req, res) {
 
     //[Lindsay Thurmond:10/30/14] TODO: replace filter section with real logic
     var detectedBy = req.query.detectedBy;
+    var hardcoded = req.query.hardcoded; //[Lindsay Thurmond:11/3/14] TODO: temporary property for testing only
     var distance = req.query.distance;
 
+    var useHardCoded = hardcoded && hardcoded === 'yes';
 
     // hardcoded filter logic
     if (detectedBy) {
-        var kitchenBeacons = [
-            {
-                name: 'Gabe',
-                uuid: '6fdg76hdf',
-                major: 89,
-                minor: 90987,
-                active: true
-            },
-            {
-                name: 'Adam',
-                uuid: 'fgh8dfhdf09',
-                major: 466,
-                minor: 77,
-                active: true
-            },
-            {
-                name: 'Tom',
-                uuid: 'sd098fdg0sd98f',
-                major: 657754,
-                minor: 23277,
-                active: true
-            }
-        ];
-        var greatRoomBeacons = [
-            {
-                name: 'AZ',
-                uuid: '87asdf798as',
-                major: 8669,
-                minor: 90666987,
-                active: true
-            }
-        ];
-        var entranceBeacons = [
-            {
-                name: 'Jeff',
-                uuid: 'fg87sfd7gds',
-                major: 89,
-                minor: 90987,
-                active: true
-            },
-            {
-                name: 'Lindsay',
-                uuid: 'sf87gs9df8g',
-                major: 4234,
-                minor: 746647,
-                active: true
-            },
-            {
-                name: 'Ian',
-                uuid: 'ad98f7as',
-                major: 65654,
-                minor: 236562,
-                active: true
-            }
-        ];
-        var otherBeacons = [
-            {
-                name: 'Ken',
-                uuid: 'sdfgsdf987',
-                major: 90,
-                minor: 232,
-                active: true
-            }
-        ];
 
-        var beaconsToSend;
-        if ('Kitchen' === detectedBy) {
-            beaconsToSend = kitchenBeacons;
-        } else if ('Great Room' === detectedBy) {
-            beaconsToSend = greatRoomBeacons;
-        } else if ('Entrance' === detectedBy) {
-            beaconsToSend = entranceBeacons;
+        if (useHardCoded) {
+            var beaconsToSend;
+            if ('Kitchen' === detectedBy) {
+                beaconsToSend = sampleData.kitchenBeacons;
+            } else if ('Great Room' === detectedBy) {
+                beaconsToSend = sampleData.greatRoomBeacons;
+            } else if ('Lobby' === detectedBy) {
+                beaconsToSend = sampleData.lobbyBeacons;
+            } else {
+                beaconsToSend = sampleData.otherBeacons;
+            }
+            return res.json(200, beaconsToSend);
         } else {
-            beaconsToSend = otherBeacons;
+            detectionEventService.getBeaconsInRangeOfPromise(detectedBy)
+                .then(function (beacons) {
+                    return res.json(200, beacons);
+                }, function (err) {
+                    handleError(res, err);
+                });
         }
 
-        return res.json(200, beaconsToSend);
+
     }
     // normal code for full list
     else {
