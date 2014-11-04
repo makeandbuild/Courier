@@ -12,7 +12,8 @@ var AgentSchema = new Schema({
     lastSeenBy: String, // beacon id
     capabilities: [String],
     approvedStatus: String, // Pending, Approved, Denied
-    operationalStatus: String // Success, Warning, Failure
+    operationalStatus: String, // Success, Warning, Failure
+    range: Number
 });
 
 module.exports = mongoose.model('Agent', AgentSchema);
