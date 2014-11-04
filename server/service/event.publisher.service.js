@@ -3,6 +3,9 @@
 var autobahn = require('autobahn');
 var config = require('../config/environment');
 
+//[Lindsay Thurmond:11/3/14] TODO: remove this when wamp configured correctly
+var detectionEventService = require('../rules/service/detection.event.service.js');
+
 var connection;
 var session;
 
@@ -31,7 +34,11 @@ exports.openConnection = function openConnection() {
 
 exports.publishEvent = function publishEvent(topic, args) {
 
-    session.publish(topic, args);
-    console.log('Published an event for: ' + topic);
+    // fake it for now until we get crossbar setup on jenkins
+//    session.publish(topic, args);
+//    console.log('Published an event for: ' + topic);
+
+    // bypass WAMP for now, and just send straight to event listener
+    detectionEventService.processDetectionEvent(args);
 
 }
