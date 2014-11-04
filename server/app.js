@@ -13,9 +13,9 @@ var config = require('./config/environment');
 var when = require('when');
 
 // open wamp connection
-require('./service/event.publisher.service.js').openConnection();
+//require('./service/event.publisher.service.js').openConnection();
 // init wamp listeners
-require('./rules/service/event.subscription.service.js').registerListeners();
+//require('./rules/service/event.subscription.service.js').registerListeners();
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
