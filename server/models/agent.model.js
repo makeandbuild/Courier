@@ -13,6 +13,10 @@ var AgentSchema = new Schema({
     capabilities: [String],
     approvedStatus: String, // Pending, Approved, Denied
     operationalStatus: String, // Success, Warning, Failure
+    /**
+     * Max distance a beacon can hit before being considered out of range.
+     * If not set all detections will be considered in range.
+     */
     range: Number
 });
 

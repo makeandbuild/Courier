@@ -9,12 +9,7 @@ var BeaconSchema = new Schema({
     major: Number,
     minor: Number,
     properties: Schema.Types.Mixed,
-    active: Boolean,
-    /**
-     * Max distance a beacon can hit before being considered out of range.
-     * If not set all detections will be considered in range.
-     */
-    range: Number
+    active: Boolean
 });
 
 module.exports = mongoose.model('Beacon', BeaconSchema);
