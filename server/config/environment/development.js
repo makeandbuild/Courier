@@ -8,5 +8,5 @@ module.exports = {
     uri: 'mongodb://localhost/courier-dev'
   },
 
-  seedDB: true
+  seedDB: false
 };
