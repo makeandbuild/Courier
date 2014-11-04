@@ -52,8 +52,7 @@ exports.agents = [
         operationalStatus: 'Success',
         lastSeenBy: exports.beacons[0].uuid,
         lastSeen: Date.now(),
-        registered: moment().day(-1),
-        range: 10
+        registered: moment().day(-1)
     },
     {
         customId: '00:1C:B3:09:85:15',
