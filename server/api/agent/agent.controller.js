@@ -72,35 +72,38 @@ exports.show = function (req, res) {
 exports.create = function (req, res) {
     var agent = req.body;
 
+    if (!agent.customId) {
+        return res.json(403, 'Validation failure: Cannot register agent without a customId');
+    }
     agentService.findAgentByCustomId(agent.customId)
-    .then(function (agentFound) {
-        if (!agentFound){
-            console.log("agent unfound, creating");
-            agentService.createAgent(agent).then(function (agent) {
-                res.json(201, agent);
-            }).catch(function (err) {
-                res.json(400, {
-                    message: "unable to create new agent",
-                    error: err
-                })
-            });
-        }else {
-            agentFound.location = agent.location;
-            agentFound.name = agent.name;
-            agentFound.customId = agent.customId;
-            agentService.updateAgent(agentFound)
-                .then(function (agent) {
-                    res.json(200, agent);
+        .then(function (agentFound) {
+            if (!agentFound) {
+                console.log("Agent unfound, creating with custom id: " + agent.customId);
+                agentService.createAgent(agent).then(function (agent) {
+                    res.json(201, agent);
                 }).catch(function (err) {
                     res.json(400, {
-                        message: "unable to update found agent",
+                        message: "unable to create new agent",
                         error: err
                     })
-                })
-        }
-    }).catch(function(error){
-        console.log("failed everything, just quit")
-    })
+                });
+            } else {
+                agentFound.location = agent.location;
+                agentFound.name = agent.name;
+                agentFound.customId = agent.customId;
+                agentService.updateAgent(agentFound)
+                    .then(function (agent) {
+                        res.json(200, agent);
+                    }).catch(function (err) {
+                        res.json(400, {
+                            message: "unable to update found agent",
+                            error: err
+                        })
+                    })
+            }
+        }).catch(function (error) {
+            console.log("failed everything, just quit: " + error);
+        });
 };
 
 exports.findByCustomId = function(req, res){
