@@ -32,7 +32,7 @@ var beaconDetectionService = require('../../service/beacon-detection.service.js'
  *   [
  *       {
  *          "_id" : "5432bbbbe4ca5c9a22bc765f",
- *          "distance" : 1.91,
+ *          "proximity" : 1.91,
  *          "major" : 1,
  *          "uuid" : "123e4567e89b12d3a456426655440000",
  *          "tx" : -62,

@@ -13,7 +13,7 @@ var sampleData = require('./sampleBeaconData.js');
  * Filter options = detectedBy=[agent custom id], distance=[meters]
  * Examples
  *      /beacons?detectedBy=Kitchen
- *      /beacons?detectedBy=Kitchen&distance=5 - nice to have, does nothing currently
+ *      /beacons?detectedBy=Kitchen&proximity=5 - nice to have, does nothing currently
  *
  *
  * @param req
@@ -24,7 +24,7 @@ exports.index = function (req, res) {
     //[Lindsay Thurmond:10/30/14] TODO: replace filter section with real logic
     var detectedBy = req.query.detectedBy;
     var hardcoded = req.query.hardcoded; //[Lindsay Thurmond:11/3/14] TODO: temporary property for testing only
-    var distance = req.query.distance;
+    var proximity = req.query.proximity;
 
     var useHardCoded = hardcoded && hardcoded === 'yes';
 

@@ -73,7 +73,7 @@ module.exports = function (complete) {
                     minor: 22222,
                     tx: 3,
                     rssi: 1,
-                    distance: 1.2,
+                    proximity: 1.2,
                     agentId: savedAgents[0].customId
                 },
                 {
@@ -83,7 +83,7 @@ module.exports = function (complete) {
                     minor: 22223,
                     tx: 4,
                     rssi: 2,
-                    distance: 2.2,
+                    proximity: 2.2,
                     agentId: savedAgents[1].customId
                 },
                 {
@@ -93,7 +93,7 @@ module.exports = function (complete) {
                     minor: 1,
                     tx: -65,
                     rssi: -75,
-                    distance: 3.7,
+                    proximity: 3.7,
                     agentId: savedAgents[2].customId
                 }
             ]);

@@ -14,7 +14,7 @@ var sampleDetections = [
         minor: 1,
         tx: -65,
         rssi: -75,
-        distance: 3.7,
+        proximity: 3.7,
         agentId: '98asd7fa9s8d7fa'
     },
     {
@@ -24,7 +24,7 @@ var sampleDetections = [
         minor: 1,
         tx: -61,
         rssi: -72,
-        distance: 3.1,
+        proximity: 3.1,
         agentId: '98sd7f9asd87po'
     },
     {
@@ -34,7 +34,7 @@ var sampleDetections = [
         minor: 1,
         tx: -68,
         rssi: -75,
-        distance: 2.9,
+        proximity: 2.9,
         agentId: '98sd7f9asd87po'
     }
 ];

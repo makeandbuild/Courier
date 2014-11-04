@@ -17,7 +17,7 @@ var sampleDetections = [
         minor: 1,
         tx: -65,
         rssi: -75,
-        distance: 3.7,
+        proximity: 3.7,
         agentId: '98asd7fa9s8d7fa'
     },
     {
@@ -27,7 +27,7 @@ var sampleDetections = [
         minor: 1,
         tx: -61,
         rssi: -72,
-        distance: 3.1,
+        proximity: 3.1,
         agentId: '98sd7f9asd87po'
     },
     {
@@ -37,7 +37,7 @@ var sampleDetections = [
         minor: 1,
         tx: -68,
         rssi: -75,
-        distance: 2.9,
+        proximity: 2.9,
         agentId: '98sd7f9asd87po'
     },
     {
@@ -47,7 +47,7 @@ var sampleDetections = [
         minor: 10,
         tx: -44,
         rssi: -66,
-        distance: 4.1,
+        proximity: 4.1,
         agentId: '5f7as65f7s'
     }
 ];
@@ -96,7 +96,7 @@ describe('Test /api/beacondetections API', function () {
         minor: 22222,
         tx: 3,
         rssi: 1,
-        distance: 1.2
+        proximity: 1.2
     };
 
     // ACCEPT BEACON DETECTION
@@ -155,7 +155,7 @@ describe('Test /api/beacondetections API', function () {
                     minor: 1,
                     tx: -65,
                     rssi: -75,
-                    distance: 3.7,
+                    proximity: 3.7,
                     agentId: '98asd7fa9s8d7fa'
                 },
                 {}
@@ -213,7 +213,7 @@ describe('Test /api/beacondetections API', function () {
                     minor: 1,
                     tx: -68,
                     rssi: -75,
-                    distance: 4.9,
+                    proximity: 4.9,
                     agentId: '98sd7f9asd87po'
                 },
                 {
@@ -223,7 +223,7 @@ describe('Test /api/beacondetections API', function () {
                     minor: 10,
                     tx: -44,
                     rssi: -66,
-                    distance: 3.6,
+                    proximity: 3.6,
                     agentId: '5f7as65f7s'
                 }
             ])

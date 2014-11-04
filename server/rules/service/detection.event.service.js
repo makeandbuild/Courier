@@ -4,8 +4,6 @@ var _ = require('lodash');
 var when = require('when');
 var beaconService = require('../../service/beacon.service.js');
 
-//[Lindsay Thurmond:10/30/14] TODO: do we need to actually save these somewhere?
-
 /*
  {
  "agent1": {
@@ -58,7 +56,7 @@ exports.processDetectionEvent = function (args) {
     console.log('Processing detection event.  Agent id = ' + agentId + ', Beacon uuid = ' + uuid + ', Event type = ' + eventType);
 
     var agentStatus;
-    if ('enter' === eventType) {
+    if ('enter' === eventType || 'alive' === eventType) {
 
         agentStatus = agentStatusCache[agentId];
         if (!agentStatus) {

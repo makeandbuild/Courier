@@ -11,7 +11,7 @@ var BeaconDetectionSchema = new Schema({
         minor: Number,
         tx: Number,
         rssi: Number,
-        distance: Number
+        proximity: Number
     },
     {
         capped: { size: 107374182, max: 100 }

@@ -21,7 +21,7 @@
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Minor</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'tx'; reverse=!reverse">TX</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'rssi'; reverse=!reverse">RSSI</a></th>
-                <th class="col-md-1"><a href="" ng-click="predicate = 'distance'; reverse=!reverse">Distance</a></th>
+                <th class="col-md-1"><a href="" ng-click="predicate = 'proximity'; reverse=!reverse">Proximity</a></th>
             </tr>
             </thead>
             <tbody>
@@ -49,7 +49,7 @@
                     {{detection.rssi}}
                 </td>
                 <td class="col-md-1">
-                    {{detection.distance}}
+                    {{detection.proximity}}
                 </td>
             </tr>
             </tbody>

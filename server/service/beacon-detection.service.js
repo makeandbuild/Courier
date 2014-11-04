@@ -214,7 +214,7 @@ function processEventsFromDetections(newDetections) {
                     publishDetectionEvent(agentId, beaconUuid, 'enter');
 
                     // add beacon to cache so we know we've previously seen it
-                    currentBeacon = { time: detection.time, distance: detection.distance };
+                    currentBeacon = { time: detection.time, proximity: detection.proximity };
                     seenBeacons[beaconUuid] = currentBeacon;
                 } else {
                     // broadcast that we are still alive
