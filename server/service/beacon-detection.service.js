@@ -183,7 +183,7 @@ function processEventsFromDetections(newDetections) {
         // no detections, indicates that all beacons went out of range for all agents
         _.forOwn(cache, function (agent, agentId) {
             var beaconUuids = _.keys(agent);
-            beaconUuids.forEach(function(uuid){
+            beaconUuids.forEach(function (uuid) {
                 publishDetectionEvent(agentId, uuid, 'exit');
                 delete agent[uuid];
             });
@@ -193,71 +193,103 @@ function processEventsFromDetections(newDetections) {
         var prevActiveAgents = _.keys(cache);
         var foundAgentIds = [];
 
-        _.forEach(agentIdToDetections, function (detections, agentId) {
-            foundAgentIds.push(agentId);
+        // look up current beacons so we can check their range //[Lindsay Thurmond:11/4/14] TODO: ... look into caching these
+        agentService.findAgents().
+            then(function (fullAgentList) {
 
-            if (!cache[agentId]) {
-                cache[agentId] = [];
-            }
-            var seenBeacons = cache[agentId];
-            var prevInRangeBeaconUuids = _.keys(seenBeacons);
+                var existingAgentMap = _.groupBy(fullAgentList, function (agent) {
+                    return agent.customId;
+                });
 
-            var foundBeaconUuids = [];
-            detections.forEach(function (detection) {
-                var beaconUuid = detection.uuid;
-                foundBeaconUuids.push(beaconUuid)
+                _.forEach(agentIdToDetections, function (detections, agentId) {
+                    if(_.indexOf(foundAgentIds, agentId) === -1) {
+                        foundAgentIds.push(agentId);
+                    }
 
-                var currentBeacon = seenBeacons[detection.uuid];
-                if (!currentBeacon) {
-                    // first time this agent has seen this beacon
-                    //[Lindsay Thurmond:10/29/14] TODO: fire enter region event
-                    publishDetectionEvent(agentId, beaconUuid, 'enter');
+                    if (!cache[agentId]) {
+                        cache[agentId] = [];
+                    }
+                    var seenBeacons = cache[agentId];
+                    var prevInRangeBeaconUuids = _.keys(seenBeacons);
 
-                    // add beacon to cache so we know we've previously seen it
-                    currentBeacon = { time: detection.time, proximity: detection.proximity };
-                    seenBeacons[beaconUuid] = currentBeacon;
-                } else {
-                    // broadcast that we are still alive
-                    publishDetectionEvent(agentId, beaconUuid, 'alive');
+                    var foundBeaconUuids = [];
+                    detections.forEach(function (detection) {
+                        var beaconUuid = detection.uuid;
+                        if (_.indexOf(foundBeaconUuids, beaconUuid) === -1) {
+                            foundBeaconUuids.push(beaconUuid);
+                        }
+
+                        var dbAgent = existingAgentMap[agentId];
+                        var hasRangeSpecified = dbAgent && dbAgent[0] && dbAgent[0].range;
+
+                        var currentBeacon = seenBeacons[detection.uuid];
+                        // first time we've seen the beacon
+                        if (!currentBeacon) {
+                            if (!hasRangeSpecified || (hasRangeSpecified && detection.proximity <= dbAgent[0].range)) {
+                                // first time this agent has seen this beacon
+                                publishDetectionEvent(agentId, beaconUuid, 'enter');
+
+                                // add beacon to cache so we know we've previously seen it
+                                currentBeacon = { time: detection.time, proximity: detection.proximity };
+                                seenBeacons[beaconUuid] = currentBeacon;
+                            }  // else ignore it b/c its out of the range that we care about
+
+                        }
+                        // beacon was previously in range
+                        else {
+                            if (hasRangeSpecified) {
+                                if (detection.proximity <= dbAgent[0].range) {
+                                    // broadcast that we are still alive
+                                    publishDetectionEvent(agentId, beaconUuid, 'alive');
+                                } else {
+                                    delete seenBeacons[beaconUuid];
+                                    // got a detection, but now out of range
+                                    publishDetectionEvent(agentId, beaconUuid, 'exit');
+                                }
+
+                            } else {
+                                // broadcast that we are still alive
+                                publishDetectionEvent(agentId, beaconUuid, 'alive');
+                            }
+                        }
+                    });
+
+                    // We've gone through all the detections for the agent
+                    // Are there any beacons that we used to know about that we didn't get an update for?
+                    var outOfRangeBeacons = _.difference(prevInRangeBeaconUuids, foundBeaconUuids);
+                    if (outOfRangeBeacons.length > 0) {
+                        // at least one beacon went out of range
+                        // remove them from the cache
+                        outOfRangeBeacons.forEach(function (beaconUuid) {
+                            delete seenBeacons[beaconUuid];
+                            // fire event that the beacon left range
+                            publishDetectionEvent(agentId, beaconUuid, 'exit');
+                        });
+                    }
+
+                });
+
+                // we've gone through all the agents, see if there are any we stopped getting updates for
+                var inactiveAgents = _.difference(prevActiveAgents, foundAgentIds);
+                if (inactiveAgents.length > 0) {
+                    // remove agent from cache
+                    inactiveAgents.forEach(function (agentId) {
+                        // send exit event for all of its beacons
+                        _.keys(cache[agentId]).forEach(function (beaconUuid) {
+                            publishDetectionEvent(agentId, beaconUuid, 'exit');
+                        })
+                        delete cache[agentId];
+                    });
                 }
 
-                //[Lindsay Thurmond:10/29/14] TODO: other events
 
+            }, function (err) {
+                console.log(err);
+            })
+            .otherwise(function (err) {
+                console.log(err);
             });
-
-            // We've gone through all the detections.
-            // Are there any that we used to know about that we didn't get an update for?
-            var outOfRangeBeacons = _.difference(prevInRangeBeaconUuids, foundBeaconUuids);
-            if (outOfRangeBeacons.length > 0) {
-                // at least one beacon went out of range
-                // remove them from the cache
-                outOfRangeBeacons.forEach(function (beaconUuid) {
-                    delete seenBeacons[beaconUuid];
-                    // fire event that the beacon left range
-                    publishDetectionEvent(agentId, beaconUuid, 'exit');
-                });
-            }
-
-        });
-
-        //[Lindsay Thurmond:10/30/14] TODO: test me
-        // we've gone through all the agents, see if there are any we stopped getting updates for
-        var inactiveAgents = _.difference(prevActiveAgents, foundAgentIds);
-        if (inactiveAgents.length > 0) {
-            // remove agent from cache
-            inactiveAgents.forEach(function(agentId){
-                // send exit event for all of its beacons
-                _.keys(cache[agentId]).forEach(function(beaconUuid){
-                    publishDetectionEvent(agentId, beaconUuid, 'exit');
-                })
-                delete cache[agentId];
-            });
-        }
-
     }
-
-    //[Lindsay Thurmond:10/30/14] TODO: delete me
-//    cache = {};
 }
 
 var DETECTION_EVENT_TYPE = 'com.makeandbuild.detection';
