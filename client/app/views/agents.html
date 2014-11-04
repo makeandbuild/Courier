@@ -18,6 +18,8 @@
                 <th class="col-md-3"><a href="">Mongo ID</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
+                 <th class="col-md-3"><a href="" ng-click="predicate = 'range'; reverse=false">Range</a></th>
+
                 <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Status</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">Last Seen</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
@@ -29,6 +31,7 @@
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent._id}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.name}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.location}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.range}}</a></td>
                 <td class="col-md-1 status-section"><a href="/agent/{{agent._id}}"><i class="glyphicon" ng-class="agent.operationalStatus == 'Failure' ? 'glyphicon-remove-sign' :'glyphicon-ok-sign'"></i></a></td>
                 <td class="col-md-1"><a href="/agent/{{agent.customId}}">{{agent.lastSeen}}</a></td>
                 <td class="col-md-1">
@@ -50,6 +53,7 @@
                     <th class="col-md-3"><a href="">Mongo ID</a></th>
                     <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">Name</a></th>
                     <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">Location</a></th>
+                    <th class="col-md-3"><a href="" ng-click="predicate = 'range'; reverse=false">Range</a></th>
                     <th class="col-md-3 status-section"><a href="" ng-click="predicate = 'approvedStatus'; reverse=false">Approve</a></th>
                     
                 </tr>
@@ -60,6 +64,7 @@
                     <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent._id}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.name}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.location}}</a></td>
+                       <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.range}}</a></td>
                     <td class="col-md-3">
                         <div class="col-md-6 icon-section ">
                             <span class="glyphicon glyphicon-ok" ng-click="approveAgent(agent)"></span>
