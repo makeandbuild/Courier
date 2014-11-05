@@ -207,12 +207,13 @@ function processEventsFromDetections(newDetections) {
                         var beaconUuid = detection.uuid;
                         var major = detection.major;
                         var minor = detection.minor;
+                        var proximity = detection.proximity;
 
                         // beacon detections with only an agentId and nothing else indicate all beacons left range of the agent
                         if (!beaconUuid || !major || !minor) {
                             // all beacons left range of the agent
                             prevInRangeBeaconUniqueKeys.forEach(function (uniqueKey) {
-                                publishDetectionByUniqueKeyEvent(agentId, uniqueKey, 'exit');
+                                publishDetectionByUniqueKeyEvent(agentId, uniqueKey, -1, 'exit');
                             });
                             cache[agentId] = [];
 
@@ -232,10 +233,10 @@ function processEventsFromDetections(newDetections) {
                             if (!currentBeacon) {
                                 if (!hasRangeSpecified || (hasRangeSpecified && detection.proximity <= dbAgent[0].range)) {
                                     // first time this agent has seen this beacon
-                                    publishDetectionEvent(agentId, beaconUuid, major, minor, 'enter');
+                                    publishDetectionEvent(agentId, beaconUuid, major, minor, proximity, 'enter');
 
                                     // add beacon to cache so we know we've previously seen it
-                                    currentBeacon = { time: detection.time, proximity: detection.proximity };
+                                    currentBeacon = { time: detection.time, proximity: proximity };
                                     seenBeacons[uniqueKey] = currentBeacon;
                                 }  // else ignore it b/c its out of the range that we care about
 
@@ -243,18 +244,18 @@ function processEventsFromDetections(newDetections) {
                             // beacon was previously in range
                             else {
                                 if (hasRangeSpecified) {
-                                    if (detection.proximity <= dbAgent[0].range) {
+                                    if (proximity <= dbAgent[0].range) {
                                         // broadcast that we are still alive
-                                        publishDetectionEvent(agentId, beaconUuid, major, minor, 'alive');
+                                        publishDetectionEvent(agentId, beaconUuid, major, minor, proximity, 'alive');
                                     } else {
                                         delete seenBeacons[uniqueKey];
                                         // got a detection, but now out of range
-                                        publishDetectionEvent(agentId, beaconUuid, major, minor, 'exit');
+                                        publishDetectionEvent(agentId, beaconUuid, major, minor, -1, 'exit');
                                     }
 
                                 } else {
                                     // broadcast that we are still alive
-                                    publishDetectionEvent(agentId, beaconUuid, major, minor, 'alive');
+                                    publishDetectionEvent(agentId, beaconUuid, major, minor, proximity, 'alive');
                                 }
                             }
                         }
@@ -270,7 +271,7 @@ function processEventsFromDetections(newDetections) {
                             delete seenBeacons[beaconUniqueKey];
 
                             // fire event that the beacon left range
-                            publishDetectionByUniqueKeyEvent(agentId, beaconUniqueKey, 'exit');
+                            publishDetectionByUniqueKeyEvent(agentId, beaconUniqueKey, -1, 'exit');
                         });
                     }
                 });
@@ -291,17 +292,17 @@ function createBeaconUniqueKey(uuid, major, minor) {
 
 var DETECTION_EVENT_TYPE = 'com.makeandbuild.detection';
 
-function publishDetectionEvent(agentId, beaconUuid, beaconMajor, beaconMinor, eventType) {
-    eventPublisherService.publishEvent(DETECTION_EVENT_TYPE, [agentId, beaconUuid, beaconMajor, beaconMinor, eventType]);
+function publishDetectionEvent(agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType) {
+    eventPublisherService.publishEvent(DETECTION_EVENT_TYPE, [agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType]);
 }
 
-function publishDetectionByUniqueKeyEvent(agentId, beaconUniqueKey, eventType) {
+function publishDetectionByUniqueKeyEvent(agentId, beaconUniqueKey, proximity, eventType) {
     var parts = beaconUniqueKey.split(':');
     var beaconUuid = parts[0];
     var beaconMajor = parts[1];
     var beaconMinor = parts[2];
 
-    eventPublisherService.publishEvent(DETECTION_EVENT_TYPE, [agentId, beaconUuid, beaconMajor, beaconMinor, eventType]);
+    publishDetectionEvent(agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType)
 }
 
 function updateAgentsWithMostRecentDetectionPromise(detections) {
