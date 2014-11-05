@@ -25,6 +25,8 @@ exports.findByUuid = function (uuid) {
  * @param uniqueKey  format = <uuid>:<major>:<minor>
  */
 exports.findByUniqueKey = function findByUniqueKey(uniqueKey) {
+    var defer = when.defer();
+
     var parts = uniqueKey.split(':');
     var uuid = parts[0];
     var major = parts[1];
@@ -34,9 +36,21 @@ exports.findByUniqueKey = function findByUniqueKey(uniqueKey) {
         uuid : uuid,
         major : major,
         minor : minor
-    }
+    };
 
-    return when(beaconDao.findFilteredBeaconsPromise(filters));
+     beaconDao.findFilteredBeaconsPromise(filters)
+         .then(function(foundBeacons){
+             if (foundBeacons) {
+                 // assume only one
+                 defer.resolve(foundBeacons[0]);
+             } else {
+                 defer.reject('No beacon found with unique key = ' + uniqueKey);
+             }
+         }, function(err){
+             defer.reject(err);
+         });
+
+    return defer.promise;
 }
 
 exports.createBeacon = function (beacon) {
