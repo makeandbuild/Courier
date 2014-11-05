@@ -179,18 +179,8 @@ function processEventsFromDetections(newDetections) {
     // remove any detections that didn't have an agent id specified
     delete agentIdToDetections.undefined;
 
-    if (_.keys(agentIdToDetections).length === 0) {
-        // no detections, indicates that all beacons went out of range for all agents
-        _.forOwn(cache, function (agent, agentId) {
-            var beaconUniqueKeys = _.keys(agent);
-            beaconUniqueKeys.forEach(function (uniqueKey) {
-                publishDetectionByUniqueKeyEvent(agentId, uniqueKey, 'exit');
-                delete agent[uniqueKey];
-            });
-        });
-    }
-    else {
-        var prevActiveAgents = _.keys(cache);
+    if (_.keys(agentIdToDetections).length > 0) {
+
         var foundAgentIds = [];
 
         // look up current beacons so we can check their range //[Lindsay Thurmond:11/4/14] TODO: ... look into caching these
@@ -217,43 +207,55 @@ function processEventsFromDetections(newDetections) {
                         var beaconUuid = detection.uuid;
                         var major = detection.major;
                         var minor = detection.minor;
-                        var uniqueKey = createBeaconUniqueKey(beaconUuid, major, minor);
 
-                        if (_.indexOf(foundBeaconUniqueKeys, uniqueKey) === -1) {
-                            foundBeaconUniqueKeys.push(uniqueKey);
-                        }
+                        // beacon detections with only an agentId and nothing else indicate all beacons left range of the agent
+                        if (!beaconUuid || !major || !minor) {
+                            // all beacons left range of the agent
+                            prevInRangeBeaconUniqueKeys.forEach(function (uniqueKey) {
+                                publishDetectionByUniqueKeyEvent(agentId, uniqueKey, 'exit');
+                            });
+                            cache[agentId] = [];
 
-                        var dbAgent = existingAgentMap[agentId];
-                        var hasRangeSpecified = dbAgent && dbAgent[0] && dbAgent[0].range;
+                        } else {
 
-                        var currentBeacon = seenBeacons[uniqueKey];
-                        // first time we've seen the beacon
-                        if (!currentBeacon) {
-                            if (!hasRangeSpecified || (hasRangeSpecified && detection.proximity <= dbAgent[0].range)) {
-                                // first time this agent has seen this beacon
-                                publishDetectionEvent(agentId, beaconUuid, major, minor, 'enter');
+                            var uniqueKey = createBeaconUniqueKey(beaconUuid, major, minor);
 
-                                // add beacon to cache so we know we've previously seen it
-                                currentBeacon = { time: detection.time, proximity: detection.proximity };
-                                seenBeacons[uniqueKey] = currentBeacon;
-                            }  // else ignore it b/c its out of the range that we care about
+                            if (_.indexOf(foundBeaconUniqueKeys, uniqueKey) === -1) {
+                                foundBeaconUniqueKeys.push(uniqueKey);
+                            }
 
-                        }
-                        // beacon was previously in range
-                        else {
-                            if (hasRangeSpecified) {
-                                if (detection.proximity <= dbAgent[0].range) {
+                            var dbAgent = existingAgentMap[agentId];
+                            var hasRangeSpecified = dbAgent && dbAgent[0] && dbAgent[0].range;
+
+                            var currentBeacon = seenBeacons[uniqueKey];
+                            // first time we've seen the beacon
+                            if (!currentBeacon) {
+                                if (!hasRangeSpecified || (hasRangeSpecified && detection.proximity <= dbAgent[0].range)) {
+                                    // first time this agent has seen this beacon
+                                    publishDetectionEvent(agentId, beaconUuid, major, minor, 'enter');
+
+                                    // add beacon to cache so we know we've previously seen it
+                                    currentBeacon = { time: detection.time, proximity: detection.proximity };
+                                    seenBeacons[uniqueKey] = currentBeacon;
+                                }  // else ignore it b/c its out of the range that we care about
+
+                            }
+                            // beacon was previously in range
+                            else {
+                                if (hasRangeSpecified) {
+                                    if (detection.proximity <= dbAgent[0].range) {
+                                        // broadcast that we are still alive
+                                        publishDetectionEvent(agentId, beaconUuid, major, minor, 'alive');
+                                    } else {
+                                        delete seenBeacons[uniqueKey];
+                                        // got a detection, but now out of range
+                                        publishDetectionEvent(agentId, beaconUuid, major, minor, 'exit');
+                                    }
+
+                                } else {
                                     // broadcast that we are still alive
                                     publishDetectionEvent(agentId, beaconUuid, major, minor, 'alive');
-                                } else {
-                                    delete seenBeacons[uniqueKey];
-                                    // got a detection, but now out of range
-                                    publishDetectionEvent(agentId, beaconUuid, major, minor, 'exit');
                                 }
-
-                            } else {
-                                // broadcast that we are still alive
-                                publishDetectionEvent(agentId, beaconUuid, major, minor, 'alive');
                             }
                         }
                     });
