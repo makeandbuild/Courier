@@ -26,7 +26,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="beacon in beacons |  orderBy:predicate:reverse | filter:searchText" ng-click="setSelected(beacon.id)" class="beaconRow">
-                <td class="col-md-3"><a href="/beacon/{{beacon.uuid}}" >{{beacon.name}}</a></td>
+                <td class="col-md-3"><a href="/beacon/{{beacon.id}}" >{{beacon.name}}</a></td>
                 <td class="col-md-4">
                     {{beacon.uuid}}
                 </td>
