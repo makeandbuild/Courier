@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var when = require('when');
 var beaconService = require('../../service/beacon.service.js');
+var agentService = require('../../service/agent.service.js');
 
 /*
  {
@@ -14,25 +15,45 @@ var beaconService = require('../../service/beacon.service.js');
  */
 var agentStatusCache = {};
 
-exports.getBeaconsInRangeOfPromise = function getBeaconsInRangeOf(agentCustomId) {
-    var agentInfo = agentStatusCache[agentCustomId];
+exports.getBeaconsInRangeOfLocationPromise = function getBeaconsInRangeOfLocationPromise(agentLocation) {
 
     var defer = when.defer();
-    var found = [];
-    if (agentInfo) {
-        var beaconIds = agentInfo.beaconsInRange;
+    agentService.findByLocation(agentLocation)
+        .then(function (foundAgent) {
+            var agentCustomId = foundAgent.customId;
+            var agentInfo = agentStatusCache[agentCustomId];
 
-        var promises = [];
-        beaconIds.forEach(function (beaconId) {
-            var promise = beaconService.findByUuid(beaconId)
-                .then(function (beacon) {
-                    found.push(beacon);
-                }, function (err) {
-                    console.log(err);
-                });
-            promises.push(promise);
+            if (agentInfo) {
+                var beaconUniqueKeys = agentInfo.beaconsInRange;
+                return lookUpBeaconsByUniqueKeysPromise(beaconUniqueKeys);
+            } else {
+                return when.resolve([]);
+            }
+        })
+        //[Lindsay Thurmond:11/4/14] TODO: can i just return this promise instead?
+        .then(function(beacons){
+            defer.resolve(beacons);
+        }, function(err){
+            defer.reject(err);
         });
-    }
+
+    return defer.promise;
+}
+
+function lookUpBeaconsByUniqueKeysPromise(beaconUniqueKeys) {
+    var defer = when.defer();
+
+    var found = [];
+    var promises = [];
+    beaconUniqueKeys.forEach(function (beaconUniqueKey) {
+        var promise = beaconService.findByUniqueKey(beaconUniqueKey)
+            .then(function (beacon) {
+                found.push(beacon);
+            }, function (err) {
+                console.log(err);
+            });
+        promises.push(promise);
+    });
 
     when.all(promises)
         .then(function (beaconsInRange) {
@@ -41,29 +62,39 @@ exports.getBeaconsInRangeOfPromise = function getBeaconsInRangeOf(agentCustomId)
             defer.resolve(found);
         }, function (err) {
             defer.reject(err);
+        })
+        .otherwise(function (err) {
+            defer.reject(err);
         });
-
 
     return defer.promise;
 }
 
+function createBeaconUniqueKey(uuid, major, minor) {
+    return uuid + ":" + major + ":" + minor;
+}
+
 exports.processDetectionEvent = function (args) {
 
-    var agentId = args[0]
+    var agentId = args[0];
     var uuid = args[1];
-    var eventType = args[2];
+    var major = args[2];
+    var minor = args[3];
+    var eventType = args[4];
 
-    console.log('Processing detection event.  Agent id = ' + agentId + ', Beacon uuid = ' + uuid + ', Event type = ' + eventType);
+    var beaconUniqueKey = createBeaconUniqueKey(uuid, major, minor);
+
+    console.log('Processing detection event. AgentId = ' + agentId + ', Beacon uuid = ' + uuid + ', Major = + ' + major + ', Minor = + ' + minor + ', EventType = ' + eventType);
 
     var agentStatus;
     if ('enter' === eventType || 'alive' === eventType) {
 
         agentStatus = agentStatusCache[agentId];
         if (!agentStatus) {
-            agentStatusCache[agentId] = { beaconsInRange: [uuid], beaconCount: 1 };
+            agentStatusCache[agentId] = { beaconsInRange: [beaconUniqueKey], beaconCount: 1 };
         } else {
-            if (!_.contains(agentStatus.beaconsInRange, uuid)) {
-                agentStatus.beaconsInRange.push(uuid);
+            if (!_.contains(agentStatus.beaconsInRange, beaconUniqueKey)) {
+                agentStatus.beaconsInRange.push(beaconUniqueKey);
                 agentStatus.beaconCount = agentStatus.beaconsInRange.length;
             }
         }
@@ -73,7 +104,7 @@ exports.processDetectionEvent = function (args) {
 
         agentStatus = agentStatusCache[agentId];
         if (agentStatus) {
-            agentStatus.beaconsInRange = _.without(agentStatus.beaconsInRange, uuid);
+            agentStatus.beaconsInRange = _.without(agentStatus.beaconsInRange, beaconUniqueKey);
             agentStatus.beaconCount = agentStatus.beaconsInRange.length;
         }
 

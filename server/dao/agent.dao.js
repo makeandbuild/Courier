@@ -17,6 +17,11 @@ exports.findAgentByCustomIdPromise = function (id) {
     return Agent.findOne({customId:id}).exec();
 }
 
+exports.findByLocationPromise = function (location) {
+    // assuming there is only one
+    return Agent.findOne({location:location}).exec();
+}
+
 exports.createAgentPromise = function (agent) {
     agent.lastSeen = new Date;
     agent.registered = new Date;

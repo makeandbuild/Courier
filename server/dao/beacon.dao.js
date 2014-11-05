@@ -22,6 +22,9 @@ exports.createBeaconPromise = function (beacon) {
     return Beacon.create(beacon); // returns a promise without needing .exec()
 };
 
+exports.findFilteredBeaconsPromise = function (filters) {
+    return Beacon.find(filters).exec();
+}
 
 exports.createBeaconsPromise = function (beacons) {
     var promise = new mongoose.Promise;

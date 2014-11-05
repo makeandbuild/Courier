@@ -8,13 +8,9 @@ var sampleData = require('./sampleBeaconData.js');
  * Get list of beacons
  * GET /beacons
  *
- * THESE FILTERS CURRENTLY HAVE HARDCODED DUMMY DATA!!!!!
- * //[Lindsay Thurmond:10/30/14] TODO: implement real data
- * Filter options = detectedBy=[agent custom id], distance=[meters]
+ * Filter options = detectedBy=[agent location], hardcoded=yes (if you want fake test only data)
  * Examples
- *      /beacons?detectedBy=Kitchen
- *      /beacons?detectedBy=Kitchen&proximity=5 - nice to have, does nothing currently
- *
+ *      /beacons?detectedBy=Kitchen  (note - Kitchen = agent location)
  *
  * @param req
  * @param res
@@ -24,7 +20,6 @@ exports.index = function (req, res) {
     //[Lindsay Thurmond:10/30/14] TODO: replace filter section with real logic
     var detectedBy = req.query.detectedBy;
     var hardcoded = req.query.hardcoded; //[Lindsay Thurmond:11/3/14] TODO: temporary property for testing only
-    var proximity = req.query.proximity;
 
     var useHardCoded = hardcoded && hardcoded === 'yes';
 
@@ -44,7 +39,7 @@ exports.index = function (req, res) {
             }
             return res.json(200, beaconsToSend);
         } else {
-            detectionEventService.getBeaconsInRangeOfPromise(detectedBy)
+            detectionEventService.getBeaconsInRangeOfLocationPromise(detectedBy)
                 .then(function (beacons) {
                     return res.json(200, beacons);
                 }, function (err) {

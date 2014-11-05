@@ -20,6 +20,25 @@ exports.findByUuid = function (uuid) {
     return when(beaconDao.findByUuidPromise(uuid));
 }
 
+/**
+ *
+ * @param uniqueKey  format = <uuid>:<major>:<minor>
+ */
+exports.findByUniqueKey = function findByUniqueKey(uniqueKey) {
+    var parts = uniqueKey.split(':');
+    var uuid = parts[0];
+    var major = parts[1];
+    var minor = parts[2];
+
+    var filters = {
+        uuid : uuid,
+        major : major,
+        minor : minor
+    }
+
+    return when(beaconDao.findFilteredBeaconsPromise(filters));
+}
+
 exports.createBeacon = function (beacon) {
     return when(beaconDao.createBeaconPromise(beacon));
 };

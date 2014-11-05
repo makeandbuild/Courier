@@ -32,6 +32,10 @@ exports.findAgentByCustomId = function (customId) {
     return when(agentDao.findAgentByCustomIdPromise(customId));
 }
 
+exports.findByLocation = function(location) {
+    return when(agentDao.findByLocationPromise(location));
+}
+
 /**
  * Creates a single agent
  *
