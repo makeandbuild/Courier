@@ -271,22 +271,7 @@ function processEventsFromDetections(newDetections) {
                             publishDetectionByUniqueKeyEvent(agentId, beaconUniqueKey, 'exit');
                         });
                     }
-
                 });
-
-                // we've gone through all the agents, see if there are any we stopped getting updates for
-                var inactiveAgents = _.difference(prevActiveAgents, foundAgentIds);
-                if (inactiveAgents.length > 0) {
-                    // remove agent from cache
-                    inactiveAgents.forEach(function (agentId) {
-                        // send exit event for all of its beacons
-                        _.keys(cache[agentId]).forEach(function (beaconUniqueKey) {
-                            publishDetectionByUniqueKeyEvent(agentId, beaconUniqueKey, 'exit');
-                        })
-                        delete cache[agentId];
-                    });
-                }
-
 
             }, function (err) {
                 console.log(err);
