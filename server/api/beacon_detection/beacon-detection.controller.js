@@ -80,54 +80,10 @@ exports.create = function (req, res) {
 //        logger.detections(logLine);
 //    }
 
-    //[Lindsay Thurmond:10/29/14] TODO: do we really need to wait for this to end to start saving? make async?
-    // publish needed events
-    // Do this before removing empty detections from list, b/c empty detections are
-    // an indication that there aren't any beacons in range anymore
-    try {
-        beaconDetectionService.processEventsFromDetections(detections);
-    } catch(e) {
-        console.log('Unexpected exception processing detections: ' + e);
-    }
-
-    // remove empty detections from list to save
-    detections = _.remove(detections, function (detection) {
-        return !_.isEmpty(detection);
-    });
-    if (detections.length === 0) {
-        // all detections are empty, that's fine it just means the
-        // beacon is out of range, but we don't need to save them
-        return res.send(204, 'No detections to save');
-    }
-
-    // update agents with most recent - more of a nice to have, don't need to block the response for it
-    beaconDetectionService.updateAgentsWithMostRecentDetectionPromise(detections)
-        .then(function (descriptors) {
-            descriptors.forEach(function (d) {
-                if (d.state === 'rejected') {
-                    console.log('Problem updating agents with most recent detection: ' + d.reason);
-                }
-            })
-        }, function (err) {
-            console.log('Error updating agents with detections ' + err);
-        }).otherwise(function (err) {
-            console.log('Error updating agents with detections (otherwise) ' + err);
-        });
-
-    // pretend like we saved, but just pass back an empty array - YES THIS IS GOING TO BREAK THE TESTS
-//    return res.json(201, []);
-
-    // should always have an array of detections by now
-    beaconDetectionService.createDetectionsOneByOne(detections)
-        .then(function (result) {
-
-            //[Lindsay Thurmond:10/21/14] TODO: set response based on if errors happened
+    beaconDetectionService.processNewDetectionData(detections)
+        .then(function(result){
             return res.json(201, result);
-        }, function (err) {
-            // something unexpected happened
-            return handleError(res, err);
-        }).otherwise(function (err) {
-            console.log('Error creating detections one by one: ' + err);
+        }, function(err) {
             return handleError(res, err);
         });
 };
