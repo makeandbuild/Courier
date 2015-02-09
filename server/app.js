@@ -37,7 +37,7 @@ app.mongoReadyPromise = promiseMongoSeedComplete;
 
 var server = require('http').createServer(app);
 var socketio = require('socket.io').listen(server);
-require('./config/socketio')(socketio);
+require('./config/socketio').configure(socketio);
 require('./config/express')(app);
 require('./routes')(app);
 

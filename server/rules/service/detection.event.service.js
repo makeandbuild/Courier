@@ -4,6 +4,7 @@ var _ = require('lodash');
 var when = require('when');
 var beaconService = require('../../service/beacon.service.js');
 var agentService = require('../../service/agent.service.js');
+var socketio = require('../../config/socketio.js');
 
 /**
  * Format:
@@ -139,18 +140,7 @@ function createBeaconUniqueKey(uuid, major, minor) {
     return uuid + ":" + major + ":" + minor;
 }
 
-exports.processDetectionEvent = function (args) {
-
-    var agentId = args[0];
-    var uuid = args[1];
-    var major = args[2];
-    var minor = args[3];
-    var proximity = args[4];
-    var eventType = args[5];
-
-    var beaconUniqueKey = createBeaconUniqueKey(uuid, major, minor);
-
-    console.log('Processing detection event. AgentId = ' + agentId + ', Beacon uuid = ' + uuid + ', Major = + ' + major + ', Minor = + ' + minor + ', EventType = ' + eventType);
+function updateAgentStatusCache(eventType, agentId, beaconUniqueKey, proximity) {
 
     var agentStatus;
     if ('enter' === eventType || 'alive' === eventType) {
@@ -168,16 +158,16 @@ exports.processDetectionEvent = function (args) {
             };
         } else {
             var beaconUniqueKeys = [];
-            _.forEach(agentStatus.beaconsInRange, function(beaconStatus){
+            _.forEach(agentStatus.beaconsInRange, function (beaconStatus) {
                 beaconUniqueKeys.push(beaconStatus.key);
             });
 
             if (_.contains(beaconUniqueKeys, beaconUniqueKey)) {
                 // update proximity
-                _.forEach(agentStatus.beaconsInRange, function(beaconStatus) {
-                   if (beaconStatus.key === beaconUniqueKey) {
+                _.forEach(agentStatus.beaconsInRange, function (beaconStatus) {
+                    if (beaconStatus.key === beaconUniqueKey) {
                         beaconStatus.lastProximity = proximity;
-                   }
+                    }
                 });
             }
             else {
@@ -192,8 +182,8 @@ exports.processDetectionEvent = function (args) {
 
         agentStatus = agentStatusCache[agentId];
         if (agentStatus) {
-            agentStatus.beaconsInRange = _.remove(agentStatus.beaconsInRange, function(beaconStatus) {
-               return beaconStatus.key !== beaconUniqueKey;
+            agentStatus.beaconsInRange = _.remove(agentStatus.beaconsInRange, function (beaconStatus) {
+                return beaconStatus.key !== beaconUniqueKey;
             });
 
             agentStatus.beaconCount = agentStatus.beaconsInRange.length;
@@ -204,7 +194,31 @@ exports.processDetectionEvent = function (args) {
     }
 
     console.log('Current status: ' + JSON.stringify(agentStatusCache));
+}
 
+exports.processDetectionEvent = function (args) {
 
-    //[Lindsay Thurmond:10/29/14] TODO: keep track of beacons in each room and display on webpage
+    var agentId = args[0];
+    var uuid = args[1];
+    var major = args[2];
+    var minor = args[3];
+    var proximity = args[4];
+    var eventType = args[5];
+
+    var beaconUniqueKey = createBeaconUniqueKey(uuid, major, minor);
+
+    console.log('Processing detection event. AgentId = ' + agentId + ', Beacon uuid = ' + uuid + ', Major = + ' + major + ', Minor = + ' + minor + ', EventType = ' + eventType);
+
+    updateAgentStatusCache(eventType, agentId, beaconUniqueKey, proximity);
+
+    notifyEngines(agentId, uuid, major, minor, eventType);
+}
+
+function notifyEngines(agentId, uuid, major, minor, eventType) {
+
+    if ('enter' === eventType) {
+        //[Lindsay Thurmond:2/8/15] TODO: add logic for which engines to play on
+        socketio.playAudioOnEngines();
+    }
+
 }

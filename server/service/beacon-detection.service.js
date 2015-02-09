@@ -35,7 +35,7 @@ function findFilteredDetections(uuid, agentId, time) {
         }
     }
     return findDetections(filters);
-};
+}
 
 function findDetectionsByUuid(uuid) {
     var filters = {uuid: uuid};
