@@ -17,7 +17,10 @@ var AgentSchema = new Schema({
      * Max distance a beacon can hit before being considered out of range.
      * If not set all detections will be considered in range.
      */
-    range: Number
+    range: Number,
+    audio: {
+        filename: { type: String }
+    }
 });
 
 module.exports = mongoose.model('Agent', AgentSchema);

@@ -52,7 +52,10 @@ exports.agents = [
         operationalStatus: 'Success',
         lastSeenBy: exports.beacons[0].uuid,
         lastSeen: Date.now(),
-        registered: moment().day(-1)
+        registered: moment().day(-1),
+        audio: {
+            filename: 'sogood.wav'
+        }
     },
     {
         customId: '00:1C:B3:09:85:15',
@@ -61,7 +64,10 @@ exports.agents = [
         capabilities: ['audio'],
         approvedStatus: 'Approved',
         operationalStatus: 'Success',
-        registered: moment().day(-2)
+        registered: moment().day(-2),
+        audio: {
+            filename: 'nananana.wav'
+        }
     },
     {
         customId: '00:A0:C9:14:C8:29',
@@ -70,6 +76,9 @@ exports.agents = [
         capabilities: ['audio'],
         approvedStatus: 'Denied',
         operationalStatus: 'Failure',
-        registered: moment().day(-7)
+        registered: moment().day(-7),
+        audio: {
+            filename: 'streaking.wav'
+        }
     }
 ];

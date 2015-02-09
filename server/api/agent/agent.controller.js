@@ -63,7 +63,10 @@ exports.show = function (req, res) {
  *   "operationalStatus": "Success",
  *   "lastSeenBy": "77876565",
  *   "lastSeen": "2014-10-06T15:56:43.793Z",
- *   "registered": "2014-10-01T15:56:43.793Z
+ *   "registered": "2014-10-01T15:56:43.793Z,
+ *   "audio": {
+ *      "filename":"sogood.wav"
+ *   }
  * }
  *
  * @param req
