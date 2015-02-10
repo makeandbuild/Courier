@@ -53,7 +53,9 @@ var all = {
     },
 
     engine: {
-        defaultAudio: 'hello.mp3' // audio file to use if one hasn't been set for the beacon or agent
+        audio: {
+            defaultFilename: 'hello.mp3' // audio file to use if one hasn't been set for the beacon or agent
+        }
     }
 
 };

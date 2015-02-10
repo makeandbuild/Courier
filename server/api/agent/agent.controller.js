@@ -95,6 +95,7 @@ exports.create = function (req, res) {
                 agentFound.location = agent.location;
                 agentFound.name = agent.name;
                 agentFound.customId = agent.customId;
+                agentFound.range = agent.range;
                 agentService.updateAgent(agentFound)
                     .then(function (agent) {
                         res.json(200, agent);

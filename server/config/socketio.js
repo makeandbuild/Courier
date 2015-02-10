@@ -14,7 +14,7 @@ var engineNamespace;
 
 //[Lindsay Thurmond:2/9/15] TODO: expose rest/socket call for list of connected engines for ui
 var connectedEngines = {};
-//var connectedAgents = {}; //[Lindsay Thurmond:2/9/15] TODO: update active agent status in mongo
+var connectedAgents = []; //[Lindsay Thurmond:2/9/15] TODO: update active agent status in mongo
 
 
 module.exports.configure = function (socketio) {
@@ -40,8 +40,8 @@ module.exports.configure = function (socketio) {
     // AGENT NAMESPACE
     agentNamespace = socketio.of('/agent');
     agentNamespace.on('connection', function(client){
-
-        console.info('Agent [%s] CONNECTED', client.id);
+        console.log('AGENT %s CONNECTED', client.id);
+        connectedAgents.push(client.id);
 
         // accept beacon detections
         client.on('beacondetections', function (detections) {
@@ -54,7 +54,7 @@ module.exports.configure = function (socketio) {
     // ENGINE NAMESPACE
     engineNamespace = socketio.of('/engine');
     engineNamespace.on('connection', function(client) {
-        console.info('Engine [%s] connected!', client.id);
+        console.log('ENGINE %s CONNECTED!', client.id);
         connectedEngines[client.id] = {};
 
         client.on('register', function (data) {
@@ -71,12 +71,24 @@ module.exports.configure = function (socketio) {
         client.connectedAt = new Date();
 
         client.on('disconnect', function () {
-            delete connectedEngines[client.id];
-
-            console.info('[%s] DISCONNECTED', client.id);
+            // engine
+            var engineConfig = connectedEngines[client.id];
+            if (engineConfig) {
+                console.log('ENGINE %s DISCONNECTED', client.id);
+                delete connectedEngines[client.id];
+            }
+            // agent
+            else if (_.indexOf(connectedAgents, client.id) != -1) {
+                connectedAgents = _.without(connectedAgents, client.id);
+                console.log('AGENT %s DISCONNECTED', client.id);
+            }
+            // other
+            else {
+                console.log('%s DISCONNECTED', client.id);
+            }
         });
 
-        console.info('[%s] CONNECTED', client.id);
+        console.log('%s CONNECTED to Default Namespace', client.id);
     });
 }
 
@@ -87,20 +99,20 @@ function broadcastToEngines(message, data) {
 /**
  * Plays the audio currently configured for the engine
  */
-function playAudioOnEngines() {
-    var engineIds = _.keys(connectedEngines);
-    if (engineIds) {
-        engineIds.forEach(function(engineId) {
-            var clientInfo = connectedEngines[engineId];
-            if (clientInfo && clientInfo.capabilities) {
-                if (_.indexOf(clientInfo.capabilities, 'audio') != -1) {
-                    //[Lindsay Thurmond:2/8/15] TODO: look up actual file names
-                    engineNamespace.to(engineId).emit('playaudio', { filename: 'sogood.wav'});
-                }
-            }
-        });
-    }
-}
+//function playAudioOnEngines() {
+//    var engineIds = _.keys(connectedEngines);
+//    if (engineIds) {
+//        engineIds.forEach(function(engineId) {
+//            var clientInfo = connectedEngines[engineId];
+//            if (clientInfo && clientInfo.capabilities) {
+//                if (_.indexOf(clientInfo.capabilities, 'audio') != -1) {
+//                    //[Lindsay Thurmond:2/8/15] TODO: look up actual file names
+//                    engineNamespace.to(engineId).emit('playaudio', { filename: 'sogood.wav'});
+//                }
+//            }
+//        });
+//    }
+//}
 
 function playAudioOnEngine(macAddress, filename) {
 
@@ -111,7 +123,7 @@ function playAudioOnEngine(macAddress, filename) {
             if (clientInfo && clientInfo.macAddress && clientInfo.macAddress === macAddress) {
 
                 if (!filename || filename == '') {
-                    filename = config.engine.defaultAudio;
+                    filename = config.engine.audio.defaultFilename;
                 }
 
                 engineNamespace.to(engineId).emit('playaudio', { filename: filename });
@@ -122,7 +134,7 @@ function playAudioOnEngine(macAddress, filename) {
 }
 
 module.exports.playAudioOnEngine = playAudioOnEngine;
-module.exports.playAudioOnEngines = playAudioOnEngines;
+//module.exports.playAudioOnEngines = playAudioOnEngines;
 module.exports.broadcastToEngines = broadcastToEngines;
 
 
