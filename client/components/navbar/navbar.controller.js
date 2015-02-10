@@ -3,15 +3,15 @@
 angular.module('courierApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Beacons',
+      'title': 'BEACONS',
       'link': '/beacons'
     },
     {
-      'title': 'Agents',
+      'title': 'AGENTS',
       'link': '/agents'
     },
     {
-      'title': 'Detections',
+      'title': 'DETECTIONS',
       'link': '/beacon_detections'
     }];
 
