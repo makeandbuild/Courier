@@ -6,7 +6,7 @@
             <input name="search" ng-model="searchTextAgent">
         </div>
         <div class="col-md-1">
-            <span class="glyphicon glyphicon-plus" ng-click="addAgent()"></span>
+            <span class="glyphicon glyphicon-plus add-btn" ng-click="addAgent()"></span>
         </div>
     </div>
 </div>
@@ -35,7 +35,7 @@
                 <td class="col-md-1 status-section"><a href="/agent/{{agent._id}}"><i class="glyphicon" ng-class="agent.operationalStatus == 'Failure' ? 'glyphicon-remove-sign' :'glyphicon-ok-sign'"></i></a></td>
                 <td class="col-md-1"><a href="/agent/{{agent.customId}}">{{agent.lastSeen}}</a></td>
                 <td class="col-md-1">
-                    <span class="glyphicon glyphicon-minus" ng-click="deleteAgent(agent)"></span>
+                    <span class="glyphicon glyphicon-minus minus-btn" ng-click="deleteAgent(agent)"></span>
                 </td>
             </tr>
         </tbody>

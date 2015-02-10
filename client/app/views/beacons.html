@@ -9,7 +9,7 @@
                 <input name="search" ng-model="searchText">
             </div>
             <div class="col-md-1">
-                <span class="glyphicon glyphicon-plus" ng-click="addBeacon()"></span>
+                <span class="glyphicon glyphicon-plus add-btn" ng-click="addBeacon()"></span>
             </div>
 
         </div>
@@ -42,7 +42,7 @@
                     {{beacon.audio.filename}}
                 </td>
                 <td class="col-md-1">
-                    <span class="glyphicon glyphicon-minus" ng-click="deleteBeacon(beacon)"></span>
+                    <span class="glyphicon glyphicon-minus minus-btn" ng-click="deleteBeacon(beacon)"></span>
                 </td>
             </tr>
             </tbody>
