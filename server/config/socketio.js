@@ -12,8 +12,9 @@ var listeningSocket;
 var agentNamespace;
 var engineNamespace;
 
+//[Lindsay Thurmond:2/9/15] TODO: expose rest/socket call for list of connected engines for ui
 var connectedEngines = {};
-//var connectedAgents = {};
+//var connectedAgents = {}; //[Lindsay Thurmond:2/9/15] TODO: update active agent status in mongo
 
 
 module.exports.configure = function (socketio) {
@@ -57,8 +58,9 @@ module.exports.configure = function (socketio) {
         connectedEngines[client.id] = {};
 
         client.on('register', function (data) {
-            // save info
+            // save data - format : { capabilities : ['audio'], macAddress : '67:98:09:89' }
             connectedEngines[client.id] = data;
+            //[Lindsay Thurmond:2/9/15] TODO: send config params to engine (s3 url, etc)
         });
     });
 
@@ -86,12 +88,8 @@ function broadcastToEngines(message, data) {
  * Plays the audio currently configured for the engine
  */
 function playAudioOnEngines() {
-//    for (var clientId in listeningSocket.engine.clients) {
-
     var engineIds = _.keys(connectedEngines);
-
     if (engineIds) {
-
         engineIds.forEach(function(engineId) {
             var clientInfo = connectedEngines[engineId];
             if (clientInfo && clientInfo.capabilities) {
@@ -104,6 +102,26 @@ function playAudioOnEngines() {
     }
 }
 
+function playAudioOnEngine(macAddress, filename) {
+
+    var engineIds = _.keys(connectedEngines);
+    if (engineIds) {
+        engineIds.forEach(function(engineId) {
+            var clientInfo = connectedEngines[engineId];
+            if (clientInfo && clientInfo.macAddress && clientInfo.macAddress === macAddress) {
+
+                if (!filename || filename == '') {
+                    filename = config.engine.defaultAudio;
+                }
+
+                engineNamespace.to(engineId).emit('playaudio', { filename: filename });
+            }
+        });
+    }
+
+}
+
+module.exports.playAudioOnEngine = playAudioOnEngine;
 module.exports.playAudioOnEngines = playAudioOnEngines;
 module.exports.broadcastToEngines = broadcastToEngines;
 

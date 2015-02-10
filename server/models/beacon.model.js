@@ -9,7 +9,10 @@ var BeaconSchema = new Schema({
     major: Number,
     minor: Number,
     properties: Schema.Types.Mixed,
-    active: Boolean
+    active: Boolean,
+    audio: {
+        filename: { type: String }
+    }
 });
 
 module.exports = mongoose.model('Beacon', BeaconSchema);

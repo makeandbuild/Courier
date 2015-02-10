@@ -81,16 +81,17 @@ exports.create = function (req, res) {
     agentService.findAgentByCustomId(agent.customId)
         .then(function (agentFound) {
             if (!agentFound) {
-                console.log("Agent unfound, creating with custom id: " + agent.customId);
+                console.log("Agent not found, creating with custom id: " + agent.customId);
                 agentService.createAgent(agent).then(function (agent) {
                     res.json(201, agent);
                 }).catch(function (err) {
                     res.json(400, {
-                        message: "unable to create new agent",
+                        message: 'Error creating new agent',
                         error: err
                     })
                 });
             } else {
+                console.log('Existing agent found with customId: %s.  Attempting to update.', agent.customId);
                 agentFound.location = agent.location;
                 agentFound.name = agent.name;
                 agentFound.customId = agent.customId;
@@ -99,13 +100,14 @@ exports.create = function (req, res) {
                         res.json(200, agent);
                     }).catch(function (err) {
                         res.json(400, {
-                            message: "unable to update found agent",
+                            message: "Error updating existing agent",
                             error: err
                         })
                     })
             }
         }).catch(function (error) {
-            console.log("failed everything, just quit: " + error);
+            res.json(400, {message: 'Unexpected error registering agent', error: error});
+            console.log("Unexpected error registering agent: " + error);
         });
 };
 

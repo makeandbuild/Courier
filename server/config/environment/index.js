@@ -48,8 +48,12 @@ var all = {
     },
 
     token: {
-        "unitOfTime" : "days",
-        "amount" : 30
+        unitOfTime : 'days',
+        amount : 30
+    },
+
+    engine: {
+        defaultAudio: 'hello.mp3' // audio file to use if one hasn't been set for the beacon or agent
     }
 
 };

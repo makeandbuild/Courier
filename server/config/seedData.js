@@ -20,25 +20,44 @@ exports.users = [
 
 exports.beacons = [
     {
-        name: 'Beacon 55',
-        uuid: '6fdg76hdf',
-        major: 89,
-        minor: 90987,
-        active: true
+        name: 'Lindsay Estimote Blue',
+        uuid: 'b9407f30f5f8466eaff925556b57fe6d',
+        major: 19602,
+        minor: 10956,
+        active: true,
+        audio: {
+            filename: 'sogood.wav'
+        }
     },
     {
-        name: 'Beacon 900',
-        uuid: 'fgh8dfhdf09',
-        major: 466,
-        minor: 77,
-        active: true
+        name: 'Tom Estimote Green',
+        uuid: 'b9407f30f5f8466eaff925556b57fe6d',
+        major: 814,
+        minor: 17788,
+        active: true,
+        audio: {
+            filename: 'streaking.wav'
+        }
     },
     {
-        name: 'Beacon 8798797',
-        uuid: 'sd098fdg0sd98f',
-        major: 6554,
-        minor: 232,
-        active: true
+        name: 'Gimbal Lindsay',
+        uuid: 'b9407f30f5f8466eaff925556b57fe6d',
+        major: 99,
+        minor: 73,
+        active: true,
+        audio: {
+            filename: 'nananana.wav'
+        }
+    },
+    {
+        name : "Reese iPhone" ,
+        uuid : "b9407f30f5f8466eaff925556b57fe6d" ,
+        major : 50,
+        minor : 54,
+        active: true,
+        audio: {
+            filename: 'hello.mp3'
+        }
     }
 ];
 
@@ -66,7 +85,7 @@ exports.agents = [
         operationalStatus: 'Success',
         registered: moment().day(-2),
         audio: {
-            filename: 'nananana.wav'
+            filename: 'sogood.wav'
         }
     },
     {
@@ -78,7 +97,7 @@ exports.agents = [
         operationalStatus: 'Failure',
         registered: moment().day(-7),
         audio: {
-            filename: 'streaking.wav'
+            filename: 'sogood.wav'
         }
     }
 ];

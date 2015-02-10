@@ -194,6 +194,11 @@ function updateAgentStatusCache(eventType, agentId, beaconUniqueKey, proximity) 
     }
 
     console.log('Current status: ' + JSON.stringify(agentStatusCache));
+
+    // just use this for local testing with a single agent
+//    var agents = _.values(agentStatusCache);
+//    var numBeacons = agents && agents.length > 0 ? agents[0].beaconCount : 0;
+//    console.log('Current number of beacons: ' + numBeacons);
 }
 
 exports.processDetectionEvent = function (args) {
@@ -207,18 +212,101 @@ exports.processDetectionEvent = function (args) {
 
     var beaconUniqueKey = createBeaconUniqueKey(uuid, major, minor);
 
-    console.log('Processing detection event. AgentId = ' + agentId + ', Beacon uuid = ' + uuid + ', Major = + ' + major + ', Minor = + ' + minor + ', EventType = ' + eventType);
+//    console.log('Processing detection event. AgentId = ' + agentId + ', Beacon uuid = ' + uuid + ', Major = + ' + major + ', Minor = + ' + minor + ', EventType = ' + eventType);
 
     updateAgentStatusCache(eventType, agentId, beaconUniqueKey, proximity);
 
-    notifyEngines(agentId, uuid, major, minor, eventType);
+    notifyEngine(agentId, uuid, major, minor, eventType);
 }
 
-function notifyEngines(agentId, uuid, major, minor, eventType) {
+/**
+ * Keeps track of the last time an enter event was seen for a beacon for a particular agent.
+ *
+ * Dictionary key = agentId:uuid:major:minor
+ * Dictionary value = timestamp in ms
+ *
+ *
+ * @type {{}}
+ */
+var lastTimeBeaconEnterSoundPlayed = {};
 
+
+function notifyEngine(agentId, uuid, major, minor, eventType) {
+
+    // play audio on the agent that detected the beacon
     if ('enter' === eventType) {
-        //[Lindsay Thurmond:2/8/15] TODO: add logic for which engines to play on
-        socketio.playAudioOnEngines();
-    }
 
+        var playSound = true;
+        // if we haven't played the enter noise in the last 10 seconds then we can play it
+        var key = agentId + ':' + uuid + ':' + major + ':' + minor;
+        var lastPlayed = lastTimeBeaconEnterSoundPlayed[key];
+        if (lastPlayed) {
+            // check if we played in last 10 seconds
+            var now = Date.now();
+            var tenSecondsAgo = now - (10 * 1000);
+            // ok play sound if the last time we played the sound was more than 10 seconds ago
+            playSound = lastPlayed < tenSecondsAgo;
+            if (!playSound) {
+                console.log('Enter event for %s, but sound was played within the last 10 seconds.  Not playing again.', key);
+            }
+        }
+
+        if (playSound) {
+            var beaconKey = createBeaconUniqueKey(uuid, major, minor);
+            lookupAudio(agentId, beaconKey)
+                .then(function (filename) {
+
+                    // update last play time
+                    lastTimeBeaconEnterSoundPlayed[key] = Date.now();
+                    socketio.playAudioOnEngine(agentId, filename);
+
+                }, function (err) {
+                    console.log('Error sending play audio command: ' + err);
+                });
+        }
+    }
+}
+
+/**
+ *
+ * @param agentId agent that detected the beacon
+ * @param beaconKey beacon that was detected
+ * @returns {When.Promise<T>} promise containing the filename of the audio file
+ */
+function lookupAudio(agentId, beaconKey) {
+    var defer = when.defer();
+
+    beaconService.findByUniqueKey(beaconKey)
+        .then(function(beacon){
+
+            var foundFilename  = false;
+
+            if (beacon && beacon.audio) {
+                var filename = beacon.audio.filename;
+                if (filename && filename != '') {
+                    foundFilename = true;
+                    defer.resolve(filename);
+                }
+            }
+
+            if (!foundFilename) {
+                // check for agent default
+                agentService.findAgentByCustomId(agentId)
+                    .then(function (agent) {
+                        if (agent && agent.audio) {
+                            defer.resolve(agent.audio.filename);
+                        } else {
+                            // we didn't find anything, just send an empty filename
+                            defer.resolve('');
+                        }
+                    }, function (err) {
+                        defer.reject(err);
+                    });
+            }
+
+        }, function(err){
+            defer.reject(err);
+        });
+
+    return defer.promise;
 }

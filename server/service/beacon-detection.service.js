@@ -293,6 +293,7 @@ function createBeaconUniqueKey(uuid, major, minor) {
 var DETECTION_EVENT_TYPE = 'com.makeandbuild.detection';
 
 function publishDetectionEvent(agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType) {
+    console.log('Event type: %s, Major: %s, Minor: %s', eventType, beaconMajor, beaconMinor);
     eventPublisherService.publishEvent(DETECTION_EVENT_TYPE, [agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType]);
 }
 
@@ -376,7 +377,8 @@ function processNewDetectionData(detections) {
     if (detections.length === 0) {
         // all detections are empty, that's fine it just means the
         // beacon is out of range, but we don't need to save them
-        return res.send(204, 'No detections to save');
+        console.log('WARNING: No detections to save.  Expected to find at least an agentId so we know which agent doesn\'t see any beacons!!');
+        return defer.resolve({});
     }
 
     // update agents with most recent - more of a nice to have, don't need to block the response for it
