@@ -66,6 +66,7 @@
  				console.log(response);
 	 			$('.newKey').val('');
 	 			$('.newValue').val('');
+                $location.path('/beacons');
 	 		});
 
  		} else {

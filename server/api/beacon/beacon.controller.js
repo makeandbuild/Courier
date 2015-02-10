@@ -69,17 +69,7 @@ exports.index = function (req, res) {
  * @param res
  */
 exports.show = function (req, res) {
-//    beaconService.findBeaconById(req.params.id)
-//        .then(function (beacon) {
-//            if (!beacon) {
-//                return res.send(404);
-//            }
-//            return res.json(beacon);
-//        }, function (err) {
-//            return handleError(res, err);
-//        });
-
-    beaconService.findByUuid(req.params.id)
+    beaconService.findBeaconById(req.params.id)
         .then(function (beacon) {
             if (!beacon) {
                 return res.send(404);
@@ -88,6 +78,16 @@ exports.show = function (req, res) {
         }, function (err) {
             return handleError(res, err);
         });
+//
+//    beaconService.findByUuid(req.params.id)
+//        .then(function (beacon) {
+//            if (!beacon) {
+//                return res.send(404);
+//            }
+//            return res.json(beacon);
+//        }, function (err) {
+//            return handleError(res, err);
+//        });
 };
 
 /**
