@@ -48,7 +48,7 @@
  			$scope.beacon.uuid = beacon.uuid;
  			$scope.beacon.major = beacon.major;
  			$scope.beacon.minor = beacon.minor;
-
+            $scope.beacon.audio.filename = beacon.audio.filename;
  			
 
  			$( ".property" ).each(function( index ) {
@@ -74,9 +74,11 @@
  				uuid: beacon.uuid,
  				major: beacon.major,
  				minor: beacon.minor,
- 				properties: $scope.properties
+ 				properties: $scope.properties,
+                audio: {
+                    filename: beacon.audio ? beacon.audio.filename : ''
+                }
  			};
- 			
 
  			$http.post('/api/beacons', newBeacon);
  			$location.path('/beacons')

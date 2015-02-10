@@ -21,6 +21,7 @@
                 <th class="col-md-4"><a href="" ng-click="predicate = 'uuid'; reverse=!reverse">UUID</a></th>
                 <th class="col-md-2"><a href="" ng-click="predicate = 'major'; reverse=!reverse">Major</a></th>
                 <th class="col-md-2"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Minor</a></th>
+                <th class="col-md-2"><a href="" ng-click="predicate = 'audioFilename'; reverse=!reverse">Audio Filename</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">Delete?</a></th>
             </tr>
             </thead>
@@ -36,6 +37,9 @@
 
                 <td class="col-md-2">
                     {{beacon.minor}}
+                </td>
+                <td class="col-md-2">
+                    {{beacon.audio.filename}}
                 </td>
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-minus" ng-click="deleteBeacon(beacon)"></span>
