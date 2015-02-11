@@ -134,7 +134,8 @@ input::-moz-focus-inner {
   padding: 0; }
 
 input {
-  line-height: normal; }
+  line-height: normal;
+  width: 200px; }
 
 input[type="checkbox"],
 input[type="radio"] {
@@ -6805,7 +6806,8 @@ button.close {
     line-height: 1;
     letter-spacing: -1px; }
   #banner .logo {
-    margin-bottom: 0; }
+    margin-bottom: 0;
+    width: 100%;  }
   #banner .lead {
     color: #5EC0C2; }
 
