@@ -23,10 +23,24 @@
     </div>
     <div class="row">
       <label for="audio.filename" class="col-md-2">Audio Filename</label>
-      <input type="text" name="audioFilename"  ng-model="beacon.audio.filename" value="">
+      <!--<input type="text" name="audioFilename"  ng-model="beacon.audio.filename" value="">-->
       <!--<select ng-model="selectedItem">-->
         <!--<option ng-repeat="item in items" value="{{item}}">{{item}}</option>-->
       <!--</select>-->
+        <select ng-model="beacon.audio.filename" name="audioFilename" value="">
+            <option value=""></option>
+            <option value="big_brain.wav">big_brain.wav</option>
+            <option value="chewy.wav">chewy.wav</option>
+            <option value="do_or_do_not.wav">do_or_do_not.wav</option>
+            <option value="hello.mp3">hello.mp3</option>
+            <option value="imperial.wav">imperial.wav</option>
+            <option value="nananana.wav">nananana.wav</option>
+            <option value="r2-d2.wav">r2-d2.wav</option>
+            <option value="satisfaction.wav">satisfaction.wav</option>
+            <option value="sogood.wav">sogood.wav</option>
+            <option value="streaking.wav">streaking.wav</option>
+            <option value="technical.wav">technical.wav</option>
+        </select>
     </div>
     <div class="properties">
       <h3>CUSTOM PROPERTIES</h3>
