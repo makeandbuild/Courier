@@ -97,7 +97,7 @@ exports.create = function (req, res) {
                 agentFound.location = agent.location;
                 agentFound.name = agent.name;
                 agentFound.customId = agent.customId;
-                agentFound.ipAddress = agent.ipAddress;
+//                agentFound.ipAddress = agent.ipAddress;
                 // we don't want to update the range every time the agent is restarted
 //                agentFound.range = agent.range;
                 agentService.updateAgent(agentFound)
