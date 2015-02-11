@@ -59,6 +59,7 @@ module.exports.configure = function (socketio) {
 
         client.on('register', function (data) {
             // save data - format : { capabilities : ['audio'], macAddress : '67:98:09:89' }
+            console.log('Enging registration: %s', JSON.stringify(data));
             connectedEngines[client.id] = data;
             //[Lindsay Thurmond:2/9/15] TODO: send config params to engine (s3 url, etc)
         });
@@ -126,6 +127,7 @@ function playAudioOnEngine(macAddress, filename) {
                     filename = config.engine.audio.defaultFilename;
                 }
 
+                console.log('Sending playAudio to engienId: %s, filename: %s', engineId, filename);
                 engineNamespace.to(engineId).emit('playaudio', { filename: filename });
             }
         });
