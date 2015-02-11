@@ -114,6 +114,10 @@ function broadcastToEngines(message, data) {
  * Plays the audio currently configured for the engine
  */
 function playAudioOnEngines(filename) {
+    if (!filename || filename == '') {
+        filename = config.engine.audio.defaultFilename;
+    }
+
     var engineIds = _.keys(connectedEngines);
     if (engineIds) {
         engineIds.forEach(function(engineId) {
