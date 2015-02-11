@@ -280,8 +280,6 @@ function lookupAudio(agentId, beaconKey) {
     beaconService.findByUniqueKey(beaconKey)
         .then(function(beacon){
 
-            console.log('Beacon LOOKUP SHOULD HAVE AUDIO: %s', JSON.stringify(beacon));
-
             var foundFilename  = false;
 
             if (beacon && beacon.audio) {

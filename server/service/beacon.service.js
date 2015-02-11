@@ -25,7 +25,6 @@ exports.findByUuid = function (uuid) {
  * @param uniqueKey  format = <uuid>:<major>:<minor>
  */
 exports.findByUniqueKey = function findByUniqueKey(uniqueKey) {
-    console.log('Find beacon by key: %s', uniqueKey);
     var defer = when.defer();
 
     var parts = uniqueKey.split(':');
@@ -43,7 +42,6 @@ exports.findByUniqueKey = function findByUniqueKey(uniqueKey) {
          .then(function(foundBeacons){
              if (foundBeacons) {
                  // assume only one
-                 console.log('Found beacons %s', JSON.stringify(foundBeacons));
                  defer.resolve(foundBeacons[0]);
              } else {
                  defer.reject('No beacon found with unique key = ' + uniqueKey);

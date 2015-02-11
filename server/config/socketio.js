@@ -119,11 +119,13 @@ function playAudioOnEngines(filename) {
     }
 
     var engineIds = _.keys(connectedEngines);
+    console.log('Engine Ids %s', JSON.stringify(engineIds));
     if (engineIds) {
         engineIds.forEach(function(engineId) {
             var clientInfo = connectedEngines[engineId];
             if (clientInfo && clientInfo.capabilities) {
                 if (_.indexOf(clientInfo.capabilities, 'audio') != -1) {
+                    console.log('Sending actual playaudio command to engineId: %s', engineId);
                     engineNamespace.to(engineId).emit('playaudio', { filename: filename});
                 }
             }
