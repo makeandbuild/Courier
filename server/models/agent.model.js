@@ -20,7 +20,8 @@ var AgentSchema = new Schema({
     range: Number,
     audio: {
         filename: { type: String }
-    }
+    },
+    ipAddress: String
 });
 
 module.exports = mongoose.model('Agent', AgentSchema);

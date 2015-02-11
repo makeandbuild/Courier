@@ -14,7 +14,8 @@
     <table  class=" col-md-12">
         <thead>
             <tr >
-                <th class="col-md-3"><a href="">ID</a></th>
+                <th class="col-md-2"><a href="">ID</a></th>
+                <th class="col-md-3"><a href="">IP ADDRESS</a></th>
                 <th class="col-md-3"><a href="">MONGO ID</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">NAME</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">LOCATION</a></th>
@@ -27,7 +28,8 @@
         </thead>
         <tbody>
             <tr ng-repeat="agent in agents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.customId)" class="beaconRow">
-                <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.customId}}</a></td>
+                <td class="col-md-2"><a href="/agent/{{agent.customId}}">{{agent.customId}}</a></td>
+                <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.ipAddress}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent._id}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.name}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.location}}</a></td>
@@ -49,7 +51,8 @@
         <table  class=" col-md-12">
             <thead>
                 <tr >
-                    <th class="col-md-3"><a href="">ID</a></th>
+                    <th class="col-md-2"><a href="">ID</a></th>
+                    <th class="col-md-3"><a href="">IP ADDRESS</a></th>
                     <th class="col-md-3"><a href="">MONGO ID</a></th>
                     <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">NAME</a></th>
                     <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">LOCATION</a></th>
@@ -61,7 +64,8 @@
             </thead>
             <tbody>
                 <tr ng-repeat="agent in pendingAgents |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(agent.customId)" class="beaconRow">
-                    <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.customId}}</a></td>
+                    <td class="col-md-2"><a href="/agent/{{agent.customId}}">{{agent.customId}}</a></td>
+                    <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.ipAddress}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent._id}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.name}}</a></td>
                     <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.location}}</a></td>
