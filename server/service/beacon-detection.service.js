@@ -293,7 +293,7 @@ function createBeaconUniqueKey(uuid, major, minor) {
 var DETECTION_EVENT_TYPE = 'com.makeandbuild.detection';
 
 function publishDetectionEvent(agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType) {
-    console.log('Event type: %s, Major: %s, Minor: %s', eventType, beaconMajor, beaconMinor);
+    console.log('Event type: %s, Major: %s, Minor: %s, Proximity: %s', eventType, beaconMajor, beaconMinor, proximity);
     eventPublisherService.publishEvent(DETECTION_EVENT_TYPE, [agentId, beaconUuid, beaconMajor, beaconMinor, proximity, eventType]);
 }
 
