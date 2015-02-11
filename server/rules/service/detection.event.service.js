@@ -306,6 +306,7 @@ function lookupAudio(agentId, beaconKey) {
             }
 
         }, function(err){
+            console.log('Error looking up filename: %s', err);
             defer.reject(err);
         });
 
