@@ -6,6 +6,7 @@
 
 var config = require('./environment');
 var beaconDetectionService = require('../service/beacon-detection.service');
+var agentService = require('../service/agent.service');
 var _ = require('lodash');
 
 var listeningSocket;
@@ -14,12 +15,14 @@ var engineNamespace;
 
 //[Lindsay Thurmond:2/9/15] TODO: expose rest/socket call for list of connected engines for ui
 var connectedEngines = {};
-var connectedAgents = []; //[Lindsay Thurmond:2/9/15] TODO: update active agent status in mongo
+var connectedAgents = {};
 
 
 module.exports.configure = function (socketio) {
 
     listeningSocket = socketio;
+
+    updateAgentStatuses();
 
     //[Lindsay Thurmond:2/8/15] TODO: add authentication
     // socket.io (v1.x.x) is powered by debug.
@@ -41,13 +44,20 @@ module.exports.configure = function (socketio) {
     agentNamespace = socketio.of('/agent');
     agentNamespace.on('connection', function(client){
         console.log('AGENT %s CONNECTED', client.id);
-        connectedAgents.push(client.id);
+        connectedAgents[client.id] = {};
 
         // accept beacon detections
         client.on('beacondetections', function (detections) {
 
             // console.log(JSON.stringify(detections));
             beaconDetectionService.processNewDetectionData(detections);
+        });
+
+        client.on('register', function (data) {
+            console.log('Agent registration: %s', JSON.stringify(data));
+            connectedAgents[client.id] = data;
+
+            updateAgentStatuses();
         });
     });
 
@@ -74,14 +84,17 @@ module.exports.configure = function (socketio) {
         client.on('disconnect', function () {
             // engine
             var engineConfig = connectedEngines[client.id];
+            var agentConfig = connectedAgents[client.id];
             if (engineConfig) {
                 console.log('ENGINE %s DISCONNECTED', client.id);
                 delete connectedEngines[client.id];
             }
             // agent
-            else if (_.indexOf(connectedAgents, client.id) != -1) {
-                connectedAgents = _.without(connectedAgents, client.id);
-                console.log('AGENT %s DISCONNECTED', client.id);
+            else if (agentConfig) {
+                var customId = agentConfig.customId;
+                console.log('AGENT %s DISCONNECTED (customId: %s)', client.id, customId);
+                delete connectedAgents[client.id];
+                updateAgentStatuses();
             }
             // other
             else {
@@ -100,23 +113,27 @@ function broadcastToEngines(message, data) {
 /**
  * Plays the audio currently configured for the engine
  */
-//function playAudioOnEngines() {
-//    var engineIds = _.keys(connectedEngines);
-//    if (engineIds) {
-//        engineIds.forEach(function(engineId) {
-//            var clientInfo = connectedEngines[engineId];
-//            if (clientInfo && clientInfo.capabilities) {
-//                if (_.indexOf(clientInfo.capabilities, 'audio') != -1) {
-//                    //[Lindsay Thurmond:2/8/15] TODO: look up actual file names
-//                    engineNamespace.to(engineId).emit('playaudio', { filename: 'sogood.wav'});
-//                }
-//            }
-//        });
-//    }
-//}
+function playAudioOnEngines(filename) {
+    var engineIds = _.keys(connectedEngines);
+    if (engineIds) {
+        engineIds.forEach(function(engineId) {
+            var clientInfo = connectedEngines[engineId];
+            if (clientInfo && clientInfo.capabilities) {
+                if (_.indexOf(clientInfo.capabilities, 'audio') != -1) {
+                    engineNamespace.to(engineId).emit('playaudio', { filename: filename});
+                }
+            }
+        });
+    }
+}
 
+/**
+ * This assume engine and agent are on the same machine (same mac address)
+ *
+ * @param macAddress
+ * @param filename
+ */
 function playAudioOnEngine(macAddress, filename) {
-
     var engineIds = _.keys(connectedEngines);
     if (engineIds) {
         engineIds.forEach(function(engineId) {
@@ -132,12 +149,14 @@ function playAudioOnEngine(macAddress, filename) {
             }
         });
     }
+}
 
+
+function updateAgentStatuses() {
+    agentService.updateAllAgentStatus(connectedAgents);
 }
 
 module.exports.playAudioOnEngine = playAudioOnEngine;
-//module.exports.playAudioOnEngines = playAudioOnEngines;
+module.exports.playAudioOnEngines = playAudioOnEngines;
 module.exports.broadcastToEngines = broadcastToEngines;
-
-
-
+module.exports.updateAgentStatuses = updateAgentStatuses;

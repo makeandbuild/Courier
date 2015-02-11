@@ -259,7 +259,7 @@ function notifyEngine(agentId, uuid, major, minor, eventType) {
                     // update last play time
                     lastTimeBeaconEnterSoundPlayed[key] = Date.now();
                     console.log('Calling playAudioOnEngine - AgentId: %s, Filename: %s', agentId, filename);
-                    socketio.playAudioOnEngine(agentId, filename);
+                    socketio.playAudioOnEngines(filename);
 
                 }, function (err) {
                     console.log('Error sending play audio command: ' + err);

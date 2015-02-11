@@ -9,12 +9,14 @@ var when = require('when');
 var Agent = require('./../models/agent.model.js');
 var agentDao = require('../dao/agent.dao.js');
 
+var _this = this;
+
 /**
  * Finds list of all agents
  *
  * @returns {*}
  */
-exports.findAgents = function () {
+exports.findAgents = function findAgents() {
     return when(agentDao.findAgentsPromise());
 }
 
@@ -24,15 +26,15 @@ exports.findAgents = function () {
  * @param _id
  * @returns {*}
  */
-exports.findAgentByUnderscoreId = function (_id) {
+exports.findAgentByUnderscoreId = function findAgentByUnderscoreId(_id) {
     return when(agentDao.findAgentByUnderscoreIdPromise(_id));
 }
 
-exports.findAgentByCustomId = function (customId) {
+exports.findAgentByCustomId = function findAgentByCustomId(customId) {
     return when(agentDao.findAgentByCustomIdPromise(customId));
 }
 
-exports.findByLocation = function(location) {
+exports.findByLocation = function findByLocation(location) {
     return when(agentDao.findByLocationPromise(location));
 }
 
@@ -42,7 +44,7 @@ exports.findByLocation = function(location) {
  * @param agent
  * @returns {*}
  */
-exports.createAgent = function(agent) {
+exports.createAgent = function createAgent(agent) {
     //[Lindsay Thurmond:10/1/14] TODO: check for existing agents first - ids will be mac addresses
     //[Lindsay Thurmond:10/1/14] TODO: add registrationDate to json in mongo
     return when(agentDao.createAgentPromise(agent));
@@ -56,7 +58,7 @@ exports.createAgent = function(agent) {
  * @param agents
  * @returns {*}
  */
-exports.createAgents = function(agents) {
+exports.createAgents = function createAgents(agents) {
     return when(agentDao.createAgentsPromise(agents));
 }
 
@@ -66,12 +68,39 @@ exports.createAgents = function(agents) {
  * @param agent
  * @returns {*}
  */
-exports.updateAgent = function (agent) {
+exports.updateAgent = function updateAgent(agent) {
     if (!agent) {
         return when.reject('Cannot update empty agent');
     }
     return when(agentDao.updateAgentPromise(agent));
 };
+
+exports.updateAllAgentStatus = function updateAgentStatus(connectedAgents) {
+
+    var connectedAgentInfos = _.values(connectedAgents);
+    var connectedCustomIds = [];
+    _.forEach(connectedAgentInfos, function(info) {
+        if (info.customId) {
+            connectedCustomIds.push(info.customId);
+        }
+    });
+
+    _this.findAgents()
+        .then(function(agents){
+            _.forEach(agents, function(agent){
+                var originalStatus = agent.operationalStatus;
+                if (_.indexOf(connectedCustomIds, agent.customId) != -1) {
+                    agent.operationalStatus = 'Success';
+                } else {
+                    agent.operationalStatus = 'Failure';
+                }
+                if (originalStatus !== agent.operationalStatus) {
+                    _this.updateAgent(agent);
+                }
+            });
+        });
+
+}
 
 /**
  * Deletes an agent

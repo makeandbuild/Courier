@@ -1,6 +1,7 @@
 'use strict';
 
 var agentService = require('../../service/agent.service.js');
+var socketio = require('../../config/socketio');
 
 /**
  * Get list of agents
@@ -83,6 +84,7 @@ exports.create = function (req, res) {
             if (!agentFound) {
                 console.log("Agent not found, creating with custom id: " + agent.customId);
                 agentService.createAgent(agent).then(function (agent) {
+                    socketio.updateAgentStatuses();
                     res.json(201, agent);
                 }).catch(function (err) {
                     res.json(400, {
@@ -95,9 +97,11 @@ exports.create = function (req, res) {
                 agentFound.location = agent.location;
                 agentFound.name = agent.name;
                 agentFound.customId = agent.customId;
-                agentFound.range = agent.range;
+                // we don't want to update the range every time the agent is restarted
+//                agentFound.range = agent.range;
                 agentService.updateAgent(agentFound)
                     .then(function (agent) {
+                        socketio.updateAgentStatuses();
                         res.json(200, agent);
                     }).catch(function (err) {
                         res.json(400, {

@@ -68,7 +68,7 @@ exports.agents = [
         location: 'entry way',
         capabilities: ['audio'],
         approvedStatus: 'Pending',
-        operationalStatus: 'Success',
+        operationalStatus: 'Failure',
         lastSeenBy: exports.beacons[0].uuid,
         lastSeen: Date.now(),
         registered: moment().day(-1),
@@ -82,7 +82,7 @@ exports.agents = [
         location: 'great room',
         capabilities: ['audio'],
         approvedStatus: 'Approved',
-        operationalStatus: 'Success',
+        operationalStatus: 'Failure',
         registered: moment().day(-2),
         audio: {
             filename: 'sogood.wav'
