@@ -166,3 +166,4 @@ module.exports.playAudioOnEngine = playAudioOnEngine;
 module.exports.playAudioOnEngines = playAudioOnEngines;
 module.exports.broadcastToEngines = broadcastToEngines;
 module.exports.updateAgentStatuses = updateAgentStatuses;
+module.exports.connectedEngines = connectedEngines;

@@ -3,9 +3,10 @@
 angular.module('courierApp')
   .controller('MainCtrl', function ($scope, $http, socket, $location, $filter, $routeParams) {
     $scope.awesomeThings = [];
-    $http.get('/api/beacons').success(function(awesomeThings) {
-      console.log(awesomeThings);
-      $scope.beacons = awesomeThings;
+
+    $http.get('/api/beacons').success(function(beacons) {
+      console.log(beacons);
+      $scope.beacons = beacons;
       socket.syncUpdates('beacon', $scope.beacons);
     });
 
@@ -60,6 +61,14 @@ angular.module('courierApp')
       });
     };
 
+    $scope.getEngines = function() {
+        $http.get('/api/engines').success(function(engines) {
+            console.log(engines);
+            $scope.engines = engines;
+            socket.syncUpdates('engine', $scope.beacons);
+        });
+    };
+
     $scope.getBeaconDetections = function() {
       $http.get('/api/beacondetections').success(function(detections) {
         $scope.detections = detections;
@@ -77,8 +86,8 @@ angular.module('courierApp')
       $scope.activetab = $routeParams.param;
     }
     $scope.getAgents();
-
     $scope.getBeaconDetections();
+    $scope.getEngines();
 
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('beacon');

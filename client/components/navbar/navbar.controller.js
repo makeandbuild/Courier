@@ -13,6 +13,10 @@ angular.module('courierApp')
     {
       'title': 'DETECTIONS',
       'link': '/beacon_detections'
+    },
+    {
+      'title': 'ENGINES',
+      'link':'/engines'
     }];
 
     $scope.isCollapsed = true;

@@ -18,6 +18,7 @@ module.exports = function (app) {
     app.use('/api/beacons', require('./api/beacon'));
     app.use('/api/users', require('./api/user'));
     app.use('/api/beacondetections', require('./api/beacon_detection'));
+    app.use('/api/engines', require('./api/engine'));
 
     // All undefined asset or api routes should return a 404
     app.route('/:url(api|auth|components|app|bower_components|assets)/*')
