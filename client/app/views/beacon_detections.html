@@ -27,7 +27,7 @@
             <tbody>
             <tr ng-repeat="detection in detections |  orderBy:predicate:reverse | filter:searchText" ng-click="setSelected(beacon.id)" class="beaconRow">
                 <td class="col-md-1">
-                    <a href="/beacon/{{detection.uuid}}" >{{detection.time}}</a>
+                    <a href="/beacon/{{detection.uuid}}" >{{detection.time | date : 'medium'}}</a>
                 </td>
                 <td class="col-md-1">
                     <a href="/agent/{{detection.agentId}}" >{{detection.agentId}}</a>
