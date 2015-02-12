@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var when = require('when');
 
 exports.findAllDetectionsPromise = function () {
-    return BeaconDetection.find().sort({time : 'desc'}).exec();
+    return BeaconDetection.find().exec();
 }
 
 exports.findFilteredDetectionsPromise = function (filters) {

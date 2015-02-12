@@ -63,6 +63,8 @@ angular.module('courierApp')
     $scope.getBeaconDetections = function() {
       $http.get('/api/beacondetections').success(function(detections) {
         $scope.detections = detections;
+          // default to reverse sort by time
+          $scope.predicate = '-time';
 
       });
     };
