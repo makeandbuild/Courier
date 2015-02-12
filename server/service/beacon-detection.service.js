@@ -399,16 +399,26 @@ function processNewDetectionData(detections) {
 //    return res.json(201, []);
 
     // should always have an array of detections by now
-    createDetectionsOneByOne(detections)
-        .then(function (result) {
-            defer.resolve(result);
-        }, function (err) {
-            // something unexpected happened
-            defer.reject(err);
-        }).otherwise(function (err) {
-            console.log('Error creating detections one by one: ' + err);
-            defer.reject(err);
-        });
+    var detectionsToSave = _.filter(detections, function(detection) {
+        // detections formatted as {"agentId":"78:31:c1:be:e2:14"} indicate that the agent doesn't see any beacons
+        // so we don't need to save them - remove them from the list before saving
+       return !(_.keys(detection).length === 1 && detection.agentId);
+    });
+
+    if (detectionsToSave.length === 0) {
+        defer.resolve({});
+    } else {
+        createDetectionsOneByOne(detections)
+            .then(function (result) {
+                defer.resolve(result);
+            }, function (err) {
+                // something unexpected happened
+                defer.reject(err);
+            }).otherwise(function (err) {
+                console.log('Error creating detections one by one: ' + err);
+                defer.reject(err);
+            });
+    }
 
     return defer.promise;
 }
