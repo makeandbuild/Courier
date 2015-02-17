@@ -7,6 +7,7 @@
 var config = require('./environment');
 var beaconDetectionService = require('../service/beacon-detection.service');
 var agentService = require('../service/agent.service');
+var engineService = require('../service/engine.service');
 var _ = require('lodash');
 
 var listeningSocket;
@@ -71,6 +72,16 @@ module.exports.configure = function (socketio) {
             // save data - format : { capabilities : ['audio'], macAddress : '67:98:09:89' }
             console.log('Engine registration: %s', JSON.stringify(data));
             connectedEngines[client.id] = data;
+
+            //[Lindsay Thurmond:2/17/15] TODO: update engine status
+            engineService.createEngineWithExistingCheck(data)
+                .then(function(engine){
+                    console.log('Successfully registered engine: %s', JSON.stringify(engine));
+                })
+                .otherwise(function(err) {
+                    console.log('Error registering engine. client.id: %s. %s', client.id, err);
+                });
+
             //[Lindsay Thurmond:2/9/15] TODO: send config params to engine (s3 url, etc)
         });
     });

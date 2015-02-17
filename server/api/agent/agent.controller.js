@@ -27,16 +27,6 @@ exports.index = function (req, res) {
  * @param res
  */
 exports.show = function (req, res) {
-//    var agentId = req.params.id;
-//    agentService.findAgentById(agentId)
-//        .then(function (agent) {
-//            if (!agent) {
-//                return res.send(404);
-//            }
-//            return res.json(agent);
-//        }, function (err) {
-//            return handleError(res, err);
-//        });
     var agentId = req.params.id;
 
     agentService.findAgentByCustomId(agentId)
