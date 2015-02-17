@@ -3,30 +3,30 @@
     <div class="searchBar">
         <div class="col-md-11">
             <label for="search" class="">Search</label>
-            <input name="search" ng-model="searchTextAgent">
+            <input name="search" ng-model="searchTextEngine">
         </div>
-        <!--<div class="col-md-1">-->
-            <!--<span class="glyphicon glyphicon-plus add-btn" ng-click="addAgent()"></span>-->
-        <!--</div>-->
+        <div class="col-md-1">
+            <span class="glyphicon glyphicon-plus add-btn" ng-click="addEngine()"></span>
+        </div>
     </div>
 </div>
 <div class="row">
     <table  class=" col-md-12">
         <thead>
             <tr>
-                <th class="col-md-2"><a href="">ID</a></th>
-                <th class="col-md-3"><a href="">IP ADDRESS</a></th>
+                <th class="col-md-2"><a href="">MAC ADDRESS</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'name'; reverse=false">NAME</a></th>
+                <th class="col-md-3"><a href="">IP ADDRESS</a></th>
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">LOCATION</a></th>
                 <th class="col-md-3">CAPABILITIES</th>
                 <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'operationalStatus'; reverse=false">STATUS</a></th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="engine in engines |  orderBy:predicate:reverse | filter:searchTextAgent " ng-click="setSelected(engine.name)" class="beaconRow">
+            <tr ng-repeat="engine in engines |  orderBy:predicate:reverse | filter:searchTextEngine " ng-click="setSelected(engine.name)" class="beaconRow">
                 <td class="col-md-2">{{engine.macAddress}}</td>
-                <td class="col-md-3">{{engine.ipAddress}}</td>
                 <td class="col-md-3">{{engine.name}}</td>
+                <td class="col-md-3">{{engine.ipAddress}}</td>
                 <td class="col-md-3">{{engine.location}}</td>
                 <td class="col-md-3">{{engine.capabilities.join(',')}}</td>
                 <td class="col-md-1 status-section">

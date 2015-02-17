@@ -69,6 +69,11 @@ angular.module('courierApp')
         });
     };
 
+    $scope.addEngine = function(){
+        console.log('addEngine clicked');
+        $location.path('/engine');
+    };
+
     $scope.getBeaconDetections = function() {
       $http.get('/api/beacondetections').success(function(detections) {
         $scope.detections = detections;
@@ -92,5 +97,6 @@ angular.module('courierApp')
     $scope.$on('$destroy', function () {
       socket.unsyncUpdates('beacon');
       socket.unsyncUpdates('agent');
+      socket.unsyncUpdates('engine');
     });
   });

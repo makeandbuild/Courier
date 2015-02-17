@@ -1,0 +1,45 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div ng-controller="EngineCtrl">
+    <div class="container">
+
+
+        <h1 class="">ADD AN ENGINE</h1>
+
+        <form class="beaconForm">
+            <div class="row">
+                <label for="macAddress" class="col-md-2">Mac Address</label>
+                <input type="text" name="macAddress" ng-model="engine.macAddress" value="">
+            </div>
+            <div class="row">
+                <label for="name" class="col-md-2">Name</label>
+                <input type="text" name="name" ng-model="engine.name" value="">
+            </div>
+            <div class="row">
+                <label for="location" class="col-md-2">Location</label>
+                <input type="text" name="location" ng-model="engine.location" value="">
+            </div>
+            <div class="row">
+                <label for="id" class="col-md-2">IP Address</label>
+                <input type="text" name="ipAddress" ng-model="engine.ipAddress" value="">
+            </div>
+            <div class="row">
+                <label for="capabilities" class="col-md-2">Capabilities</label>
+                <input type="text" name="capabilities" ng-model="engine.capabilities" value="">
+            </div>
+            <!--<div class="row">-->
+                <!--<label for="lastSeen" class="col-md-2">Last Seen</label>-->
+                <!--<input type="text" name="lastSeen" ng-model="engine.lastSeen" value="" readonly>-->
+            <!--</div>-->
+            <!--<div class="row">-->
+                <!--<label for="registered" class="col-md-2">Registered</label>-->
+                <!--<input type="text" name="registered" ng-model="engine.registered" value="" readonly>-->
+            <!--</div>-->
+
+
+            <div class="button" ng-click="submit(engine)">Submit</div>
+
+        </form>
+    </div>
+</div>
+

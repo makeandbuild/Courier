@@ -23,6 +23,14 @@ angular.module('courierApp', [
 				templateUrl: 'app/views/agent.html',
 				controller: 'AgentCtrl'
 			})
+            .when('/engine', {
+                templateUrl: 'app/views/engine.html',
+                controller: 'EngineCtrl'
+            })
+            .when('/engine/:engineId', {
+                templateUrl: 'app/views/engine.html',
+                controller: 'EngineCtrl'
+            })
 			.when('/beacon', {
 				templateUrl: 'app/views/beacon.html',
 				controller: 'BeaconCtrl'
