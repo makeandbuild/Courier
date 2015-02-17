@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var AgentSchema = new Schema({
-    customId: String, // unique id for the agent - such as mac address
+    customId: { type: String, required: true }, // unique id for the agent - such as mac address
     name: String,
     registered: Date,
     location: String,
@@ -12,7 +12,7 @@ var AgentSchema = new Schema({
     lastSeenBy: String, // beacon id
     capabilities: [String],
     approvedStatus: String, // Pending, Approved, Denied
-    operationalStatus: String, // Success, Warning, Failure
+    operationalStatus: { type: String, enum : ['Success', 'Warning', 'Failure']},
     /**
      * Max distance a beacon can hit before being considered out of range.
      * If not set all detections will be considered in range.

@@ -79,6 +79,7 @@ exports.create = function (req, res) {
     if (!agent.customId) {
         return res.json(403, 'Validation failure: Cannot register agent without a customId');
     }
+    //[Lindsay Thurmond:2/16/15] TODO: move business logic to agent.service.js
     agentService.findAgentByCustomId(agent.customId)
         .then(function (agentFound) {
             if (!agentFound) {

@@ -10,5 +10,6 @@ var router = express.Router();
 router.use(tokenAuth);
 
 router.get('/', controller.index);
+router.post('/', controller.create);
 
 module.exports = router;

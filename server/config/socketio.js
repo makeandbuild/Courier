@@ -150,7 +150,7 @@ function playAudioOnEngine(macAddress, filename) {
                     filename = config.engine.audio.defaultFilename;
                 }
 
-                console.log('Sending playAudio to engienId: %s, filename: %s', engineId, filename);
+                console.log('Sending playAudio to engineId: %s, filename: %s', engineId, filename);
                 engineNamespace.to(engineId).emit('playaudio', { filename: filename });
             }
         });

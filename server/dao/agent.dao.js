@@ -5,11 +5,13 @@ var _ = require('lodash');
 
 var Agent = require('./../models/agent.model.js');
 
+var _this = this;
+
 exports.findAgentsPromise = function () {
     return Agent.find().exec();
 }
 
-exports.findAgentByUnderscoreIdPromise = function (_id) {
+exports.findAgentByUnderscoreIdPromise = function findAgentByUnderscoreIdPromise(_id) {
     return Agent.findById(_id).exec();
 }
 
@@ -52,7 +54,6 @@ exports.createAgentsPromise = function(agents) {
     return promise;
 }
 
-//[Lindsay Thurmond:10/8/14] TODO:  there has to be a better way to do this
 exports.updateAgentPromise = function (agent) {
     var promise = new mongoose.Promise;
 
@@ -61,21 +62,23 @@ exports.updateAgentPromise = function (agent) {
         agentId = agent._id;
         delete agent._id;
     }
-    Agent.findById(agentId, function (err, agentToUpdate) {
-        if (err) {
-            return promise.reject(err);
-        }
-        if (!agentToUpdate) {
-            return promise.reject('No agent with id=' + agentId + ' found to update.');
-        }
-        var updated = _.merge(agentToUpdate, agent);
-        updated.save(function (err) {
-            if (err) {
-                return promise.reject(err);
+
+    _this.findAgentByUnderscoreIdPromise(agentId)
+        .then(function(agentToUpdate){
+            if (!agentToUpdate) {
+                return promise.reject('No agent with id =' + agentId + ' found to update.');
             }
-            return promise.complete(agentToUpdate);
+            var updated = _.merge(agentToUpdate, agent);
+            updated.save(function (err) {
+                if (err) {
+                    return promise.reject(err);
+                }
+                return promise.complete(agentToUpdate);
+            });
+        },
+        function(err){
+            promise.reject(err);
         });
-    });
     return promise;
 }
 
