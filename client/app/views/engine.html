@@ -9,7 +9,7 @@
         <form class="beaconForm">
             <div class="row">
                 <label for="macAddress" class="col-md-2">Mac Address</label>
-                <input type="text" name="macAddress" ng-model="engine.macAddress" value="">
+                <input type="text" name="macAddress" ng-model="engine.macAddress" required value="">
             </div>
             <div class="row">
                 <label for="name" class="col-md-2">Name</label>
@@ -25,7 +25,7 @@
             </div>
             <div class="row">
                 <label for="capabilities" class="col-md-2">Capabilities</label>
-                <input type="text" name="capabilities" ng-model="engine.capabilities" value="">
+                <input type="text" name="capabilities" ng-model="engine.capabilities" ng-list="," value="">
             </div>
             <!--<div class="row">-->
                 <!--<label for="lastSeen" class="col-md-2">Last Seen</label>-->

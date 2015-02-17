@@ -44,3 +44,7 @@ exports.updateEnginePromise = function(engine) {
         });
     return promise;
 }
+
+exports.deleteEngineByIdPromise = function (_id) {
+    return Engine.findById(_id).remove().exec();
+}

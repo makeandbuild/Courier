@@ -11,9 +11,9 @@ app.controller('EngineCtrl', function($scope, $http, $location, $routeParams) {
 
 	$scope.properties = {};
 	
-	if ($routeParams.macAddress) {
+	if ($routeParams.engineId) {
 		console.log($routeParams);
-		$http.get('/api/engines/' + $routeParams.macAddress).success(function(engine) {
+		$http.get('/api/engines/' + $routeParams.engineId).success(function(engine) {
 			$scope.engine = engine;
             $scope.properties = engine.properties;
 		});
@@ -28,23 +28,16 @@ app.controller('EngineCtrl', function($scope, $http, $location, $routeParams) {
 				$location.path('/engines')
 			});
 
-		} else if(engine.macAddress){
-            var newEngine = {
-                macAddress: engine.macAddress,
-                name: engine.name,
-                location: engine.location
-            };
-
-            $http.post('/api/engines', newEngine);
-            $location.path('/engines')
-
         } else {
-			var newEngine = {
-				name: engine.name,
-				location: engine.location
-			};
+//			var newEngine = {
+//                macAddress: engine.macAddress,
+//				name: engine.name,
+//				location: engine.location,
+//                ipAddress : engine.ipAddress,
+//                capabilities : engine.capabilities
+//			};
 
-			$http.post('/api/engines', newEngine);
+			$http.post('/api/engines', engine);
 			$location.path('/engines')
 		}
 	};

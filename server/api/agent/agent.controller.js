@@ -123,6 +123,9 @@ exports.findByCustomId = function(req, res){
                 res.json(200, agent);
             }
         })
+        .otherwise(function(err) {
+            handleError(res, err);
+        });
 }
 
 /**

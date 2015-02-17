@@ -48,8 +48,8 @@ exports.createEngineWithExistingCheck = function(engine) {
 
             } else {
                 console.log('Existing engine found with macAddress %s.  Updating engine.', engine.macAddress);
-                foundEngine.location = engine.location;
-                foundEngine.name = engine.name;
+//                foundEngine.location = engine.location;
+//                foundEngine.name = engine.name;
                 foundEngine.ipAddress = engine.ipAddress;
                 foundEngine.capabilities = engine.capabilities;
                 _this.updateEngine(foundEngine)
@@ -109,3 +109,10 @@ exports.updateAllEngineStatus = function updateAllEngineStatus(connectedEngines)
             });
         });
 }
+
+/**
+ * Deletes an engine
+ */
+exports.deleteEngine = function (_id) {
+    return when(engineDao.deleteEngineByIdPromise(_id));
+};

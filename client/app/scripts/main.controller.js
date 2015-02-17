@@ -74,6 +74,12 @@ angular.module('courierApp')
         $location.path('/engine');
     };
 
+    $scope.deleteEngine = function(engine) {
+        $http.delete('/api/engines/' + engine._id).success(function(response){
+            $scope.engines = $filter('filter')($scope.engines, {_id: '!' + engine._id});
+        });
+    };
+
     $scope.getBeaconDetections = function() {
       $http.get('/api/beacondetections').success(function(detections) {
         $scope.detections = detections;

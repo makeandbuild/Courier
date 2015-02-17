@@ -20,17 +20,21 @@
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">LOCATION</a></th>
                 <th class="col-md-3">CAPABILITIES</th>
                 <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'operationalStatus'; reverse=false">STATUS</a></th>
+                <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">DELETE?</a></th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="engine in engines |  orderBy:predicate:reverse | filter:searchTextEngine " ng-click="setSelected(engine.name)" class="beaconRow">
-                <td class="col-md-2">{{engine.macAddress}}</td>
+                <td class="col-md-2"><a href="/engine/{{engine.macAddress}}">{{engine.macAddress}}</a></td>
                 <td class="col-md-3">{{engine.name}}</td>
                 <td class="col-md-3">{{engine.ipAddress}}</td>
                 <td class="col-md-3">{{engine.location}}</td>
                 <td class="col-md-3">{{engine.capabilities.join(',')}}</td>
                 <td class="col-md-1 status-section">
                     <i class="glyphicon" ng-class="engine.operationalStatus == 'Failure' ? 'glyphicon-remove-sign' :'glyphicon-ok-sign'"></i>
+                </td>
+                <td class="col-md-1">
+                    <span class="glyphicon glyphicon-minus minus-btn" ng-click="deleteEngine(engine)"></span>
                 </td>
             </tr>
         </tbody>
