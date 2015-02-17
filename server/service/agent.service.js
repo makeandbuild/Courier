@@ -6,8 +6,9 @@
 var _ = require('lodash');
 var when = require('when');
 
-var Agent = require('./../models/agent.model.js');
-var agentDao = require('../dao/agent.dao.js');
+var Agent = require('./../models/agent.model');
+var agentDao = require('../dao/agent.dao');
+var socketio = require('../config/socketio');
 
 var _this = this;
 
@@ -48,6 +49,49 @@ exports.createAgent = function createAgent(agent) {
     //[Lindsay Thurmond:10/1/14] TODO: add registrationDate to json in mongo
     return when(agentDao.createAgentPromise(agent));
 };
+
+exports.createAgentWithExistingCheck = function(agent) {
+    var defer = when.defer();
+
+    if (!agent.customId) {
+        return when.reject('Validation failure: Cannot create/register agent without a customId');
+    }
+    _this.findAgentByCustomId(agent.customId)
+        .then(function (agentFound) {
+            if (!agentFound) {
+                console.log("Agent not found, creating with custom id: " + agent.customId);
+                _this.createAgent(agent)
+                    .then(function (agent) {
+                        socketio.updateAgentStatuses();
+                        defer.resolve(agent);
+                    })
+                    .otherwise(function (err) {
+                        defer.reject(err);
+                    });
+            } else {
+                console.log('Existing agent found with customId: %s.  Attempting to update.', agent.customId);
+                agentFound.location = agent.location;
+                agentFound.name = agent.name;
+                agentFound.customId = agent.customId;
+                agentFound.ipAddress = agent.ipAddress;
+                // we don't want to update the range every time the agent is restarted
+//                agentFound.range = agent.range;
+                _this.updateAgent(agentFound)
+                    .then(function (agent) {
+                        socketio.updateAgentStatuses();
+                        defer.resolve(agent);
+                    })
+                    .otherwise(function (err) {
+                        defer.reject(err);
+                    });
+            }
+        })
+        .otherwise(function (error) {
+            console.log("Unexpected error registering agent: " + error);
+            defer.reject(error);
+        });
+    return defer.promise;
+}
 
 /**
  * Creates all agents in array

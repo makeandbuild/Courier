@@ -57,6 +57,17 @@ module.exports.configure = function (socketio) {
             console.log('Agent registration: %s', JSON.stringify(data));
             connectedAgents[client.id] = data;
 
+            // register agent
+            agentService.createAgentWithExistingCheck(data)
+                .then(function(registeredAgent){
+                    console.log('Successfully registered agent: %s', JSON.stringify(registeredAgent));
+                    agentNamespace.to(client.id).emit('registerSuccess', registeredAgent);
+                })
+                .otherwise(function(err){
+                    console.log('Error registering agent. client.id: %s. %s', client.id, err);
+                    agentNamespace.to(client.id).emit('registerFailure', { error: err });
+                });
+
             updateAgentStatuses();
         });
     });

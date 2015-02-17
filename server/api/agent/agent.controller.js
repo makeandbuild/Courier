@@ -1,7 +1,6 @@
 'use strict';
 
 var agentService = require('../../service/agent.service.js');
-var socketio = require('../../config/socketio');
 
 /**
  * Get list of agents
@@ -66,45 +65,12 @@ exports.show = function (req, res) {
 exports.create = function (req, res) {
     var agent = req.body;
 
-    if (!agent.customId) {
-        return res.json(403, 'Validation failure: Cannot register agent without a customId');
-    }
-    //[Lindsay Thurmond:2/16/15] TODO: move business logic to agent.service.js
-    agentService.findAgentByCustomId(agent.customId)
-        .then(function (agentFound) {
-            if (!agentFound) {
-                console.log("Agent not found, creating with custom id: " + agent.customId);
-                agentService.createAgent(agent).then(function (agent) {
-                    socketio.updateAgentStatuses();
-                    res.json(201, agent);
-                }).catch(function (err) {
-                    res.json(400, {
-                        message: 'Error creating new agent',
-                        error: err
-                    })
-                });
-            } else {
-                console.log('Existing agent found with customId: %s.  Attempting to update.', agent.customId);
-                agentFound.location = agent.location;
-                agentFound.name = agent.name;
-                agentFound.customId = agent.customId;
-                agentFound.ipAddress = agent.ipAddress;
-                // we don't want to update the range every time the agent is restarted
-//                agentFound.range = agent.range;
-                agentService.updateAgent(agentFound)
-                    .then(function (agent) {
-                        socketio.updateAgentStatuses();
-                        res.json(200, agent);
-                    }).catch(function (err) {
-                        res.json(400, {
-                            message: "Error updating existing agent",
-                            error: err
-                        })
-                    })
-            }
-        }).catch(function (error) {
-            res.json(400, {message: 'Unexpected error registering agent', error: error});
-            console.log("Unexpected error registering agent: " + error);
+    agentService.createAgentWithExistingCheck(agent)
+        .then(function(registeredAgent){
+            res.json(200, registeredAgent);
+        })
+        .otherwise(function(err){
+           handleError(res, err);
         });
 };
 
