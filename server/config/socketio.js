@@ -14,7 +14,6 @@ var listeningSocket;
 var agentNamespace;
 var engineNamespace;
 
-//[Lindsay Thurmond:2/9/15] TODO: expose rest/socket call for list of connected engines for ui
 var connectedEngines = {};
 var connectedAgents = {};
 
@@ -73,7 +72,6 @@ module.exports.configure = function (socketio) {
             console.log('Engine registration: %s', JSON.stringify(data));
             connectedEngines[client.id] = data;
 
-            //[Lindsay Thurmond:2/17/15] TODO: update engine status
             engineService.createEngineWithExistingCheck(data)
                 .then(function(engine){
                     console.log('Successfully registered engine: %s', JSON.stringify(engine));
@@ -99,6 +97,7 @@ module.exports.configure = function (socketio) {
             if (engineConfig) {
                 console.log('ENGINE %s DISCONNECTED', client.id);
                 delete connectedEngines[client.id];
+                updateEngineStatuses();
             }
             // agent
             else if (agentConfig) {
@@ -170,11 +169,18 @@ function playAudioOnEngine(macAddress, filename) {
 
 
 function updateAgentStatuses() {
-    agentService.updateAllAgentStatus(connectedAgents);
+    var connectedAgentInfos = _.values(connectedAgents);
+    agentService.updateAllAgentStatus(connectedAgentInfos);
+}
+
+function updateEngineStatuses() {
+    var connectedEngineInfos = _.values(connectedEngines);
+    engineService.updateAllEngineStatus(connectedEngineInfos);
 }
 
 module.exports.playAudioOnEngine = playAudioOnEngine;
 module.exports.playAudioOnEngines = playAudioOnEngines;
 module.exports.broadcastToEngines = broadcastToEngines;
 module.exports.updateAgentStatuses = updateAgentStatuses;
+module.exports.updateEngineStatuses = updateEngineStatuses;
 module.exports.connectedEngines = connectedEngines;

@@ -21,8 +21,8 @@
                 <th class="col-md-3"><a href="" ng-click="predicate = 'location'; reverse=false">LOCATION</a></th>
                  <th class="col-md-3"><a href="" ng-click="predicate = 'range'; reverse=false">RANGE</a></th>
 
-                <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">STATUS</a></th>
-                <th class="col-md-1"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">LAST SEEN</a></th>
+                <th class="col-md-1 status-section"><a href="" ng-click="predicate = 'operationalStatus'; reverse=false">STATUS</a></th>
+                <th class="col-md-2"><a href="" ng-click="predicate = 'lastSeen'; reverse=false">LAST SEEN</a></th>
                 <th class="col-md-1"><a href="" ng-click="predicate = 'minor'; reverse=!reverse">DELETE?</a></th>
             </tr>
         </thead>
@@ -35,7 +35,7 @@
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.location}}</a></td>
                 <td class="col-md-3"><a href="/agent/{{agent.customId}}">{{agent.range}}</a></td>
                 <td class="col-md-1 status-section"><a href="/agent/{{agent._id}}"><i class="glyphicon" ng-class="agent.operationalStatus == 'Failure' ? 'glyphicon-remove-sign' :'glyphicon-ok-sign'"></i></a></td>
-                <td class="col-md-1"><a href="/agent/{{agent.customId}}">{{agent.lastSeen | date : 'medium'}}</a></td>
+                <td class="col-md-2"><a href="/agent/{{agent.customId}}">{{agent.lastSeen | date : 'medium'}}</a></td>
                 <td class="col-md-1">
                     <span class="glyphicon glyphicon-minus minus-btn" ng-click="deleteAgent(agent)"></span>
                 </td>

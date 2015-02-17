@@ -8,6 +8,7 @@ var when = require('when');
 
 var Engine = require('./../models/engine.model');
 var engineDao = require('../dao/engine.dao');
+var socketio = require('../config/socketio');
 
 var _this = this;
 
@@ -38,7 +39,7 @@ exports.createEngineWithExistingCheck = function(engine) {
                 console.log('Engine not found.  Creating new engine with macAddress %s', engine.macAddress);
                 _this.createEngine(engine)
                     .then(function(engine) {
-                        //[Lindsay Thurmond:2/16/15] TODO: update engine status
+                        socketio.updateEngineStatuses();
                         defer.resolve(engine);
                     }, function(err){
                         console.log('Error creating new engine: %s', err);
@@ -53,7 +54,7 @@ exports.createEngineWithExistingCheck = function(engine) {
                 foundEngine.capabilities = engine.capabilities;
                 _this.updateEngine(foundEngine)
                     .then(function(engine) {
-                        //[Lindsay Thurmond:2/17/15] TODO: update engine status
+                        socketio.updateEngineStatuses();
                         defer.resolve(engine);
                     })
                     .otherwise(function(err) {
@@ -78,4 +79,33 @@ exports.updateEngine = function updateEngine(engine) {
         return when.reject('Cannot update empty engine');
     }
     return when(engineDao.updateEnginePromise(engine));
+}
+
+/**
+ *
+ * @param connectedEngines array of engines that are connected
+ */
+exports.updateAllEngineStatus = function updateAllEngineStatus(connectedEngines) {
+
+    var connectedMacAddresses = [];
+    _.forEach(connectedEngines, function(engine) {
+        if (engine.macAddress) {
+            connectedMacAddresses.push(engine.macAddress);
+        }
+    });
+
+    _this.findEngines()
+        .then(function(engines){
+            _.forEach(engines, function(engine){
+                var originalStatus = engine.operationalStatus;
+                if (_.indexOf(connectedMacAddresses, engine.macAddress) != -1) {
+                    engine.operationalStatus = 'Success';
+                } else {
+                    engine.operationalStatus = 'Failure';
+                }
+                if (originalStatus !== engine.operationalStatus) {
+                    _this.updateEngine(engine);
+                }
+            });
+        });
 }

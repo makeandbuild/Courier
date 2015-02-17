@@ -45,11 +45,8 @@ exports.findByLocation = function findByLocation(location) {
  * @returns {*}
  */
 exports.createAgent = function createAgent(agent) {
-    //[Lindsay Thurmond:10/1/14] TODO: check for existing agents first - ids will be mac addresses
     //[Lindsay Thurmond:10/1/14] TODO: add registrationDate to json in mongo
     return when(agentDao.createAgentPromise(agent));
-
-    //[Lindsay Thurmond:10/1/14] TODO: if already exists - set saved approved status, otherwise unapproved
 };
 
 /**
@@ -75,11 +72,14 @@ exports.updateAgent = function updateAgent(agent) {
     return when(agentDao.updateAgentPromise(agent));
 };
 
+/**
+ *
+ * @param connectedAgents array of agents that are connected
+ */
 exports.updateAllAgentStatus = function updateAgentStatus(connectedAgents) {
 
-    var connectedAgentInfos = _.values(connectedAgents);
     var connectedCustomIds = [];
-    _.forEach(connectedAgentInfos, function(info) {
+    _.forEach(connectedAgents, function(info) {
         if (info.customId) {
             connectedCustomIds.push(info.customId);
         }
