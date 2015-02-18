@@ -29,7 +29,6 @@ function findUserByIdWithoutPassword(id) {
     return when(userDao.findUserByIdWithoutPasswordPromise(id));
 }
 
-//[Lindsay Thurmond:10/10/14] TODO: is there a better way to do this?
 function createUser(user) {
     var newUser = new User(user);
     newUser.provider = 'local';
@@ -60,7 +59,6 @@ function deleteAllUsers() {
     return when(userDao.deleteAllUsers());
 }
 
-//[Lindsay Thurmond:10/10/14] TODO: is there a cleaner way to do this?
 function changePassword(userId, oldPass, newPass) {
     var defer = when.defer();
     findUserByIdWithPassword(userId)

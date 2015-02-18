@@ -46,7 +46,6 @@ exports.createBeaconsPromise = function (beacons) {
     return promise;
 }
 
-//[Lindsay Thurmond:10/8/14] TODO:  there has to be a better way to do this
 exports.updateBeaconPromise = function (beacon) {
     var promise = new mongoose.Promise;
 
@@ -55,21 +54,22 @@ exports.updateBeaconPromise = function (beacon) {
         beaconId = beacon._id;
         delete beacon._id;
     }
-    Beacon.findById(beaconId, function (err, beaconToUpdate) {
-        if (err) {
-            return promise.reject(err);
-        }
-        if (!beaconToUpdate) {
-            return promise.reject('No beacon with id=' + beaconId + ' found to update.');
-        }
-        var updated = _.merge(beaconToUpdate, beacon);
-        updated.save(function (err) {
-            if (err) {
-                return promise.reject(err);
+    Beacon.findById(beaconId).exec()
+        .then(function(beaconToUpdate) {
+            if (!beaconToUpdate) {
+                return promise.reject('No beacon with id=' + beaconId + ' found to update.');
             }
-            return promise.complete(beaconToUpdate);
+            var updated = _.merge(beaconToUpdate, beacon);
+            updated.save(function (err) {
+                if (err) {
+                    return promise.reject(err);
+                }
+                return promise.complete(beaconToUpdate);
+            });
+        }, function(err){
+            return promise.reject(err);
         });
-    });
+
     return promise;
 }
 
