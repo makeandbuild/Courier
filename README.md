@@ -62,6 +62,7 @@ The source code comes with two built in users by default.  You can add additiona
 This repo is a work in progress - *IT IS NOT PRODUCTION READY*.  We don't expect you to use the entire thing as is, but we're hoping that you'll at least find parts of it useful for your own development.
 
 This is subject to change, but the items that we plan to work on next are the following:
+- Fix broken tests
 - Make rules engine pluggable
 - Add socket.io authentication
 - Publish websocket events that the rules engine listens for instead of calling directly
@@ -110,6 +111,8 @@ Run Mocha Tests
 ```
 grunt mochaTest
 ```
+
+_Warning_: We know that some of these are broken.  We are working on it.
 
 ### Intellij Setup
 Javascript developers, don't laugh but we have Java developers working on this code and they like to use IntelliJ.  So be it.  Feel free to use your favorite Javascript editor - Sublime, Atom, etc.  This is more for our own reference, but perhaps you'll find it useful.
