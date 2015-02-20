@@ -8,6 +8,18 @@ The Courier project is broken down into four pieces - Agent, Engine, Server & Ad
 
 For a high level overview including architecture diagrams refer to our blog post [Courier iBeacon Implementation](http://makeandbuild.com/blog/post/courier-ibeacon-implementation)
 
+## Server - Summary
+We chose to write the server in Node.js using the Express framework to get everything up and running quickly.  Node allowed us to get our web server running in just a few lines of code and Express helped simplify building the REST API.  We started out using REST for all communication with the server but have since started using WebSockets with socket.io as well.  Most notably we switched to WebSockets for communication with agents to remove the overhead of HTTP when publishing detections to the server every two seconds.
+
+Once the server receives a detection payload from an agent, it saves the detections to a MongoDB database and analyzes them to determine which beacons came in range for the first time, which ones are still in range, and which ones are no longer detected - enter, alive, or exit events respectively.  Based on the event type, we send action commands to the configured engines.  Currently we send commands to play audio files when we receive an enter event for a beacon, but you can customize this to do whatever you want.
+
+```javascript
+var engineNamespace = socketio.of('/engine');
+engineNamespace.to(engineId).emit('playaudio', { filename: 'hello.wav' });
+```
+
+## Admin Console - Summary
+The admin console is written in Angular.js and connects to the server using its REST API.  You can use it to manage and check the status of your agents, beacons, and engines.  You can also view a list of the saved detections.
 
 ## Environment Setup
 
@@ -88,3 +100,4 @@ This is subject to change, but the items that we plan to work on next are the fo
 - Publish websocket events that the rules engine listens for instead of calling directly
 - Auto register beacons when they are first seen (like we do for agents)
 - Make uuids case and dash insensitive (currently only supports uuids in all lowercase without dashs)
+- Pull list of audio file choices and urls from S3 bucket in order to provide list of files to play dynamically (currently we the UI is hardcoded)
