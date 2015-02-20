@@ -21,8 +21,6 @@ var all = {
     // Server port
     port: process.env.PORT || 9000,
 
-    crossbarUrl: 'ws://127.0.0.1:8080/ws',
-
     // Should we populate the DB with sample data?
     seedDB: false,
 
