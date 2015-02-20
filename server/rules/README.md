@@ -1,3 +1,3 @@
-After the Movember event this package needs to be split into its own application.
+This package needs to be split into its own application.
 
-It should continue to receive its data through a WAMP connection.
+It should continue to receive its data through a websocket (socket.io) connection.
