@@ -2,6 +2,36 @@
   "name": "courier",
   "version": "0.0.0",
   "main": "server/app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makeandbuild/Courier.git"
+  },
+  "contributors": [
+    {
+      "name": "Lindsay Thurmond",
+      "email": "lindsay.thurmond@makeandbuild.com"
+    },
+    {
+      "name": "Gabriel Arronte"
+    },
+    {
+      "name": "Tyler Porter"
+    },
+    {
+      "name": "Ken Orji"
+    },
+    {
+      "name": "Todd Wilson"
+    },
+    {
+      "name": "Jeremy Dyer"
+    },
+    {
+      "name": "Tom Elrod",
+      "email": "tom.elrod@gmail.com"
+    }
+  ],
+  "license": "Apache 2",
   "dependencies": {
     "body-parser": "~1.0.0",
     "composable-middleware": "^0.3.0",
