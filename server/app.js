@@ -50,5 +50,11 @@ try {
     console.log('Error starting up server: ' + e);
 }
 
+// Configure rules
+//[Lindsay Thurmond:3/6/15] TODO: find a better way to do this - I'd prefer to make the plugins configurable
+require('./rules/plugins/audio.rule.js').register();
+require('./rules/plugins/employee.location.rule.js').register();
+
+
 // Expose app
 exports = module.exports = app;
