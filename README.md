@@ -45,7 +45,7 @@ The DAO layer uses MongoDB.  The code is located in the ```server/dao``` folder.
 ### Server - Rules Engine
 This is the code that is responsible for taking actions based on the _enter_, _alive_, and _exit_ events for the beacons.  Eventually we want to pull this code into a separate module and use socket.io to send events from the Server to the Rules Engine for processing but we haven't gotten that far yet.  We have separated the code to its own ```server/rules``` folder so that it is easy to separate when we have time.
 
-Any custom actions you want to take when an event is recieved should be registered in the ```detection.event.service.js``` by passing the behavior/rule as a function to the ```registerRule(ruleFunction)```.  When an event is detected it all registered rules will be processed.
+Any custom actions you want to take when an event is recieved should be registered in ```detection.event.service.js``` by passing the behavior/rule as a function to the ```registerRule(ruleFunction)```.  When an event is detected all registered rules will be processed.
 
 ## Admin Console
 
