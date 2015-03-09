@@ -67,10 +67,10 @@ This is subject to change, but the items that we plan to work on next are the fo
 - Fix broken tests
 - Make rules engine pluggable
 - Add socket.io authentication
-- Publish websocket events that the rules engine listens for instead of calling directly
+- ~~Publish websocket events that the rules engine listens for instead of calling directly~~
 - Auto register beacons when they are first seen (like we do for agents)
 - Make uuids case and dash insensitive (currently only supports uuids in all lowercase without dashs)
-- Pull list of audio file choices and urls from S3 bucket in order to provide list of files to play dynamically (currently we the UI is hardcoded)
+- Pull list of audio file choices and urls from S3 bucket in order to provide list of files to play dynamically (currently the UI auido file list is hardcoded)
 
 ## Environment Setup
 
