@@ -1,10 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
-var when = require('when');
-var socketio = require('../../config/socketio.js');
-
-
 var rules = []
 
 exports.registerRule  = function (ruleFunction) {
@@ -12,19 +7,20 @@ exports.registerRule  = function (ruleFunction) {
 }
 
 /**
- * agentId = args[0]
- * uuid = args[1]
- * major = args[2]
- * minor = args[3]
- * proximity = args[4]
- * eventType = args[5]
- *
- * @param args
+ * @param detectionEvent Format:
+ *   {
+ *     agentId: "",
+ *     beaconUuid: "",
+ *     beaconMajor: 5,
+ *     beaconMinor: 4,
+ *     proximity: 1.2,
+ *     eventType: "enter"
+ *   }
  */
-exports.processDetectionEvent = function (args) {
+exports.processDetectionEvent = function (detectionEvent) {
 
     rules.forEach(function(rule){
-        rule(args);
+        rule(detectionEvent);
     });
 
 }

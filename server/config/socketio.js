@@ -13,9 +13,11 @@ var _ = require('lodash');
 var listeningSocket;
 var agentNamespace;
 var engineNamespace;
+var rulesNamespace;
 
 var connectedEngines = {};
 var connectedAgents = {};
+var connectedRulesEngines = {};
 
 
 module.exports.configure = function (socketio) {
@@ -95,6 +97,20 @@ module.exports.configure = function (socketio) {
         });
     });
 
+    // RULES NAMESPACE
+    rulesNamespace = socketio.of('/rules');
+    rulesNamespace.on('connection', function(client) {
+        console.log('RULES ENGINE %s CONNECTED!', client.id);
+        connectedRulesEngines[client.id] = {};
+
+        client.on('register', function(data) {
+            console.log('Rules engine registration: %s', JSON.stringify(data));
+            connectedRulesEngines[client.id] = data;
+
+           //[Lindsay Thurmond:3/9/15] TODO: save rules engines to database
+        });
+    });
+
 
     // DEFAULT NAMESPACE
     socketio.on('connection', function (client) {
@@ -105,6 +121,7 @@ module.exports.configure = function (socketio) {
             // engine
             var engineConfig = connectedEngines[client.id];
             var agentConfig = connectedAgents[client.id];
+            var rulesEngineConfig = connectedRulesEngines[client.id];
             if (engineConfig) {
                 console.log('ENGINE %s DISCONNECTED', client.id);
                 delete connectedEngines[client.id];
@@ -117,6 +134,11 @@ module.exports.configure = function (socketio) {
                 delete connectedAgents[client.id];
                 updateAgentStatuses();
             }
+            // rules
+            else if (rulesEngineConfig) {
+                console.log('RULES ENGINE %s DISCONNECTED', client.id);
+                delete connectedRulesEngines[client.id];
+            }
             // other
             else {
                 console.log('%s DISCONNECTED', client.id);
@@ -125,6 +147,10 @@ module.exports.configure = function (socketio) {
 
         console.log('%s CONNECTED to Default Namespace', client.id);
     });
+}
+
+function broadcastToRulesEngines(message, data) {
+    rulesNamespace.emit(message, data);
 }
 
 function broadcastToEngines(message, data) {
@@ -191,6 +217,7 @@ function updateEngineStatuses() {
 
 module.exports.playAudioOnEngine = playAudioOnEngine;
 module.exports.playAudioOnEngines = playAudioOnEngines;
+module.exports.broadcastToRulesEngines = broadcastToRulesEngines;
 module.exports.broadcastToEngines = broadcastToEngines;
 module.exports.updateAgentStatuses = updateAgentStatuses;
 module.exports.updateEngineStatuses = updateEngineStatuses;

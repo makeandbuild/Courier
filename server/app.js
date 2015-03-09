@@ -50,7 +50,8 @@ try {
     console.log('Error starting up server: ' + e);
 }
 
-// Configure rules
+// Configure rules engine
+require('./rules/service/event.subscription.service').register();
 //[Lindsay Thurmond:3/6/15] TODO: find a better way to do this - I'd prefer to make the plugins configurable
 require('./rules/plugins/audio.rule.js').register();
 require('./rules/plugins/employee.location.rule.js').register();

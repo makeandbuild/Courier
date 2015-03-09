@@ -19,14 +19,14 @@ var detectionEventService = require('../service/detection.event.service')
 var lastTimeBeaconEnterSoundPlayed = {};
 
 exports.register = function() {
-    detectionEventService.registerRule(function (args) {
+    detectionEventService.registerRule(function (detectionEvent) {
 
-        var agentId = args[0];
-        var uuid = args[1];
-        var major = args[2];
-        var minor = args[3];
-        var proximity = args[4];
-        var eventType = args[5];
+        var agentId = detectionEvent.agentId;
+        var uuid = detectionEvent.beaconUuid;
+        var major = detectionEvent.beaconMajor;
+        var minor = detectionEvent.beaconMinor;
+        var proximity = detectionEvent.proximity;
+        var eventType = detectionEvent.eventType;
 
         notifyEngine(agentId, uuid, major, minor, eventType);
 
