@@ -43,9 +43,18 @@ The service layer code is located in the ```server/service``` folder.  The files
 The DAO layer uses MongoDB.  The code is located in the ```server/dao``` folder.  The files are named like ```agent.dao.js```.
 
 ### Server - Rules Engine
-This is the code that is responsible for taking actions based on the _enter_, _alive_, and _exit_ events for the beacons.  Eventually we want to pull this code into a separate module and use socket.io to send events from the Server to the Rules Engine for processing but we haven't gotten that far yet.  We have separated the code to its own ```server/rules``` folder so that it is easy to separate when we have time.
+This is the code that is responsible for taking actions based on the _enter_, _alive_, and _exit_ events for the beacons.  Eventually we want to pull this code into a separate module/code base.  In preparation for that we send events to it using socket.io instead of making direct calls to it.  We have separated the code to its own ```server/rules``` folder so that it is easy to separate when we have time.
 
 Any custom actions you want to take when an event is recieved should be registered in ```detection.event.service.js``` by passing the behavior/rule as a function to the ```registerRule(ruleFunction)```.  When an event is detected all registered rules will be processed.
+
+If you open ```app.js``` you'll see a section where we are manually registering the rules engine and the specific rules for it.  You should continue to follow this pattern for now.
+
+```javascript
+// Configure rules engine
+require('./rules/service/event.subscription.service').register();
+require('./rules/plugins/audio.rule.js').register();
+require('./rules/plugins/employee.location.rule.js').register();
+```
 
 ## Admin Console
 
